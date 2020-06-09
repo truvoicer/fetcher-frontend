@@ -8,8 +8,15 @@
     "start": "next start"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.13.0",
+    "bootstrap": "^4.5.0",
     "next": "9.4.4",
     "react": "16.13.1",
-    "react-dom": "16.13.1"
+    "react-bootstrap": "^1.0.1",
+    "react-dom": "16.13.1",
+    "react-html-parser": "^2.0.2",
+    "sass": "^1.26.8",
+    "sprintf": "^0.1.5",
+    "swr": "^0.2.2"
   }
 }
