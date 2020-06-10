@@ -9,12 +9,20 @@ class ListingsFilter extends React.Component {
         super(props);
         this.state = {
             listingType: this.props.data.listing_type,
-            listingFilters: []
+            listingFilters: [],
+            location: "",
+            name: "",
+            date: ""
         }
         this.listingFilters = [];
-        this.filterKey = this.props.data.listing_type + "_listings_filters";
         this.filterItem = this.filterItem.bind(this);
-        this.getListingFilters = this.getListingFilters.bind(this);
+        this.formChangeHandler = this.formChangeHandler.bind(this);
+    }
+    formChangeHandler(e) {
+        console.log(e.target.name, e.target.value)
+        this.setState({
+            [e.target.name]: e.target.value
+        })
     }
 
     filterItem(options) {
@@ -29,16 +37,13 @@ class ListingsFilter extends React.Component {
         )
     }
 
-    getListingFilters() {
-        let groupKey = this.props.data.listing_type + "_listings_filters";
-        if (typeof this.props.data[groupKey] === "undefined") {
-            return false;
-        }
-        return this.props.data[groupKey]
-    }
-
     render() {
-        this.listingFilters = this.props.data[this.filterKey]
+        // console.log(this.context)
+        if(typeof this.context.listingsData.listing_block_category === "undefined") {
+            return <p>Listings category not set/found</p>
+        }
+        let listingCategory = this.context.listingsData.listing_block_category.slug;
+        this.listingFilters = this.props.data[listingCategory+"_listings_filters"]
         return (
             <div id={"listings_filter"} className={"listings-filter"}>
                 <header className="major">
@@ -53,19 +58,31 @@ class ListingsFilter extends React.Component {
                                 <ListingsFilterItem
                                     key={index}
                                     label={item.label}
-                                    control={<input id={"location_filter"}/>}/>
+                                    control={<input name={"location"}
+                                                    id={"location_filter"}
+                                                    onChange={this.formChangeHandler}
+                                                    value={this.state.location}
+                                    />}/>
                                 }
                                 {item.filter === "name" &&
                                 <ListingsFilterItem
                                     key={index}
                                     label={item.label}
-                                    control={<input id={"location_filter"}/>}/>
+                                    control={<input name={"name"}
+                                                    id={"location_filter"}
+                                                    onChange={this.formChangeHandler}
+                                                    value={this.state.name}
+                                    />}/>
                                 }
                                 {item.filter === "date" &&
                                 <ListingsFilterItem
                                     key={index}
                                     label={item.label}
-                                    control={<input id={"location_filter"}/>}/>
+                                    control={<input name={"date"}
+                                                    id={"location_filter"}
+                                                    onChange={this.formChangeHandler}
+                                                    value={this.state.date}
+                                    />}/>
                                 }
                             </li>
                         ))}

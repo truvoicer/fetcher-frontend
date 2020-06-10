@@ -6,10 +6,11 @@ import Router from "next/router";
 import Header from "../../views/layout/Header";
 import ReactHtmlParser from "react-html-parser";
 import {filterHtml} from "../../library/html-parser";
+import {PageContext} from "../Context/PageContext";
+import {ListingsContext} from "../Context/ListingsContext";
+import {fetchData, fetchWpData} from "../../library/api/middleware";
 
 const sprintf = require("sprintf").sprintf;
-
-const fetcher = (url) => fetch(url).then((res) => res.json())
 
 class PageComponent extends React.Component {
     static async getInitialProps(ctx) {
@@ -21,43 +22,52 @@ class PageComponent extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            pageData: ""
+            pageData: false
         }
-        this.page = "";
         this.htmlParserOptions = {
             decodeEntities: true,
             transform: filterHtml
         };
         this.getPage = this.getPage.bind(this);
+
     }
 
     componentDidMount() {
-        const {page} = Router.query;
-        this.page = page;
+        this.getPage();
     }
 
     getPage() {
-        const endpoint = sprintf(wpApiConfig.apiBaseUrl + wpApiConfig.endpoints.page, this.props.data.pageName);
-        const {data, error} = useSwr(endpoint, fetcher)
-
-        if (error) return <div>Failed to load user</div>
-        if (!data) return <div>Loading...</div>
-        return (
-            <div>
-                <Header data={data}/>
-                <div>
-                    <h1>{data.post.post_title}</h1>
-                    { ReactHtmlParser(data.post.post_content, this.htmlParserOptions) }
-                </div>
-            </div>
-        )
+        fetchWpData(wpApiConfig.endpoints.page, this.props.data.pageName).then((res) => {
+            // res.json()
+            // console.log(res.data)
+            this.setState({
+                pageData: res.data
+            })
+            this.props.setPageData(res.data)
+            if (typeof res.data.post.blocks_data.tru_fetcher_listings !== "undefined") {
+                this.context.setListingsData(res.data.post.blocks_data.tru_fetcher_listings)
+            }
+        })
     }
 
     render() {
         return (
-                <this.getPage/>
+            <div>
+                {this.state.pageData
+                    ?
+                    <>
+                    <Header data={this.state.pageData}/>
+                    <div>
+                        <h1>{this.state.pageData.post.post_title}</h1>
+                        {ReactHtmlParser(this.state.pageData.post.post_content, this.htmlParserOptions)}
+                    </div>
+                    </>
+                    :
+                    <div>Loading...</div>
+                }
+            </div>
         )
     }
 }
-
+PageComponent.contextType = ListingsContext;
 export default PageComponent;
