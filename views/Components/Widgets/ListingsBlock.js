@@ -7,7 +7,6 @@ class ListingsBlock extends React.Component {
     }
 
     render() {
-        console.log(this.context)
         return (
             <div>
                 <p>LISTING BLOCK</p>

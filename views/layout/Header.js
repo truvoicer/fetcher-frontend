@@ -1,4 +1,5 @@
 import HeaderMenu from "../Components/Menus/HeaderMenu";
+import {SiteContext} from "../Context/SiteContext";
 
 class Header extends React.Component {
     constructor(props) {
@@ -8,7 +9,7 @@ class Header extends React.Component {
     render() {
         return (
             <header id="header">
-                <a href="index.html" className="logo"><strong>Editorial</strong> by HTML5 UP</a>
+                <a href="/" className="logo"><strong>{this.context.siteData.name}</strong></a>
                 <HeaderMenu/>
                 <ul className="icons">
                     <li><a href="#" className="icon brands fa-twitter"><span className="label">Twitter</span></a></li>
@@ -26,4 +27,5 @@ class Header extends React.Component {
         )
     }
 }
+Header.contextType = SiteContext;
 export default Header;

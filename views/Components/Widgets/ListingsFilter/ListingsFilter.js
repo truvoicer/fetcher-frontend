@@ -10,20 +10,27 @@ class ListingsFilter extends React.Component {
         this.state = {
             listingType: this.props.data.listing_type,
             listingFilters: [],
-            location: "",
-            name: "",
-            date: ""
+            data: {
+                location: "",
+                name: "",
+                date: ""
+            }
         }
         this.listingFilters = [];
         this.filterItem = this.filterItem.bind(this);
         this.formChangeHandler = this.formChangeHandler.bind(this);
     }
     formChangeHandler(e) {
-        console.log(e.target.name, e.target.value)
         this.setState({
-            [e.target.name]: e.target.value
+            data: {
+                location: (e.target.name === "location") ? e.target.value : this.state.data.location,
+                name: (e.target.name === "name") ? e.target.value : this.state.data.name,
+                date: (e.target.name === "date") ? e.target.value : this.state.data.date,
+            }
         })
+        this.context.setListingsQueryData(this.state.data);
     }
+
 
     filterItem(options) {
         return (
@@ -38,9 +45,11 @@ class ListingsFilter extends React.Component {
     }
 
     render() {
-        // console.log(this.context)
+        if(typeof this.context.listingsData === "undefined") {
+            return <p>Loading...</p>
+        }
         if(typeof this.context.listingsData.listing_block_category === "undefined") {
-            return <p>Listings category not set/found</p>
+            return <p>Loading...</p>
         }
         let listingCategory = this.context.listingsData.listing_block_category.slug;
         this.listingFilters = this.props.data[listingCategory+"_listings_filters"]
@@ -53,15 +62,16 @@ class ListingsFilter extends React.Component {
                     <ul>
                         {this.listingFilters.map((item, index) => (
 
-                            <li className={"listings-filter--item"}>
+                            <li className={"listings-filter--item"} key={index}>
                                 {item.filter === "location" &&
                                 <ListingsFilterItem
                                     key={index}
                                     label={item.label}
                                     control={<input name={"location"}
+                                                    type={"text"}
                                                     id={"location_filter"}
                                                     onChange={this.formChangeHandler}
-                                                    value={this.state.location}
+                                                    value={this.state.data.location}
                                     />}/>
                                 }
                                 {item.filter === "name" &&
@@ -69,9 +79,10 @@ class ListingsFilter extends React.Component {
                                     key={index}
                                     label={item.label}
                                     control={<input name={"name"}
-                                                    id={"location_filter"}
+                                                    id={"name_filter"}
+                                                    type={"text"}
                                                     onChange={this.formChangeHandler}
-                                                    value={this.state.name}
+                                                    value={this.state.data.name}
                                     />}/>
                                 }
                                 {item.filter === "date" &&
@@ -79,9 +90,10 @@ class ListingsFilter extends React.Component {
                                     key={index}
                                     label={item.label}
                                     control={<input name={"date"}
-                                                    id={"location_filter"}
+                                                    id={"date_filter"}
+                                                    type={"text"}
                                                     onChange={this.formChangeHandler}
-                                                    value={this.state.date}
+                                                    value={this.state.data.date}
                                     />}/>
                                 }
                             </li>

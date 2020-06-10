@@ -45,7 +45,7 @@ class PageComponent extends React.Component {
             })
             this.props.setPageData(res.data)
             if (typeof res.data.post.blocks_data.tru_fetcher_listings !== "undefined") {
-                this.context.setListingsData(res.data.post.blocks_data.tru_fetcher_listings)
+                this.props.setListingsData(res.data.post.blocks_data.tru_fetcher_listings)
             }
         })
     }
