@@ -3,22 +3,25 @@ import {fetcherApiConfig} from "../../../config/fetcher-api-config";
 import {getSessionObject} from "./session/authenticate";
 
 const axios = require('axios');
-const sprintf = require("sprintf").sprintf;
+const vsprintf = require("sprintf").vsprintf;
 
-export const fetchData = (queryData, endpoint, operation) => {
+export const fetchData = (endpoint, operation, queryData = false) => {
     let baseUrl;
     if (typeof fetcherApiConfig.endpoints[endpoint] === "undefined") {
         console.error("Endpoint not found")
         return false;
     }
-    if (typeof fetcherApiConfig.endpoints[endpoint][operation] === "undefined") {
-        console.error("Endpoint operation not found")
-        return false;
+    baseUrl = fetcherApiConfig.apiBaseUrl + vsprintf(fetcherApiConfig.endpoints[endpoint], operation);
+    let url;
+    if (!queryData) {
+        let queryData = {};
+        queryData.access_token = getSessionObject().access_token;
+        url = baseUrl;
+    } else {
+        queryData.access_token = getSessionObject().access_token;
+        url = baseUrl + buildQueryString(queryData);
     }
-    baseUrl = fetcherApiConfig.apiBaseUrl + fetcherApiConfig.endpoints[endpoint][operation];
-
-    queryData.access_token = getSessionObject().access_token;
-    let url = baseUrl + buildQueryString(queryData);
+    // console.log(url)
     return axios.get(url);
 
 }

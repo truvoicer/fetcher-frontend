@@ -1,16 +1,11 @@
 export const fetcherApiConfig = {
-    apiBaseUrl: "http://localhost:8001/",
+    apiBaseUrl: "http://localhost:8001/api/",
     email: "truvoice@local.com",
     password: "Deelite4",
     endpoints: {
-        getToken: "api/login",
-        events: {
-            search: "event/query",
-            get: "event/get"
-        },
-        retail: {
-            search: "item/query",
-            get: "item/get",
-        }
+        getToken: "login",
+        list: "list/%s/%s",
+        events: "event/%s",
+        retail: "retail/%s"
     }
 }

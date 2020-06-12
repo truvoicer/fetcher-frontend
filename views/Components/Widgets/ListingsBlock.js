@@ -19,7 +19,8 @@ class ListingsBlock extends React.Component {
             return <p>Loading...</p>
         }
         let endpoint = this.context.listingsData.listing_block_category.slug;
-        fetchData(this.context.listingsQueryData, endpoint, "search").then((response) => {
+
+        fetchData(endpoint, ["query"], this.context.listingsQueryData).then((response) => {
             console.log(response)
         })
 
