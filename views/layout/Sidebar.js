@@ -13,6 +13,15 @@ class Sidebar extends React.Component {
     constructor(props) {
         super(props);
         this.getSidebar = this.getSidebar.bind(this)
+        this.getListingFilterData = this.getListingFilterData.bind(this);
+    }
+
+    getListingFilterData(item) {
+        if (typeof this.props.listingsData !== "undefined" &&
+            this.props.listingsData.filters_override) {
+            return this.props.listingsData.listing_filter_settings_override;
+        }
+        return item.listings_filter_widget
     }
 
     getSidebar() {
@@ -29,7 +38,7 @@ class Sidebar extends React.Component {
 
                         {item.nav_menu && <SidebarMenu data={item.nav_menu} />}
 
-                        {item.listings_filter_widget && <ListingsFilter data={item.listings_filter_widget} />}
+                        {item.listings_filter_widget && <ListingsFilter data={this.getListingFilterData(item)} />}
                     </div>
                 ))}
 

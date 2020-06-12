@@ -2,7 +2,9 @@ import React from "react";
 import {ListingsContext} from "../../../Context/ListingsContext";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
-import ListingsFilterItem from "./ListingsFilterItem";
+import ListingsFilterDateItem from "./Items/ListingsFilterDateItem";
+import ListingsFilterTextItem from "./Items/ListingsFilterTextItem";
+import ListingsFilterListItem from "./Items/ListingsFilterListItem";
 
 class ListingsFilter extends React.Component {
     constructor(props) {
@@ -10,49 +12,40 @@ class ListingsFilter extends React.Component {
         this.state = {
             listingType: this.props.data.listing_type,
             listingFilters: [],
-            data: {
-                location: "",
-                name: "",
-                date: ""
-            }
+            controlPrefix: "filter_control_",
+            data: {}
         }
         this.listingFilters = [];
-        this.filterItem = this.filterItem.bind(this);
+        this.getListingFilters = this.getListingFilters.bind(this);
         this.formChangeHandler = this.formChangeHandler.bind(this);
+        this.showControl = this.showControl.bind(this)
     }
     formChangeHandler(e) {
+        let data = this.state.data;
+        data[e.name] = e.value;
         this.setState({
-            data: {
-                location: (e.target.name === "location") ? e.target.value : this.state.data.location,
-                name: (e.target.name === "name") ? e.target.value : this.state.data.name,
-                date: (e.target.name === "date") ? e.target.value : this.state.data.date,
-            }
+            data: data
         })
-        this.context.setListingsQueryData(this.state.data);
+
+        let listingsQueryData = this.context.listingsQueryData;
+        listingsQueryData[e.name] = e.value;
+        this.context.setListingsQueryData(listingsQueryData);
     }
 
+    showControl(e) {
+        if (e.target.classList.contains("active")) {
+            e.target.classList.remove("active")
+        } else {
+            e.target.classList.add("active")
+        }
+    }
 
-    filterItem(options) {
-        return (
-            options.show &&
-            <div className={"listings-filter--item"}>
-                <span>{options.label}</span>
-                <div className={"listings-filter--item-control"}>
-
-                </div>
-            </div>
-        )
+    getListingFilters() {
+        return this.props.data.listings_filters
     }
 
     render() {
-        if(typeof this.context.listingsData === "undefined") {
-            return <p>Loading...</p>
-        }
-        if(typeof this.context.listingsData.listing_block_category === "undefined") {
-            return <p>Loading...</p>
-        }
-        let listingCategory = this.context.listingsData.listing_block_category.slug;
-        this.listingFilters = this.props.data[listingCategory+"_listings_filters"]
+        this.listingFilters = this.getListingFilters()
         return (
             <div id={"listings_filter"} className={"listings-filter"}>
                 <header className="major">
@@ -63,38 +56,28 @@ class ListingsFilter extends React.Component {
                         {this.listingFilters.map((item, index) => (
 
                             <li className={"listings-filter--item"} key={index}>
-                                {item.filter === "location" &&
-                                <ListingsFilterItem
-                                    key={index}
-                                    label={item.label}
-                                    control={<input name={"location"}
-                                                    type={"text"}
-                                                    id={"location_filter"}
-                                                    onChange={this.formChangeHandler}
-                                                    value={this.state.data.location}
-                                    />}/>
+                                <span className="opener" onClick={this.showControl}>{item.label}</span>
+
+                                {item.type === "text" &&
+                                <ListingsFilterTextItem
+                                    controlPrefix={this.state.controlPrefix}
+                                    data={item}
+                                    value={this.state.data[item.name]}
+                                    onChangeCallback={this.formChangeHandler} />
                                 }
-                                {item.filter === "name" &&
-                                <ListingsFilterItem
-                                    key={index}
-                                    label={item.label}
-                                    control={<input name={"name"}
-                                                    id={"name_filter"}
-                                                    type={"text"}
-                                                    onChange={this.formChangeHandler}
-                                                    value={this.state.data.name}
-                                    />}/>
+                                {item.type === "date" &&
+                                <ListingsFilterDateItem
+                                    controlPrefix={this.state.controlPrefix}
+                                    data={item}
+                                    value={this.state.data[item.name]}
+                                    onChangeCallback={this.formChangeHandler} />
                                 }
-                                {item.filter === "date" &&
-                                <ListingsFilterItem
-                                    key={index}
-                                    label={item.label}
-                                    control={<input name={"date"}
-                                                    id={"date_filter"}
-                                                    type={"text"}
-                                                    onChange={this.formChangeHandler}
-                                                    value={this.state.data.date}
-                                    />}/>
+                                {item.type === "list" &&
+                                <ListingsFilterListItem
+                                    controlPrefix={this.state.controlPrefix}
+                                    data={item}
+                                    value={this.state.data[item.name]}
+                                    onChangeCallback={this.formChangeHandler} />
                                 }
                             </li>
                         ))}

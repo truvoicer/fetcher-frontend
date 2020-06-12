@@ -1,9 +1,16 @@
 export const fetcherApiConfig = {
-    apiBaseUrl: process.env.NEXP_PUBLIC_FETCHER_API_BASE_URL,
+    apiBaseUrl: "http://localhost:8001/",
+    email: "truvoice@local.com",
+    password: "Deelite4",
     endpoints: {
-        item_search: "item",
-        get_item: "item",
-        event_search: "event",
-        get_event: "event"
+        getToken: "api/login",
+        events: {
+            search: "event/query",
+            get: "event/get"
+        },
+        retail: {
+            search: "item/query",
+            get: "item/get",
+        }
     }
 }

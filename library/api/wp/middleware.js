@@ -1,4 +1,4 @@
-import {wpApiConfig} from "../../config/wp-api-config";
+import {wpApiConfig} from "../../../config/wp-api-config";
 
 const axios = require('axios');
 const sprintf = require("sprintf").sprintf;

@@ -8,7 +8,7 @@ import ReactHtmlParser from "react-html-parser";
 import {filterHtml} from "../../library/html-parser";
 import {PageContext} from "../Context/PageContext";
 import {ListingsContext} from "../Context/ListingsContext";
-import {fetchData, fetchWpData} from "../../library/api/middleware";
+import {fetchData, fetchWpData} from "../../library/api/wp/middleware";
 
 const sprintf = require("sprintf").sprintf;
 

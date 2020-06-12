@@ -3,8 +3,9 @@ import PageComponent from "./Components/Page";
 import {ListingsContext} from "./Context/ListingsContext";
 import {PageContext} from "./Context/PageContext";
 import {SiteContext} from "./Context/SiteContext";
-import {fetchWpData, fetchWpSiteData} from "../library/api/middleware";
+import {fetchWpData, fetchWpSiteData} from "../library/api/wp/middleware";
 import Head from "next/head";
+import {getToken, setSession} from "../library/api/fetcher/session/authenticate";
 
 class FetcherApp extends React.Component {
     constructor(props) {
@@ -66,7 +67,6 @@ class FetcherApp extends React.Component {
     }
 
     setListingsData(data) {
-        // console.log(data)
         this.setState(state => ({
             listings: {
                 listingsData: data,
@@ -101,7 +101,7 @@ class FetcherApp extends React.Component {
                                                    setListingsData={this.setListingsData}/>
                                 </div>
                             </div>
-                            <Sidebar/>
+                            <Sidebar listingsData={this.state.listings.listingsData}/>
                         </div>
                     </ListingsContext.Provider>
                 </PageContext.Provider>
