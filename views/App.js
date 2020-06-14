@@ -6,102 +6,51 @@ import {SiteContext} from "./Context/SiteContext";
 import {fetchWpData, fetchWpSiteData} from "../library/api/wp/middleware";
 import Head from "next/head";
 import {getToken, setSession} from "../library/api/fetcher/session/authenticate";
+import {fetchData, isEmpty} from "../library/api/fetcher/middleware";
+import {Listings} from "../library/states/listings";
+import {PageState} from "../library/states/page";
+import {Site} from "../library/states/site";
 
 class FetcherApp extends React.Component {
     constructor(props) {
         super(props);
-
-        this.state = {
-            listings: {},
-            page: {},
-            site: {
-                siteData: {}
-            }
-        }
-        this.setPageData = this.setPageData.bind(this)
-        this.setListingsData = this.setListingsData.bind(this)
-        this.setListingsQueryData = this.setListingsQueryData.bind(this)
-        this.setSiteData = this.setSiteData.bind(this)
+        this.listingsState = new Listings(this);
+        this.pageState = new PageState(this);
+        this.siteState = new Site(this);
+        this.listingsState.init();
+        this.pageState.init();
+        this.siteState.init();
     }
 
     componentDidMount() {
-        this.setState({
-            listings: {
-                listingsData: {},
-                listingsQueryData: {},
-                setListingsData: this.setListingsData,
-                setlistingsQueryData: this.setListingsQueryData
-            },
-            page: {
-                pageData: {},
-                setPageData: this.setPageData,
-            }
-        })
+        this.listingsState.setCallbacks();
+        this.pageState.setCallbacks();
         this.setSiteData();
     }
 
     setSiteData() {
         fetchWpSiteData().then((response) => {
-            this.setState({
-                site: {
-                    siteData: {
-                        name: response.data.name,
-                        description: response.data.description,
-                        siteUrl: response.data.url,
-                        homeUrl: response.data.home,
-                        gmtOffset: response.data.gm_offset,
-                        timezoneString: response.data.timezone_string
-                    }
-                }
-            })
+            this.siteState.setData(response.data)
         })
     }
 
-    setPageData(data) {
-        this.setState(state => ({
-            page: {
-                pageData: data,
-                setPageData: this.setPageData
-            }
-        }));
-    }
-
-    setListingsData(data) {
-        this.setState(state => ({
-            listings: {
-                listingsData: data,
-                listingsQueryData: this.state.listings.listingsQueryData,
-                setListingsData: this.setListingsData,
-                setListingsQueryData: this.setListingsQueryData
-            }
-        }));
-    }
-    setListingsQueryData(data) {
-        // console.log(data)
-        this.setState(state => ({
-            listings: {
-                listingsData: this.state.listings.listingsData,
-                listingsQueryData: data,
-                setListingsData: this.setListingsData,
-                setListingsQueryData: this.setListingsQueryData
-            }
-        }));
-    }
-
     render() {
+console.log(this.pageState.state)
         return (
-            <SiteContext.Provider value={this.state.site}>
-                <PageContext.Provider value={this.state.page}>
-                    <ListingsContext.Provider value={this.state.listings}>
+            <SiteContext.Provider value={this.siteState.state}>
+                <PageContext.Provider value={this.pageState.state}>
+                    <ListingsContext.Provider value={this.listingsState.state}>
 
                         <div id="wrapper">
                             <div id="main">
                                 <div className="inner">
-                                    <PageComponent data={this.props.data} setPageData={this.setPageData}
-                                                   setListingsData={this.setListingsData}/>
+                                    <PageComponent data={this.props.data}
+                                                   setPageData={this.pageState.state.updatePageData}
+                                                   // setListingsProviders={this.listingsState.state.updateListingsProvidersData}
+                                                   setListingsData={this.listingsState.state.updateListingsData}/>
                                 </div>
                             </div>
-                            <Sidebar listingsData={this.state.listings.listingsData}/>
+                            <Sidebar listingsData={this.listingsState.getData()}/>
                         </div>
                     </ListingsContext.Provider>
                 </PageContext.Provider>

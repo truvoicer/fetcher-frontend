@@ -4,8 +4,7 @@ export const fetcherApiConfig = {
     password: "Deelite4",
     endpoints: {
         getToken: "login",
-        list: "list/%s/%s",
-        events: "event/%s",
-        retail: "retail/%s"
+        list: "category/%s/%s",
+        operation: "operation/%s/",
     }
 }

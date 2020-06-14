@@ -5,6 +5,7 @@ import Form from "react-bootstrap/Form";
 import ListingsFilterDateItem from "./Items/ListingsFilterDateItem";
 import ListingsFilterTextItem from "./Items/ListingsFilterTextItem";
 import ListingsFilterListItem from "./Items/ListingsFilterListItem";
+import ListingsFilterApiListItem from "./Items/ListingsFilterApiListItem";
 
 class ListingsFilter extends React.Component {
     constructor(props) {
@@ -19,7 +20,9 @@ class ListingsFilter extends React.Component {
         this.getListingFilters = this.getListingFilters.bind(this);
         this.formChangeHandler = this.formChangeHandler.bind(this);
         this.showControl = this.showControl.bind(this)
+        this.getDataList = this.getDataList.bind(this)
     }
+
     formChangeHandler(e) {
         let data = this.state.data;
         data[e.name] = e.value;
@@ -38,6 +41,27 @@ class ListingsFilter extends React.Component {
         } else {
             e.target.classList.add("active")
         }
+    }
+
+    getDataList(item) {
+        if (item.type === "list" && item.list_source === "wordpress") {
+            return (
+                <ListingsFilterListItem
+                    controlPrefix={this.state.controlPrefix}
+                    data={item}
+                    value={this.state.data[item.name]}
+                    onChangeCallback={this.formChangeHandler}/>
+            );
+        } else if (item.type === "list" && item.list_source === "api") {
+            return (
+                <ListingsFilterApiListItem
+                    controlPrefix={this.state.controlPrefix}
+                    data={item}
+                    value={this.state.data[item.name]}
+                    onChangeCallback={this.formChangeHandler}/>
+            )
+        }
+        return null
     }
 
     getListingFilters() {
@@ -63,21 +87,17 @@ class ListingsFilter extends React.Component {
                                     controlPrefix={this.state.controlPrefix}
                                     data={item}
                                     value={this.state.data[item.name]}
-                                    onChangeCallback={this.formChangeHandler} />
+                                    onChangeCallback={this.formChangeHandler}/>
                                 }
                                 {item.type === "date" &&
                                 <ListingsFilterDateItem
                                     controlPrefix={this.state.controlPrefix}
                                     data={item}
                                     value={this.state.data[item.name]}
-                                    onChangeCallback={this.formChangeHandler} />
+                                    onChangeCallback={this.formChangeHandler}/>
                                 }
                                 {item.type === "list" &&
-                                <ListingsFilterListItem
-                                    controlPrefix={this.state.controlPrefix}
-                                    data={item}
-                                    value={this.state.data[item.name]}
-                                    onChangeCallback={this.formChangeHandler} />
+                                    this.getDataList(item)
                                 }
                             </li>
                         ))}

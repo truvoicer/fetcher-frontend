@@ -1,6 +1,6 @@
 import React from "react";
 import {ListingsContext} from "../../Context/ListingsContext";
-import {buildFetcherApiUrl, fetchData} from "../../../library/api/fetcher/middleware";
+import {buildFetcherApiUrl, fetchData, fetchSearchData} from "../../../library/api/fetcher/middleware";
 import {getToken, isAuthenticated, setSession} from "../../../library/api/fetcher/session/authenticate";
 
 
@@ -12,17 +12,20 @@ class ListingsBlock extends React.Component {
     }
 
     getData() {
+        // if(typeof this.context.listingsData === "undefined" ||
+        //     typeof this.context.listingsData.listing_block_category === "undefined" ||
+        //     typeof this.context.listingsQueryData["keywords"] === "undefined") {
+        //     return <p>Loading...</p>
+        // }
         console.log(this.context)
-        if(typeof this.context.listingsData === "undefined" ||
-            typeof this.context.listingsData.listing_block_category === "undefined" ||
-            typeof this.context.listingsQueryData["keywords"] === "undefined") {
-            return <p>Loading...</p>
-        }
-        let endpoint = this.context.listingsData.listing_block_category.slug;
-
-        fetchData(endpoint, ["query"], this.context.listingsQueryData).then((response) => {
-            console.log(response)
-        })
+        let queryData = this.context.listingsQueryData;
+        // let getSearchData = fetchSearchData(queryData);
+        // if (!getSearchData) {
+        //     return <p>Loading...</p>
+        // }
+        // getSearchData.then((response) => {
+        //     console.log(response)
+        // })
 
         return null
     }

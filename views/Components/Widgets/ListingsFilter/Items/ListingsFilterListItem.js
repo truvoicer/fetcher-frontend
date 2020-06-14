@@ -7,23 +7,10 @@ class ListingsFilterListItem extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            listItems: []
+            listItems: [],
+            apiList: []
         }
         this.formChangeHandler = this.formChangeHandler.bind(this);
-        this.getApiList = this.getApiList.bind(this);
-    }
-
-    getApiList() {
-
-        if(typeof this.context.listingsData.listing_block_category === "undefined") {
-            return <p>Loading...</p>
-        }
-        let category = this.context.listingsData.listing_block_category.slug;
-        console.log(fetchData("list", [category, this.props.data.api_endpoint]))
-        // fetchData("list", [category, this.props.data.api_endpoint]).then((response) => {
-        //     console.log(response)
-        // })
-        return <li>Api List</li>
     }
 
     formChangeHandler(e) {
@@ -47,8 +34,7 @@ class ListingsFilterListItem extends React.Component {
         return (
             <>
                 <ul>
-                    {this.props.data.list_source === "wordpress"
-                        ?
+                    {this.props.data.list_source === "wordpress" &&
                         this.props.data.list.map((item, index) => (
                                 <li className={"listings-filter--item-control"}
                                     key={"list_control_" + index.toString()}>
@@ -62,9 +48,8 @@ class ListingsFilterListItem extends React.Component {
                                     />
                                 </li>
                             ))
-                        :
-                        <this.getApiList/>
-                    }
+                        }
+
                 </ul>
             </>
         )
