@@ -35,22 +35,26 @@ export const fetchSearchData = (data) => {
         console.error("Search params validate error");
         return false;
     }
-    return fetchData("operation", "search", data)
+    return fetchData("operation", ["search"], data)
 }
 
 export const fetchData = (endpoint, operation, queryData = {}) => {
     if(!validateEndpoint(endpoint)) {
         console.error("Endpoint not found")
     }
-    let url = getApiUrl(endpoint, operation, queryData);
-    console.log(url)
-    return axios.get(url);
+
+    let config = {
+        url: getApiUrl(endpoint, operation, queryData),
+        method: "get",
+        headers: {'Authorization': 'Bearer ' + getSessionObject().access_token}
+    }
+    console.log(config)
+    return axios.request(config);
 }
 
 const getApiUrl = (endpoint, operation, queryData = {}) => {
     let baseUrl;
     baseUrl = fetcherApiConfig.apiBaseUrl + vsprintf(fetcherApiConfig.endpoints[endpoint], operation);
-    queryData.access_token = getSessionObject().access_token;
     return  baseUrl + (isEmpty(!buildQueryString(queryData))? buildQueryString(queryData) : "");
 }
 

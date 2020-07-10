@@ -25,7 +25,7 @@ class ListingsFilterListItem extends React.Component {
             listItems: list
         })
         let data = {
-            name: e.target.name,
+            name: this.props.data.name,
             value: list
         };
         this.props.onChangeCallback(data)

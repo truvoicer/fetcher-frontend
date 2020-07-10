@@ -1,18 +1,13 @@
 export class PageState {
-    constructor(state) {
-        this.state = state;
-    }
-
-    init() {
-        // const updateData = (data) => {
-        //     this.state.setState({
-        //     });
-        // };
+    constructor(reactComponent) {
+        this.component = reactComponent;
+        this.state = reactComponent.state;
         this.state = {
             pageData: {},
-            updatePageData: this.updateData,
+            updatePageData: this.updateData.bind(this),
         }
     }
+
     setCallbacks() {
         // this.state.setState({
         //             pageData: data
@@ -25,7 +20,8 @@ export class PageState {
     }
 
     setData(data) {
-        this.state.setState({
+        console.log(this.component)
+        this.component.state.setState({
             pageData: data
         });
     }

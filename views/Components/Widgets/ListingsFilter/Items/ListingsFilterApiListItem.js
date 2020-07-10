@@ -7,50 +7,40 @@ class ListingsFilterApiListItem extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            listItems: []
+            listItems: [],
+            checkedListItems: []
         }
         this.formChangeHandler = this.formChangeHandler.bind(this);
         this.getApiList = this.getApiList.bind(this);
     }
     componentDidMount() {
-        if (this.props.data.list_source === "api") {
-            this.getApiList()
-        }
+        this.getApiList()
     }
 
     getApiList() {
-        // console.log(this.props.data)
-        // console.log(this.context)
-        // // return <p>List</p>
-        // if(typeof this.context.listingsData.listing_block_category === "undefined") {
-        //     console.log("loading")
-        //     return <p>Loading...</p>
-        // }
-        // let category = this.context.listingsData.listing_block_category.slug;
-        // fetchData("list", [category, this.props.data.api_endpoint])
-        //     .then((response) => {
-        //         console.log(response)
-        //         this.setState({
-        //             listItems: response.data.data
-        //         })
-        //     }).catch((error) => {
-        //     console.log(error)
-        // })
+        // console.log(this.context.listingsData)
+        let category = this.context.listingsData.listing_block_category.slug;
+        fetchData("list", [category, this.props.data.api_endpoint])
+            .then((response) => {
+                // console.log(response)
+                this.setState({
+                    listItems: response.data.data
+                })
+            }).catch((error) => {
+            console.log(error)
+        })
 
     }
     formChangeHandler(e) {
-        let list = this.state.listItems;
+        let list = this.state.checkedListItems;
         if (e.target.checked) {
             list.push(e.target.value)
         } else {
             let index = list.indexOf(e.target.value);
             if (index !== -1) list.splice(index, 1);
         }
-        this.setState({
-            listItems: list
-        })
         let data = {
-            name: e.target.name,
+            name: this.props.data.api_endpoint,
             value: list
         };
         this.props.onChangeCallback(data)
@@ -67,7 +57,7 @@ class ListingsFilterApiListItem extends React.Component {
                                 type={"checkbox"}
                                 label={item.provider_label}
                                 id={this.props.controlPrefix + item.provider_name}
-                                name={item.provider_name + "[]"}
+                                name={this.props.data.api_endpoint + "[]"}
                                 value={item.provider_name}
                                 onChange={this.formChangeHandler}
                             />

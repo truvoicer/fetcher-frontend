@@ -6,6 +6,7 @@ import ListingsFilterDateItem from "./Items/ListingsFilterDateItem";
 import ListingsFilterTextItem from "./Items/ListingsFilterTextItem";
 import ListingsFilterListItem from "./Items/ListingsFilterListItem";
 import ListingsFilterApiListItem from "./Items/ListingsFilterApiListItem";
+import {isSet} from "../../../../library/utils";
 
 class ListingsFilter extends React.Component {
     constructor(props) {
@@ -53,13 +54,16 @@ class ListingsFilter extends React.Component {
                     onChangeCallback={this.formChangeHandler}/>
             );
         } else if (item.type === "list" && item.list_source === "api") {
-            return (
-                <ListingsFilterApiListItem
-                    controlPrefix={this.state.controlPrefix}
-                    data={item}
-                    value={this.state.data[item.name]}
-                    onChangeCallback={this.formChangeHandler}/>
-            )
+            if (isSet(this.context.listingsData) && isSet(this.context.listingsData.listing_block_category)) {
+                return (
+                    <ListingsFilterApiListItem
+                        controlPrefix={this.state.controlPrefix}
+                        data={item}
+                        value={this.state.data[item.name]}
+                        onChangeCallback={this.formChangeHandler}/>
+                )
+            }
+            return <p>Loading...</p>
         }
         return null
     }

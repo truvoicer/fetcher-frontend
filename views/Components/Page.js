@@ -47,9 +47,9 @@ class PageComponent extends React.Component {
 
             console.log(this.props)
             if (isSet(this.props.setListingsData)) {
-                console.log(this.props)
-                // this.props.setListingsProviders(res.data.post.blocks_data.tru_fetcher_listings.listing_block_category.slug)
+                // console.log(res.data.post.blocks_data.tru_fetcher_listings)
                 this.props.setListingsData(res.data.post.blocks_data.tru_fetcher_listings)
+                this.props.setListingsProviders(res.data.post.blocks_data.tru_fetcher_listings)
             }
         })
     }
