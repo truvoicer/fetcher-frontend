@@ -9,31 +9,37 @@ class Search extends React.Component {
             keywords: ""
         }
         this.formChangeHandler = this.formChangeHandler.bind(this);
+        this.formClickHandler = this.formClickHandler.bind(this);
+    }
+
+    formClickHandler(e) {
+        let keywords = document.getElementById("keywords");
+        let listingsQueryData = this.context.listingsQueryData;
+        listingsQueryData["keywords"] = keywords.value;
+        this.context.setListingsQueryData(listingsQueryData);
     }
 
     formChangeHandler(e) {
         this.setState({
-            [e.target.name]: e.target.value
+            keywords: e.target.value
         })
-
-        let listingsQueryData = this.context.listingsQueryData;
-        listingsQueryData[e.target.name] = e.target.value;
-        this.context.setListingsQueryData(listingsQueryData);
     }
 
     render() {
         return (
             <section id="search" className="alt">
                 <form method="post" action="#">
-                    <input type="text" name="keywords"
-                           id="keywords"
-                           placeholder="Search"
-                           value={this.state.keywords}
-                           onChange={this.formChangeHandler}/>
+                        <input type="text" name="keywords"
+                               id="keywords"
+                               placeholder="Search"
+                               value={this.state.keywords}
+                               onChange={this.formChangeHandler}/>
+                    <span className={"search-icon"} onClick={this.formClickHandler}/>
                 </form>
             </section>
         )
     }
 }
+
 Search.contextType = ListingsContext;
 export default Search;

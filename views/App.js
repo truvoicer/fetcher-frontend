@@ -6,7 +6,7 @@ import {SiteContext} from "./Context/SiteContext";
 import {fetchWpData, fetchWpSiteData} from "../library/api/wp/middleware";
 import Head from "next/head";
 import {getToken, setSession} from "../library/api/fetcher/session/authenticate";
-import {fetchData, isEmpty} from "../library/api/fetcher/middleware";
+import {fetchData, isEmpty, responseHandler} from "../library/api/fetcher/middleware";
 
 class FetcherApp extends React.Component {
     constructor(props) {
@@ -23,6 +23,7 @@ class FetcherApp extends React.Component {
         this.setListingsData = this.setListingsData.bind(this)
         this.setListingsQueryData = this.setListingsQueryData.bind(this)
         this.setListingsProviders = this.setListingsProviders.bind(this)
+        this.getProvidersCallback = this.getProvidersCallback.bind(this)
         this.setSiteData = this.setSiteData.bind(this)
     }
 
@@ -72,16 +73,13 @@ class FetcherApp extends React.Component {
     setListingsProviders(data) {
         if (!isEmpty(data)) {
             let category = data.listing_block_category.slug;
-            fetchData("list", [category, "providers"])
-                .then((response) => {
-                    let listingsData = data;
-                    listingsData.providers = response.data.data;
-                    console.log(listingsData)
-                    this.setListingsData(listingsData)
-                }).catch((error) => {
-                console.log(error)
-            })
+            fetchData("list", [category, "providers"], {}, this.getProvidersCallback);
         }
+    }
+    getProvidersCallback(status, data) {
+        let listingsData = this.state.listings.listingsData;
+        listingsData.providers = data.data;
+        this.setListingsData(listingsData)
     }
     setListingsData(data) {
         this.setState(state => ({

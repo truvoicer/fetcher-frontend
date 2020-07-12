@@ -1,6 +1,6 @@
 import {wpApiConfig} from "../../../config/wp-api-config";
 import {fetcherApiConfig} from "../../../config/fetcher-api-config";
-import {getSessionObject} from "./session/authenticate";
+import {getSessionObject, getToken, isAuthenticated, setSession} from "./session/authenticate";
 
 const axios = require('axios');
 const vsprintf = require("sprintf").vsprintf;
@@ -38,18 +38,41 @@ export const fetchSearchData = (data) => {
     return fetchData("operation", ["search"], data)
 }
 
-export const fetchData = (endpoint, operation, queryData = {}) => {
+export const fetchData = (endpoint, operation, queryData = {}, callback = false) => {
     if(!validateEndpoint(endpoint)) {
         console.error("Endpoint not found")
     }
 
+    if (!isAuthenticated()) {
+        getToken().then((response) => {
+            setSession(response.data)
+            if (callback) {
+                responseHandler(fetchFromApi(endpoint, operation, queryData), callback);
+            }
+        })
+    } else {
+        if (callback) {
+            responseHandler(fetchFromApi(endpoint, operation, queryData), callback);
+        }
+    }
+
+}
+
+const fetchFromApi = (endpoint, operation, queryData) => {
     let config = {
         url: getApiUrl(endpoint, operation, queryData),
         method: "get",
         headers: {'Authorization': 'Bearer ' + getSessionObject().access_token}
     }
     console.log(config)
+
     return axios.request(config);
+}
+
+export const responseHandler = (request, callback) => {
+    request.then((response) => {
+        callback(response.status, response.data);
+    })
 }
 
 const getApiUrl = (endpoint, operation, queryData = {}) => {

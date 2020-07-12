@@ -1,6 +1,6 @@
 import React from "react";
 import Form from "react-bootstrap/Form";
-import {fetchData} from "../../../../../library/api/fetcher/middleware";
+import {fetchData, responseHandler} from "../../../../../library/api/fetcher/middleware";
 import {ListingsContext} from "../../../../Context/ListingsContext";
 
 class ListingsFilterApiListItem extends React.Component {
@@ -11,6 +11,7 @@ class ListingsFilterApiListItem extends React.Component {
             checkedListItems: []
         }
         this.formChangeHandler = this.formChangeHandler.bind(this);
+        this.getApiListCallback = this.getApiListCallback.bind(this);
         this.getApiList = this.getApiList.bind(this);
     }
     componentDidMount() {
@@ -20,17 +21,15 @@ class ListingsFilterApiListItem extends React.Component {
     getApiList() {
         // console.log(this.context.listingsData)
         let category = this.context.listingsData.listing_block_category.slug;
-        fetchData("list", [category, this.props.data.api_endpoint])
-            .then((response) => {
-                // console.log(response)
-                this.setState({
-                    listItems: response.data.data
-                })
-            }).catch((error) => {
-            console.log(error)
-        })
-
+        fetchData("list", [category, this.props.data.api_endpoint], {}, this.getApiListCallback);
     }
+
+    getApiListCallback(status, data) {
+        this.setState({
+            listItems: data.data
+        })
+    }
+
     formChangeHandler(e) {
         let list = this.state.checkedListItems;
         if (e.target.checked) {
