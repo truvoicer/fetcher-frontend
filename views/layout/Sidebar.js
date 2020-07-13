@@ -16,12 +16,12 @@ class Sidebar extends React.Component {
         this.getListingFilterData = this.getListingFilterData.bind(this);
     }
 
-    getListingFilterData(item) {
+    getListingFilterData() {
         if (typeof this.props.listingsData !== "undefined" &&
-            this.props.listingsData.filters_override) {
-            return this.props.listingsData.listing_filter_settings_override;
+            this.props.listingsData.show_filters) {
+            return this.props.listingsData.filters;
         }
-        return item.listings_filter_widget
+        return false;
     }
 
     getSidebar() {
@@ -34,15 +34,17 @@ class Sidebar extends React.Component {
             <div>
                 {data.map((item, index) => (
                     <div key={"sidebar_widget_"+index}>
-                        {item.search && <Search data={item.search}/>}
+                        {item.search &&
+                            <div>
+                            <Search data={item.search}/>
+                                {this.getListingFilterData() && <ListingsFilter data={this.getListingFilterData()} />}
+                            </div>
+                        }
 
                         {item.nav_menu && <SidebarMenu data={item.nav_menu} />}
 
-                        {item.listings_filter_widget && <ListingsFilter data={this.getListingFilterData(item)} />}
                     </div>
                 ))}
-
-
 
 
                 {/*<PostList/>*/}

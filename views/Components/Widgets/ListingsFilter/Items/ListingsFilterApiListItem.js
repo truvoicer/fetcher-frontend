@@ -19,8 +19,7 @@ class ListingsFilterApiListItem extends React.Component {
     }
 
     getApiList() {
-        // console.log(this.context.listingsData)
-        let category = this.context.listingsData.listing_block_category.slug;
+        let category = this.context.listingsData.listing_block_category;
         fetchData("list", [category, this.props.data.api_endpoint], {}, this.getApiListCallback);
     }
 

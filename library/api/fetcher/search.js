@@ -8,14 +8,15 @@ const getSearchData = (queryData, callback) => {
 }
 
 export const runSearch = (callback, context) => {
-    console.log(context)
+    // console.log(context)
     if(!isSet(context.listingsData) ||
-        !isSet(context.listingsData.listing_block_category) ||
-        !isSet(context.listingsQueryData["keywords"])) {
+        !isSet(context.listingsData.listing_block_category)) {
         return false;
     }
     let queryData = context.listingsQueryData;
-    console.log(queryData)
+    if (!isSet(context.listingsQueryData["keywords"])) {
+        queryData.keywords = ""
+    }
     if (!isSet(queryData.providers) || queryData.providers.length === 0) {
         context.listingsData.providers.map((provider, index) => {
             queryData.provider = provider.provider_name;

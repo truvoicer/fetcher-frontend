@@ -7,6 +7,7 @@ import {fetchWpData, fetchWpSiteData} from "../library/api/wp/middleware";
 import {AddAxiosInterceptors} from "../library/api/global-scripts"
 import {fetchData, isEmpty, responseHandler} from "../library/api/fetcher/middleware";
 import {runSearch} from "../library/api/fetcher/search";
+import {isSet} from "../library/utils";
 
 class FetcherApp extends React.Component {
     constructor(props) {
@@ -24,6 +25,7 @@ class FetcherApp extends React.Component {
         this.setListingsQueryData = this.setListingsQueryData.bind(this)
         this.setListingsProviders = this.setListingsProviders.bind(this)
         this.setListingsSearchResults = this.setListingsSearchResults.bind(this)
+        this.initialSearch = this.initialSearch.bind(this)
         this.getProvidersCallback = this.getProvidersCallback.bind(this)
         this.setSiteData = this.setSiteData.bind(this)
     }
@@ -75,7 +77,7 @@ class FetcherApp extends React.Component {
 
     setListingsProviders(data) {
         if (!isEmpty(data)) {
-            let category = data.listing_block_category.slug;
+            let category = data.listing_block_category;
             fetchData("list", [category, "providers"], {}, this.getProvidersCallback);
         }
     }
@@ -83,7 +85,9 @@ class FetcherApp extends React.Component {
         let listingsData = this.state.listings.listingsData;
         listingsData.providers = data.data;
         this.setListingsData(listingsData)
+        this.initialSearch()
     }
+
     setListingsData(data) {
         this.setState(state => ({
             listings: {
@@ -108,6 +112,27 @@ class FetcherApp extends React.Component {
             }
         }));
         runSearch(this.setListingsSearchResults, this.state.listings)
+    }
+
+    initialSearch() {
+        if (!isSet(this.state.listings.listingsData.block_options)) {
+            return false;
+        }
+        if (!isSet(this.state.listings.listingsData.block_options.initial_search)) {
+            return false;
+        }
+        let initialSearch = this.state.listings.listingsData.block_options.initial_search;
+        if (!isSet(initialSearch.search_type || !isSet(initialSearch.search_value))) {
+            return false;
+        }
+        let queryData = {};
+        if (initialSearch.search_type === "keywords") {
+            queryData.keywords = initialSearch.search_value;
+        } else if (initialSearch.search_type === "location") {
+            queryData.location = initialSearch.search_value;
+        }
+        console.log(queryData);
+        this.setListingsQueryData(queryData)
     }
 
     setListingsSearchResults(status, data) {

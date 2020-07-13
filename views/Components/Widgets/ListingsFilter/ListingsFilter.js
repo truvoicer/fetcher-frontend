@@ -77,7 +77,7 @@ class ListingsFilter extends React.Component {
         return (
             <div id={"listings_filter"} className={"listings-filter"}>
                 <header className="major">
-                    <h2>{this.props.data.listing_heading}</h2>
+                    <h2>{this.props.data.filter_heading}</h2>
                 </header>
                 <form>
                     <ul>

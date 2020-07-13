@@ -16,7 +16,7 @@ class ListingsBlock extends React.Component {
     }
 
     render() {
-        console.log(this.context.listingsSearchResults)
+        // console.log(this.context.listingsSearchResults)
         return (
             <div className={"listings-block"}>
                 {this.context.listingsSearchResults.length > 0 ?

@@ -6,6 +6,7 @@ import {filterHtml} from "../../library/html-parser";
 import {ListingsContext} from "../Context/ListingsContext";
 import {fetchWpData} from "../../library/api/wp/middleware";
 import {isSet} from "../../library/utils";
+import Router from "next/router";
 
 
 const sprintf = require("sprintf").sprintf;
@@ -34,7 +35,8 @@ class PageComponent extends React.Component {
     }
 
     getPage() {
-        fetchWpData(wpApiConfig.endpoints.page, this.props.data.pageName).then((res) => {
+        const {page} = Router.query;
+        fetchWpData(wpApiConfig.endpoints.page, page).then((res) => {
             // res.json()
             // console.log(res.data)
             this.setState({
@@ -45,7 +47,7 @@ class PageComponent extends React.Component {
                 this.props.setPageData(res.data)
             }
 
-            console.log(this.props)
+            // console.log(this.props)
             if (isSet(this.props.setListingsData)) {
                 // console.log(res.data.post.blocks_data.tru_fetcher_listings)
                 this.props.setListingsData(res.data.post.blocks_data.tru_fetcher_listings)
