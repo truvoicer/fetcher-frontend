@@ -3,72 +3,41 @@ import {ListingsContext} from "../../Context/ListingsContext";
 import {buildFetcherApiUrl, fetchData, fetchSearchData} from "../../../library/api/fetcher/middleware";
 import {getToken, isAuthenticated, setSession} from "../../../library/api/fetcher/session/authenticate";
 import {isSet} from "../../../library/utils";
+import {getDefaultImage, runSearch} from "../../../library/api/fetcher/search";
 
 
 class ListingsBlock extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-            listItems: []
-        }
-        this.getSearchData = this.getSearchData.bind(this)
-        this.runSearch = this.runSearch.bind(this)
-        this.buildListItems = this.buildListItems.bind(this)
     }
 
-    getSearchData(queryData) {
-        queryData.limit = 10;
-        queryData.location = "london";
-        let getSearchData = fetchSearchData(queryData);
-        // console.log(getSearchData);
-        if (getSearchData) {
-            getSearchData.then((response) => {
-                console.log(response)
-            })
-            .catch((error) => {
-                console.log(error.message);
-                // console.log(error.response.data);
-            });
-        }
-    }
+    componentDidMount() {
 
-    runSearch() {
-        if(!isSet(this.context.listingsData) ||
-            !isSet(this.context.listingsData.listing_block_category) ||
-            !isSet(this.context.listingsQueryData["keywords"])) {
-            return <p>Loading...</p>
-        }
-        let queryData = this.context.listingsQueryData;
-        console.log(queryData)
-        if (!isSet(queryData.providers) || queryData.providers.length === 0) {
-            this.context.listingsData.providers.map((provider, index) => {
-                queryData.provider = provider.provider_name;
-                this.getSearchData(queryData);
-            });
-        } else {
-            this.getSearchData(queryData);
-        }
-
-        return null
-    }
-
-
-
-    buildListItems() {
-        if (!isAuthenticated()) {
-            getToken().then((response) => {
-                setSession(response.data)
-                this.runSearch()
-            })
-        }
-        const data = this.runSearch();
-        return null
     }
 
     render() {
+        console.log(this.context.listingsSearchResults)
         return (
-            <div>
-                <this.buildListItems/>
+            <div className={"listings-block"}>
+                {this.context.listingsSearchResults.length > 0 ?
+
+                    <div className="posts">
+                        {this.context.listingsSearchResults.map((item, index) => (
+                            <article key={index}>
+                                <a href="#" className="image">
+                                    <img className={"default-image"} src={getDefaultImage(item)} />
+                                </a>
+                                <h3>{item.event_name}</h3>
+                                <p>{item.event_info}</p>
+                                <ul className="actions">
+                                    <li><a href={item.event_links} className="button">More</a></li>
+                                </ul>
+                            </article>
+                    ))}
+                    </div>
+                    :
+                    <p>loading</p>
+                }
             </div>
         )
     }

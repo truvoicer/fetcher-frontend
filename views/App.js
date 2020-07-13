@@ -4,9 +4,9 @@ import {ListingsContext} from "./Context/ListingsContext";
 import {PageContext} from "./Context/PageContext";
 import {SiteContext} from "./Context/SiteContext";
 import {fetchWpData, fetchWpSiteData} from "../library/api/wp/middleware";
-import Head from "next/head";
-import {getToken, setSession} from "../library/api/fetcher/session/authenticate";
+import {AddAxiosInterceptors} from "../library/api/global-scripts"
 import {fetchData, isEmpty, responseHandler} from "../library/api/fetcher/middleware";
+import {runSearch} from "../library/api/fetcher/search";
 
 class FetcherApp extends React.Component {
     constructor(props) {
@@ -23,15 +23,18 @@ class FetcherApp extends React.Component {
         this.setListingsData = this.setListingsData.bind(this)
         this.setListingsQueryData = this.setListingsQueryData.bind(this)
         this.setListingsProviders = this.setListingsProviders.bind(this)
+        this.setListingsSearchResults = this.setListingsSearchResults.bind(this)
         this.getProvidersCallback = this.getProvidersCallback.bind(this)
         this.setSiteData = this.setSiteData.bind(this)
     }
 
     componentDidMount() {
+        AddAxiosInterceptors();
         this.setState({
             listings: {
                 listingsData: {},
                 listingsQueryData: {},
+                listingsSearchResults: [],
                 setListingsData: this.setListingsData,
                 setListingsProviders: this.setListingsProviders,
                 setlistingsQueryData: this.setListingsQueryData
@@ -86,19 +89,42 @@ class FetcherApp extends React.Component {
             listings: {
                 listingsData: data,
                 listingsQueryData: this.state.listings.listingsQueryData,
+                listingsSearchResults: this.state.listings.listingsSearchResults,
                 setListingsData: this.setListingsData,
                 setListingsProviders: this.setListingsProviders,
                 setListingsQueryData: this.setListingsQueryData
             }
         }));
-        // this.setListingsProviders(data)
     }
     setListingsQueryData(data) {
-        console.log(data)
         this.setState(state => ({
             listings: {
                 listingsData: this.state.listings.listingsData,
                 listingsQueryData: data,
+                listingsSearchResults: [],
+                setListingsData: this.setListingsData,
+                setListingsProviders: this.setListingsProviders,
+                setListingsQueryData: this.setListingsQueryData
+            }
+        }));
+        runSearch(this.setListingsSearchResults, this.state.listings)
+    }
+
+    setListingsSearchResults(status, data) {
+        let listItems = [];
+        if (this.state.listings.listingsSearchResults.length === 0) {
+            listItems = data.listItems;
+        } else if (this.state.listings.listingsSearchResults.length > 0) {
+            listItems = this.state.listings.listingsSearchResults;
+            for (let i=0;i<data.listItems.length;i++) {
+                listItems.push(data.listItems[i]);
+            }
+        }
+        this.setState(state => ({
+            listings: {
+                listingsData: this.state.listings.listingsData,
+                listingsQueryData: this.state.listings.listingsQueryData,
+                listingsSearchResults: listItems,
                 setListingsData: this.setListingsData,
                 setListingsProviders: this.setListingsProviders,
                 setListingsQueryData: this.setListingsQueryData

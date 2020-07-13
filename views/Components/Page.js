@@ -56,15 +56,15 @@ class PageComponent extends React.Component {
 
     render() {
         return (
-            <div>
+            <div id={"page-content"}>
                 {this.state.pageData
                     ?
                     <>
                     <Header data={this.state.pageData}/>
-                    <div>
+
                         <h1>{this.state.pageData.post.post_title}</h1>
                         {ReactHtmlParser(this.state.pageData.post.post_content, this.htmlParserOptions)}
-                    </div>
+
                     </>
                     :
                     <div>Loading...</div>

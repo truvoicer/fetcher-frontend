@@ -13,6 +13,7 @@ class Search extends React.Component {
     }
 
     formClickHandler(e) {
+        e.preventDefault();
         let keywords = document.getElementById("keywords");
         let listingsQueryData = this.context.listingsQueryData;
         listingsQueryData["keywords"] = keywords.value;
@@ -28,7 +29,7 @@ class Search extends React.Component {
     render() {
         return (
             <section id="search" className="alt">
-                <form method="post" action="#">
+                <form method="post" onSubmit={this.formClickHandler}>
                         <input type="text" name="keywords"
                                id="keywords"
                                placeholder="Search"

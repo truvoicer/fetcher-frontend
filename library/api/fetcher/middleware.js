@@ -1,6 +1,7 @@
 import {wpApiConfig} from "../../../config/wp-api-config";
 import {fetcherApiConfig} from "../../../config/fetcher-api-config";
 import {getSessionObject, getToken, isAuthenticated, setSession} from "./session/authenticate";
+import {isSet} from "../../utils";
 
 const axios = require('axios');
 const vsprintf = require("sprintf").vsprintf;
@@ -29,13 +30,13 @@ export const isEmpty = (object) => {
     return true;
 }
 
-export const fetchSearchData = (data) => {
-    // console.log(data)
+export const fetchSearchData = (data, callback) => {
+    console.log(data)
     if (!validateRequestParams(["keywords"], data)) {
         console.error("Search params validate error");
         return false;
     }
-    return fetchData("operation", ["search"], data)
+    return fetchData("operation", ["search"], data, callback)
 }
 
 export const fetchData = (endpoint, operation, queryData = {}, callback = false) => {
@@ -64,7 +65,7 @@ const fetchFromApi = (endpoint, operation, queryData) => {
         method: "get",
         headers: {'Authorization': 'Bearer ' + getSessionObject().access_token}
     }
-    console.log(config)
+    // console.log(config)
 
     return axios.request(config);
 }
@@ -72,6 +73,18 @@ const fetchFromApi = (endpoint, operation, queryData) => {
 export const responseHandler = (request, callback) => {
     request.then((response) => {
         callback(response.status, response.data);
+    })
+    .catch((error) => {
+        if (isSet(error.response)) {
+            if (error.response.status === 401 && error.response.data.message === "token_expired") {
+                getToken().then((response) => {
+                    setSession(response.data)
+                    if (callback) {
+                        responseHandler(axios.request(config), callback);
+                    }
+                })
+            }
+        }
     })
 }
 
