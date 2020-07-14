@@ -1,19 +1,45 @@
 .listings-block {
 
+	.sort-bar {
+		height: 30px;
+		margin: 20px 0;
+	}
+
 	&--item {
+		display: flex;
+		justify-content: flex-start;
+		align-items: center;
+		flex-direction: row;
+		width: 100%;
+		height: 100px;
+		margin: 0 0 25px 0;
+		padding: 20px;
+		position: relative;
+		box-shadow: 0 1px 1px 1px rgba(176, 176, 176, 0.3);
 		&--image {
-			.default-image {
-				max-width: 100px;
+			width: 100px;
+			img {
+				width: 100%;
 			}
 		}
 		&--title {
-
+			margin: 0 0 0 10px;
+			font-size: 14px;
+			font-weight: bold;
+			height: 63px;
+			width: 194px;
 		}
 		&--info {
-
+			font-size: 12px;
+			height: 60px;
+			overflow-y: hidden;
+			margin-bottom: 0;
 		}
-		&--links {
-
+		&--actions {
+			a {
+				padding: 10px 30px 10px 30px;
+				display: unset;
+			}
 		}
 	}
 

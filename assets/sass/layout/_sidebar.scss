@@ -37,8 +37,8 @@
 	#sidebar {
 		$pad: 2em / 0.9;
 
-		@include vendor('flex-grow', '0');
-		@include vendor('flex-shrink', '0');
+		//@include vendor('flex-grow', '0');
+		//@include vendor('flex-shrink', '0');
 		@include vendor('transition', (
 			'margin-left 0.5s ease',
 			'box-shadow 0.5s ease'
@@ -46,7 +46,7 @@
 		background-color: _palette(bg-alt);
 		font-size: 0.9em;
 		position: relative;
-		width: _size(sidebar-width);
+		//width: _size(sidebar-width);
 
 		h2 {
 			font-size: (1.25em / 0.9);
@@ -118,106 +118,4 @@
 			margin-left: (_size(sidebar-width) * -1);
 		}
 
-		@include breakpoint('<=xlarge') {
-			$pad: 1.5em / 0.9;
-
-			width: _size(sidebar-width-alt);
-
-			> .inner {
-				@include padding($pad, $pad, (0, 0, $pad, 0));
-				width: _size(sidebar-width-alt);
-
-				> .alt {
-					margin: ($pad * -1) 0 ($pad * 2) ($pad * -1);
-					padding: $pad;
-					width: calc(100% + #{$pad * 2});
-				}
-			}
-
-			.toggle {
-				height: 6.25em;
-				left: _size(sidebar-width-alt);
-				line-height: 6.25em;
-				text-indent: 5em;
-				width: 5em;
-
-				&:before {
-					font-size: 1.5rem;
-				}
-			}
-
-			&.inactive {
-				margin-left: (_size(sidebar-width-alt) * -1);
-			}
-		}
-
-		@include breakpoint('<=large') {
-			box-shadow: 0 0 5em 0 rgba(0, 0, 0, 0.175);
-			height: 100%;
-			left: 0;
-			position: fixed;
-			top: 0;
-			z-index: _misc(z-index-base);
-
-			&.inactive {
-				box-shadow: none;
-			}
-
-			> .inner {
-				-webkit-overflow-scrolling: touch;
-				height: 100%;
-				left: 0;
-				overflow-x: hidden;
-				overflow-y: auto;
-				position: absolute;
-				top: 0;
-
-				&:after {
-					content: '';
-					display: block;
-					height: 4em;
-					width: 100%;
-				}
-			}
-
-			.toggle {
-				text-indent: 6em;
-				width: 6em;
-
-				&:before {
-					font-size: 1.5rem;
-					margin-left: (-0.875em / 2);
-				}
-			}
-
-			body.is-preload & {
-				display: none;
-			}
-		}
-
-		@include breakpoint('<=small') {
-			.toggle {
-				text-indent: 7.25em;
-				width: 7.25em;
-
-				&:before {
-					color: _palette(fg);
-					margin-left: (-0.125em / 2);
-					margin-top: (-0.5em / 2);
-					font-size: 1.1rem;
-					z-index: 1;
-				}
-
-				&:after {
-					background: transparentize(lighten(_palette(fg), 35), 0.25);
-					border-radius: _size(border-radius);
-					content: '';
-					height: 3.5em;
-					left: 1em;
-					position: absolute;
-					top: 1em;
-					width: 5em;
-				}
-			}
-		}
 	}

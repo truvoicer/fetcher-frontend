@@ -1,5 +1,5 @@
 import {fetchSearchData} from "./middleware";
-import {isSet} from "../../utils";
+import {imageSelector, isSet} from "../../utils";
 
 const getSearchData = (queryData, callback) => {
     queryData.limit = 10;
@@ -31,11 +31,17 @@ export const runSearch = (callback, context) => {
 }
 
 export const getDefaultImage = (item) => {
+    if (!isSet(item.image_list)) {
+        return null
+    }
+    let selectImage = imageSelector("medium", item.image_list.images);
+    if (selectImage) {
+        return selectImage.url;
+    }
     if (isSet(item.event_default_image) && item.event_default_image !== "") {
         return item.event_default_image;
     }
-    if(isSet(item.image_list) &&
-        isSet(item.image_list.default_image) &&
+    if(isSet(item.image_list.default_image) &&
         isSet(item.image_list.default_image.url) &&
         item.image_list.default_image.url !== "") {
         return item.image_list.default_image.url;

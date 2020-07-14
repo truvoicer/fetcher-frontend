@@ -36,7 +36,7 @@ class FetcherApp extends React.Component {
             listings: {
                 listingsData: {},
                 listingsQueryData: {},
-                listingsSearchResults: [],
+                listingsSearchResults: {},
                 setListingsData: this.setListingsData,
                 setListingsProviders: this.setListingsProviders,
                 setlistingsQueryData: this.setListingsQueryData
@@ -105,7 +105,7 @@ class FetcherApp extends React.Component {
             listings: {
                 listingsData: this.state.listings.listingsData,
                 listingsQueryData: data,
-                listingsSearchResults: [],
+                listingsSearchResults: {},
                 setListingsData: this.setListingsData,
                 setListingsProviders: this.setListingsProviders,
                 setListingsQueryData: this.setListingsQueryData
@@ -131,16 +131,18 @@ class FetcherApp extends React.Component {
         } else if (initialSearch.search_type === "location") {
             queryData.location = initialSearch.search_value;
         }
-        console.log(queryData);
+        // console.log(queryData);
         this.setListingsQueryData(queryData)
     }
 
     setListingsSearchResults(status, data) {
         let listItems = [];
-        if (this.state.listings.listingsSearchResults.length === 0) {
+        if (!isSet(this.state.listings.listingsSearchResults.listItems) ||
+            this.state.listings.listingsSearchResults.listItems.length === 0
+        ) {
             listItems = data.listItems;
-        } else if (this.state.listings.listingsSearchResults.length > 0) {
-            listItems = this.state.listings.listingsSearchResults;
+        } else if (this.state.listings.listingsSearchResults.listItems.length > 0) {
+            listItems = this.state.listings.listingsSearchResults.listItems;
             for (let i=0;i<data.listItems.length;i++) {
                 listItems.push(data.listItems[i]);
             }
@@ -149,7 +151,12 @@ class FetcherApp extends React.Component {
             listings: {
                 listingsData: this.state.listings.listingsData,
                 listingsQueryData: this.state.listings.listingsQueryData,
-                listingsSearchResults: listItems,
+                listingsSearchResults: {
+                    listData: data.listData,
+                    listItems: listItems,
+                    requestService: data.requestService,
+                    provider: data.provider
+                },
                 setListingsData: this.setListingsData,
                 setListingsProviders: this.setListingsProviders,
                 setListingsQueryData: this.setListingsQueryData
@@ -164,13 +171,11 @@ class FetcherApp extends React.Component {
                     <ListingsContext.Provider value={this.state.listings}>
 
                         <div id="wrapper">
+                            <Sidebar listingsData={this.state.listings.listingsData}/>
                             <div id="main">
-                                <div className="inner">
                                     <PageComponent data={this.props.data} setPageData={this.setPageData}
                                                    setListingsData={this.setListingsData} setListingsProviders={this.setListingsProviders}/>
-                                </div>
                             </div>
-                            <Sidebar listingsData={this.state.listings.listingsData}/>
                         </div>
                     </ListingsContext.Provider>
                 </PageContext.Provider>

@@ -1,6 +1,6 @@
 import React from "react";
 import DatePicker from "react-datepicker";
-const dateFormat = require('date-format');
+const dateFormat = require('dateformat');
 
 class ListingsFilterDateItem extends React.Component {
     constructor(props) {
@@ -11,7 +11,7 @@ class ListingsFilterDateItem extends React.Component {
             endDate: null,
             dateString: date.toLocaleString()
         };
-        this.dateFormatString = "yyyyMMdd";
+        this.dateFormatString = "yyyymmdd";
         this.handleStartDateChange = this.handleStartDateChange.bind(this)
         this.handleEndDateChange = this.handleEndDateChange.bind(this)
         this.onChangeCallback = this.onChangeCallback.bind(this)
@@ -21,7 +21,7 @@ class ListingsFilterDateItem extends React.Component {
         this.setState({
             startDate: date,
         });
-        this.onChangeCallback("start_date", dateFormat(this.dateFormatString, date))
+        this.onChangeCallback("start_date", dateFormat(date, this.dateFormatString))
     };
 
     handleEndDateChange(date) {
@@ -29,7 +29,7 @@ class ListingsFilterDateItem extends React.Component {
             endDate: date,
         });
         // this.onChangeCallback("start_date", dateFormat(this.dateFormatString, this.state.startDate))
-        this.onChangeCallback("end_date", dateFormat(this.dateFormatString, date))
+        this.onChangeCallback("end_date", dateFormat(date, this.dateFormatString))
     };
 
     onChangeCallback(name, value) {

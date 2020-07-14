@@ -4,6 +4,7 @@
 @import 'libs/vendor';
 @import 'libs/breakpoints';
 @import 'libs/html-grid';
+@import "../../node_modules/bootstrap/dist/css/bootstrap.min.css";
 @import '~@fortawesome/fontawesome-free/css/all.min.css';
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:400,600,400italic,600italic|Roboto+Slab:400,700');
 
@@ -52,6 +53,7 @@
 	@import 'components/posts';
 	@import 'components/listings_filter';
 	@import 'components/listings_block';
+	@import 'components/item_info';
 	@import "~react-datepicker/src/stylesheets/datepicker";
 
 // Layout.
