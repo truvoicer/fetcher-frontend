@@ -100,12 +100,13 @@ class FetcherApp extends React.Component {
             }
         }));
     }
-    setListingsQueryData(data) {
+    setListingsQueryData(data, refresh = true) {
+        console.log(data)
         this.setState(state => ({
             listings: {
                 listingsData: this.state.listings.listingsData,
                 listingsQueryData: data,
-                listingsSearchResults: {},
+                listingsSearchResults: (refresh)? {} : this.state.listings.listingsSearchResults,
                 setListingsData: this.setListingsData,
                 setListingsProviders: this.setListingsProviders,
                 setListingsQueryData: this.setListingsQueryData
@@ -135,7 +136,7 @@ class FetcherApp extends React.Component {
         this.setListingsQueryData(queryData)
     }
 
-    setListingsSearchResults(status, data) {
+    setListingsSearchResults(status, data, completed = false) {
         let listItems = [];
         if (!isSet(this.state.listings.listingsSearchResults.listItems) ||
             this.state.listings.listingsSearchResults.listItems.length === 0
@@ -152,6 +153,7 @@ class FetcherApp extends React.Component {
                 listingsData: this.state.listings.listingsData,
                 listingsQueryData: this.state.listings.listingsQueryData,
                 listingsSearchResults: {
+                    completed: completed,
                     listData: data.listData,
                     listItems: listItems,
                     requestService: data.requestService,

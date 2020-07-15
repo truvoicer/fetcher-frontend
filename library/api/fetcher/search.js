@@ -1,11 +1,6 @@
 import {fetchSearchData} from "./middleware";
 import {imageSelector, isSet} from "../../utils";
-
-const getSearchData = (queryData, callback) => {
-    queryData.limit = 10;
-    queryData.location = "london";
-    fetchSearchData(queryData, callback);
-}
+let completed = false;
 
 export const runSearch = (callback, context) => {
     // console.log(context)
@@ -18,14 +13,17 @@ export const runSearch = (callback, context) => {
         queryData.keywords = ""
     }
     if (!isSet(queryData.providers) || queryData.providers.length === 0) {
+        // console.log(context.listingsData.providers.length)
         context.listingsData.providers.map((provider, index) => {
             queryData.provider = provider.provider_name;
-            getSearchData(queryData, callback);
+            completed = (context.listingsData.providers.length === index + 1);
+            fetchSearchData(queryData, callback, completed);
         });
     } else {
         queryData.providers.map((provider, index) => {
             queryData.provider = provider;
-            getSearchData(queryData, callback);
+            completed = (queryData.providers.length === index + 1);
+            fetchSearchData(queryData, callback, completed);
         });
     }
 }

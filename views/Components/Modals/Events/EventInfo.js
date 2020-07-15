@@ -15,15 +15,12 @@ class EventInfo extends React.Component {
     componentDidMount() {
         let data = {
             id: this.props.data.item.event_id,
-            provider: this.props.data.provider
+            provider: this.props.data.item.provider
         }
-        console.log(this.props.data)
         fetchData("operation", ["get"], data, this.fetchItemCallback)
     }
 
     fetchItemCallback(status, data) {
-        console.log(status, data)
-
         this.setState({
             data: {
                 item: data.item

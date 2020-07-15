@@ -6,6 +6,7 @@ import {isSet} from "../../utils";
 const axios = require('axios');
 const vsprintf = require("sprintf").vsprintf;
 
+// let searchCompleted = false;
 
 export const validateRequestParams = (requiredParams, queryData) => {
     if (isEmpty(queryData)) {
@@ -30,16 +31,18 @@ export const isEmpty = (object) => {
     return true;
 }
 
-export const fetchSearchData = (data, callback) => {
-    console.log(data)
+export const fetchSearchData = (data, callback, completed = false) => {
+    // console.log(data)
     if (!validateRequestParams(["keywords"], data)) {
         console.error("Search params validate error");
         return false;
     }
-    return fetchData("operation", ["search"], data, callback)
+    data.limit = 10;
+    data.location = "london";
+    return fetchData("operation", ["search"], data, callback, completed)
 }
 
-export const fetchData = (endpoint, operation, queryData = {}, callback = false) => {
+export const fetchData = (endpoint, operation, queryData = {}, callback = false, completed = false) => {
     if(!validateEndpoint(endpoint)) {
         console.error("Endpoint not found")
     }
@@ -48,12 +51,12 @@ export const fetchData = (endpoint, operation, queryData = {}, callback = false)
         getToken().then((response) => {
             setSession(response.data)
             if (callback) {
-                responseHandler(fetchFromApi(endpoint, operation, queryData), callback);
+                responseHandler(fetchFromApi(endpoint, operation, queryData), callback, completed);
             }
         })
     } else {
         if (callback) {
-            responseHandler(fetchFromApi(endpoint, operation, queryData), callback);
+            responseHandler(fetchFromApi(endpoint, operation, queryData), callback, completed);
         }
     }
 
@@ -70,9 +73,9 @@ const fetchFromApi = (endpoint, operation, queryData) => {
     return axios.request(config);
 }
 
-export const responseHandler = (request, callback) => {
+export const responseHandler = (request, callback, completed = false) => {
     request.then((response) => {
-        callback(response.status, response.data);
+        callback(response.status, response.data, completed);
     })
     .catch((error) => {
         if (isSet(error.response)) {
@@ -80,9 +83,16 @@ export const responseHandler = (request, callback) => {
                 getToken().then((response) => {
                     setSession(response.data)
                     if (callback) {
-                        responseHandler(axios.request(config), callback);
+                        error.response.config.headers = {'Authorization': 'Bearer ' + getSessionObject().access_token}
+                        responseHandler(axios.request(error.response.config), callback);
                     }
                 })
+            } else {
+                if (callback && isSet(error.response)) {
+                    callback(error.response.status, error.response.data);
+                } else {
+                    console.error(error)
+                }
             }
         }
     })

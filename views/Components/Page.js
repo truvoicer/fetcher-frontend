@@ -7,6 +7,7 @@ import {ListingsContext} from "../Context/ListingsContext";
 import {fetchWpData} from "../../library/api/wp/middleware";
 import {isSet} from "../../library/utils";
 import Router from "next/router";
+import Head from "next/head";
 
 
 const sprintf = require("sprintf").sprintf;
@@ -62,6 +63,9 @@ class PageComponent extends React.Component {
                 {this.state.pageData
                     ?
                     <>
+                        <Head>
+                            <title>{this.state.pageData.post.head_title}</title>
+                        </Head>
                     <Header data={this.state.pageData}/>
 
                         <h1>{this.state.pageData.post.post_title}</h1>
