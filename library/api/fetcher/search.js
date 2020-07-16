@@ -14,8 +14,10 @@ export const runSearch = (callback, context) => {
     }
     if (!isSet(queryData.providers) || queryData.providers.length === 0) {
         // console.log(context.listingsData.providers.length)
+        queryData.providers = [];
         context.listingsData.providers.map((provider, index) => {
             queryData.provider = provider.provider_name;
+            queryData.providers.push(provider.provider_name)
             completed = (context.listingsData.providers.length === index + 1);
             fetchSearchData(queryData, callback, completed);
         });
@@ -26,6 +28,7 @@ export const runSearch = (callback, context) => {
             fetchSearchData(queryData, callback, completed);
         });
     }
+    // console.log(queryData)
 }
 
 export const getDefaultImage = (item) => {
@@ -36,8 +39,8 @@ export const getDefaultImage = (item) => {
     if (selectImage) {
         return selectImage.url;
     }
-    if (isSet(item.event_default_image) && item.event_default_image !== "") {
-        return item.event_default_image;
+    if (isSet(item.item_default_image) && item.item_default_image !== "") {
+        return item.item_default_image;
     }
     if(isSet(item.image_list.default_image) &&
         isSet(item.image_list.default_image.url) &&

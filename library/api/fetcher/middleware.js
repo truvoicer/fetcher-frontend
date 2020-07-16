@@ -39,6 +39,7 @@ export const fetchSearchData = (data, callback, completed = false) => {
     }
     data.limit = 10;
     data.location = "london";
+    console.log(data.provider)
     return fetchData("operation", ["search"], data, callback, completed)
 }
 

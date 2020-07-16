@@ -5,7 +5,7 @@ export const formatDate = (dateString, formatString = "dd mmmm yyyy") => {
         return null;
     }
     let date = new Date(dateString);
-    console.log(date)
+    // console.log(date)
     if (isSet(date)) {
         return DateFormat(date, formatString);
     }

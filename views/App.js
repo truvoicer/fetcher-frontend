@@ -25,6 +25,7 @@ class FetcherApp extends React.Component {
         this.setListingsQueryData = this.setListingsQueryData.bind(this)
         this.setListingsProviders = this.setListingsProviders.bind(this)
         this.setListingsSearchResults = this.setListingsSearchResults.bind(this)
+        this.setListingsRequestStatus = this.setListingsRequestStatus.bind(this)
         this.initialSearch = this.initialSearch.bind(this)
         this.getProvidersCallback = this.getProvidersCallback.bind(this)
         this.setSiteData = this.setSiteData.bind(this)
@@ -37,9 +38,11 @@ class FetcherApp extends React.Component {
                 listingsData: {},
                 listingsQueryData: {},
                 listingsSearchResults: {},
+                listingsRequestStatus: false,
                 setListingsData: this.setListingsData,
                 setListingsProviders: this.setListingsProviders,
-                setlistingsQueryData: this.setListingsQueryData
+                setlistingsQueryData: this.setListingsQueryData,
+                setListingsRequestStatus: this.setListingsRequestStatus
             },
             page: {
                 pageData: {},
@@ -82,10 +85,29 @@ class FetcherApp extends React.Component {
         }
     }
     getProvidersCallback(status, data) {
-        let listingsData = this.state.listings.listingsData;
-        listingsData.providers = data.data;
-        this.setListingsData(listingsData)
-        this.initialSearch()
+        if (status === 200) {
+            let listingsData = this.state.listings.listingsData;
+            listingsData.providers = data.data;
+            this.setListingsData(listingsData)
+            this.initialSearch()
+            return
+        }
+        console.error(data.message)
+    }
+
+    setListingsRequestStatus(status) {
+        this.setState(state => ({
+            listings: {
+                listingsData: this.state.listings.listingsData,
+                listingsQueryData: this.state.listings.listingsQueryData,
+                listingsSearchResults: this.state.listings.listingsSearchResults,
+                listingsRequestStatus: status,
+                setListingsData: this.setListingsData,
+                setListingsProviders: this.setListingsProviders,
+                setListingsQueryData: this.setListingsQueryData,
+                setListingsRequestStatus: this.setListingsRequestStatus
+            }
+        }));
     }
 
     setListingsData(data) {
@@ -94,45 +116,51 @@ class FetcherApp extends React.Component {
                 listingsData: data,
                 listingsQueryData: this.state.listings.listingsQueryData,
                 listingsSearchResults: this.state.listings.listingsSearchResults,
+                listingsRequestStatus: this.state.listings.listingsRequestStatus,
                 setListingsData: this.setListingsData,
                 setListingsProviders: this.setListingsProviders,
-                setListingsQueryData: this.setListingsQueryData
+                setListingsQueryData: this.setListingsQueryData,
+                setListingsRequestStatus: this.setListingsRequestStatus
             }
         }));
     }
     setListingsQueryData(data, refresh = true) {
-        console.log(data)
+        // console.log(data)
         this.setState(state => ({
             listings: {
                 listingsData: this.state.listings.listingsData,
                 listingsQueryData: data,
                 listingsSearchResults: (refresh)? {} : this.state.listings.listingsSearchResults,
+                listingsRequestStatus: this.state.listings.listingsRequestStatus,
                 setListingsData: this.setListingsData,
                 setListingsProviders: this.setListingsProviders,
-                setListingsQueryData: this.setListingsQueryData
+                setListingsQueryData: this.setListingsQueryData,
+                setListingsRequestStatus: this.setListingsRequestStatus
             }
         }));
-        runSearch(this.setListingsSearchResults, this.state.listings)
+        let listings = this.state.listings
+        runSearch(this.setListingsSearchResults, listings)
     }
 
     initialSearch() {
-        if (!isSet(this.state.listings.listingsData.block_options)) {
+        if (!isSet(this.state.listings.listingsData)) {
             return false;
         }
-        if (!isSet(this.state.listings.listingsData.block_options.initial_search)) {
+        if (!isSet(this.state.listings.listingsData.initial_search)) {
             return false;
         }
-        let initialSearch = this.state.listings.listingsData.block_options.initial_search;
+        let initialSearch = this.state.listings.listingsData.initial_search;
         if (!isSet(initialSearch.search_type || !isSet(initialSearch.search_value))) {
             return false;
         }
+        // console.log(initialSearch)
         let queryData = {};
         if (initialSearch.search_type === "keywords") {
             queryData.keywords = initialSearch.search_value;
         } else if (initialSearch.search_type === "location") {
             queryData.location = initialSearch.search_value;
         }
-        // console.log(queryData);
+        console.log(queryData)
         this.setListingsQueryData(queryData)
     }
 
@@ -148,20 +176,22 @@ class FetcherApp extends React.Component {
                 listItems.push(data.listItems[i]);
             }
         }
+        console.log(completed)
         this.setState(state => ({
             listings: {
                 listingsData: this.state.listings.listingsData,
                 listingsQueryData: this.state.listings.listingsQueryData,
                 listingsSearchResults: {
-                    completed: completed,
                     listData: data.listData,
                     listItems: listItems,
                     requestService: data.requestService,
                     provider: data.provider
                 },
+                listingsRequestStatus: completed,
                 setListingsData: this.setListingsData,
                 setListingsProviders: this.setListingsProviders,
-                setListingsQueryData: this.setListingsQueryData
+                setListingsQueryData: this.setListingsQueryData,
+                setListingsRequestStatus: this.setListingsRequestStatus
             }
         }));
     }

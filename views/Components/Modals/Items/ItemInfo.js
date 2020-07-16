@@ -3,7 +3,7 @@ import React from "react";
 import {formatDate} from "../../../../library/utils";
 import {fetchData, responseHandler} from "../../../../library/api/fetcher/middleware";
 
-class EventInfo extends React.Component {
+class ItemInfo extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -35,31 +35,31 @@ class EventInfo extends React.Component {
                     {this.state.data.item &&
                     <div className={"item-info"}>
                         <div className={"item-info--header"}>
-                            <h3 className={"item-info--title"}>{this.state.data.item.item_name}</h3>
+                            <h3 className={"item-info--title"}>{this.state.data.item.item_title}</h3>
                             <div className={"listings-block--item--action"}>
-                                <a href={this.state.data.item.item_links}
+                                <a href={this.state.data.item.item_href}
                                    className="button"
-                                   target={"_blank"}>More info</a>
+                                   target={"_blank"}>Buy</a>
                             </div>
                         </div>
                         <ul className={"item-info--list"}>
                             <li>
                                 <div className={"item-info--list--row"}>
                                     <div className={"item-info--list--row--label"}>
-                                        Event Start Date:
+                                        Price:
                                     </div>
                                     <div className={"item-info--list--row--value"}>
-                                        <p>{formatDate(this.state.data.item.item_start_date)}</p>
+                                        <p>{this.state.data.item.item_price}</p>
                                     </div>
                                 </div>
                             </li>
                             <li>
                                 <div className={"item-info--list--row"}>
                                     <div className={"item-info--list--row--label"}>
-                                        Event details:
+                                        Currency:
                                     </div>
                                     <div className={"item-info--list--row--value"}>
-                                        <p>{this.state.data.item.item_info}</p>
+                                        <p>{this.state.data.item.item_item_currency}</p>
                                     </div>
                                 </div>
                             </li>
@@ -72,4 +72,4 @@ class EventInfo extends React.Component {
     }
 }
 
-export default EventInfo;
+export default ItemInfo;
