@@ -21,12 +21,6 @@ class SidebarMenu extends React.Component {
         }
     }
     getMenu() {
-        const endpoint = sprintf(wpApiConfig.apiBaseUrl + wpApiConfig.endpoints.menu, siteConfig.sidebarMenu);
-        const {data, error} = useSwr(endpoint, fetcher)
-
-        if (error) return <div>Failed to load menu</div>
-        if (!data) return <div>Loading...</div>
-
         return (
             <nav id="menu">
                 <header className="major">

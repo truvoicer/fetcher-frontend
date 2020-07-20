@@ -33,12 +33,12 @@ class ListingsBlock extends React.Component {
 
     onScroll(e) {
         let st = window.pageYOffset;
-        if (st > this.lastScrollTop){
+        if (st > this.lastScrollTop) {
             let loader = document.getElementsByClassName("loader")[0];
             if (!isSet(loader)) {
                 return false;
             }
-            if(((window.scrollY + window.innerHeight) >= (loader.offsetTop - this.threshold) ||
+            if (((window.scrollY + window.innerHeight) >= (loader.offsetTop - this.threshold) ||
                 (window.scrollY + window.innerHeight) <= (loader.offsetTop - this.threshold)) &&
                 this.context.listingsRequestStatus) {
                 // console.log((window.scrollY + window.innerHeight), loader.offsetTop)
@@ -73,7 +73,7 @@ class ListingsBlock extends React.Component {
     loadMore() {
         // console.log(this.context.listingsRequestStatus)
         let listingsQueryData = this.context.listingsQueryData;
-        if(isSet(this.context.listingsSearchResults.listData.page_number)) {
+        if (isSet(this.context.listingsSearchResults.listData.page_number)) {
             let pageNumber = parseInt(this.context.listingsSearchResults.listData.page_number);
             // listingsQueryData.page_number = pageNumber + 1;
             //     console.log("pageNumber")
@@ -88,7 +88,7 @@ class ListingsBlock extends React.Component {
     }
 
     render() {
-        // console.log(this.context.listingsQueryData)
+        console.log(this.context.listingsSearchResults)
         return (
             <div id={"listing_block"} className={"listings-block"}>
                 <div className={"sort-bar"}>
@@ -98,24 +98,24 @@ class ListingsBlock extends React.Component {
                     <>
                         <Row>
                             {this.context.listingsSearchResults.listItems.map((item, index) => (
-                                <Col sm={12} md={4} lg={4} key={index}>
-                                    {this.context.listingsSearchResults.requestService === "item_search" &&
-                                        <ListingsBlockItem data={item} showInfoCallback={this.showInfo}/>
+                                <React.Fragment key={index}>
+                                    {this.context.listingsSearchResults.category === "retail" &&
+                                    <ListingsBlockItem data={item} showInfoCallback={this.showInfo}/>
                                     }
-                                    {this.context.listingsSearchResults.requestService === "event_search" &&
-                                        <ListingsBlockEvent data={item} showInfoCallback={this.showInfo}/>
+                                    {this.context.listingsSearchResults.category === "events" &&
+                                    <ListingsBlockEvent data={item} showInfoCallback={this.showInfo}/>
                                     }
-                                </Col>
+                                </React.Fragment>
                             ))}
                             {this.context.listingsRequestStatus &&
-                                <div className="loader" key={0}>Loading ...</div>
+                            <div className="loader" key={0}>Loading ...</div>
                             }
                         </Row>
-                        {this.context.listingsSearchResults.requestService === "event_search" && this.state.modalData.show &&
-                            <EventInfo data={this.state.modalData} close={this.closeModal}/>
+                        {this.context.listingsSearchResults.category === "events" && this.state.modalData.show &&
+                        <EventInfo data={this.state.modalData} close={this.closeModal}/>
                         }
-                        {this.context.listingsSearchResults.requestService === "item_search" && this.state.modalData.show &&
-                            <ItemInfo data={this.state.modalData} close={this.closeModal}/>
+                        {this.context.listingsSearchResults.category === "retail" && this.state.modalData.show &&
+                        <ItemInfo data={this.state.modalData} close={this.closeModal}/>
                         }
                     </>
                     :

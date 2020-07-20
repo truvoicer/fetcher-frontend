@@ -14,7 +14,7 @@
 		align-items: center;
 
 		> * {
-			@include vendor('flex', '1');
+			//@include vendor('flex', '1');
 			margin-bottom: 0;
 		}
 
@@ -26,6 +26,7 @@
 		}
 
 		.icons {
+			margin-left: auto;
 			text-align: right;
 		}
 

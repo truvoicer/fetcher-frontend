@@ -1,5 +1,8 @@
 import React from "react";
 import FetcherApp from "../views/App";
+import { render } from "react-dom";
+import { Provider } from "react-redux";
+import store from "../redux/store/index";
 
 class Home extends React.Component {
 
@@ -14,7 +17,9 @@ class Home extends React.Component {
 
     render() {
         return (
+            <Provider store={store}>
             <FetcherApp data={this.state.data}/>
+            </Provider>
         )
     }
 }

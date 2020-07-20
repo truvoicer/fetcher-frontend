@@ -12,3 +12,7 @@ export const fetchWpData = (endpoint, param) => {
     console.log(param, url)
     return axios.get(url);
 }
+
+export const buildWpApiUrl = (endpoint, param) => {
+    return sprintf(wpApiConfig.apiBaseUrl + endpoint, param);
+}

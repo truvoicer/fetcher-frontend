@@ -13,6 +13,7 @@ class Header extends React.Component {
                 this.context.siteData ?
                     <header id="header">
                         <a href="/" className="logo"><strong>{this.context.siteData.name}</strong></a>
+
                         <HeaderMenu/>
                         <ul className="icons">
                             <li><a href="#" className="icon brands fa-twitter"><span

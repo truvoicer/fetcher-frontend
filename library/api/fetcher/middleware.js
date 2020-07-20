@@ -40,7 +40,7 @@ export const fetchSearchData = (data, callback, completed = false) => {
     data.limit = 10;
     data.location = "london";
     console.log(data.provider)
-    return fetchData("operation", ["search"], data, callback, completed)
+    return fetchData("operation", ["list"], data, callback, completed)
 }
 
 export const fetchData = (endpoint, operation, queryData = {}, callback = false, completed = false) => {
@@ -53,11 +53,15 @@ export const fetchData = (endpoint, operation, queryData = {}, callback = false,
             setSession(response.data)
             if (callback) {
                 responseHandler(fetchFromApi(endpoint, operation, queryData), callback, completed);
+            } else {
+                return fetchFromApi(endpoint, operation, queryData);
             }
         })
     } else {
         if (callback) {
             responseHandler(fetchFromApi(endpoint, operation, queryData), callback, completed);
+        } else {
+            return fetchFromApi(endpoint, operation, queryData);
         }
     }
 

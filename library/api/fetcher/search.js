@@ -12,6 +12,7 @@ export const runSearch = (callback, context) => {
     if (!isSet(context.listingsQueryData["keywords"])) {
         queryData.keywords = ""
     }
+    console.log(context.listingsData)
     if (!isSet(queryData.providers) || queryData.providers.length === 0) {
         // console.log(context.listingsData.providers.length)
         queryData.providers = [];

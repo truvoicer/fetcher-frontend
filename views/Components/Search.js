@@ -6,7 +6,7 @@ class Search extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            keywords: ""
+            query: ""
         }
         this.formChangeHandler = this.formChangeHandler.bind(this);
         this.formClickHandler = this.formClickHandler.bind(this);
@@ -16,13 +16,13 @@ class Search extends React.Component {
         e.preventDefault();
         let keywords = document.getElementById("keywords");
         let listingsQueryData = this.context.listingsQueryData;
-        listingsQueryData["keywords"] = keywords.value;
+        listingsQueryData["query"] = this.state.query;
         this.context.setListingsQueryData(listingsQueryData);
     }
 
     formChangeHandler(e) {
         this.setState({
-            keywords: e.target.value
+            query: e.target.value
         })
     }
 
@@ -30,10 +30,10 @@ class Search extends React.Component {
         return (
             <section id="search" className="alt">
                 <form method="post" onSubmit={this.formClickHandler}>
-                        <input type="text" name="keywords"
-                               id="keywords"
+                        <input type="text" name="query"
+                               id="query"
                                placeholder="Search"
-                               value={this.state.keywords}
+                               value={this.state.query}
                                onChange={this.formChangeHandler}/>
                     <span className={"search-icon"} onClick={this.formClickHandler}/>
                 </form>

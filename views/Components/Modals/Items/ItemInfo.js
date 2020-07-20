@@ -14,16 +14,16 @@ class ItemInfo extends React.Component {
 
     componentDidMount() {
         let data = {
-            id: this.props.data.item.item_id,
+            query: this.props.data.item.item_id,
             provider: this.props.data.item.provider
         }
-        fetchData("operation", ["get"], data, this.fetchItemCallback)
+        fetchData("operation", ["single"], data, this.fetchItemCallback)
     }
 
     fetchItemCallback(status, data) {
         this.setState({
             data: {
-                item: data.item
+                item: data.requestData[0]
             }
         })
     }
@@ -42,28 +42,43 @@ class ItemInfo extends React.Component {
                                    target={"_blank"}>Buy</a>
                             </div>
                         </div>
-                        <ul className={"item-info--list"}>
-                            <li>
-                                <div className={"item-info--list--row"}>
-                                    <div className={"item-info--list--row--label"}>
-                                        Price:
+                        <div className={"item-info--body"}>
+                            <div className={"item-info--image"}>
+                                <img src={this.state.data.item.item_image_url}/>
+                            </div>
+                            <ul className={"item-info--list"}>
+                                <li>
+                                    <div className={"item-info--list--row"}>
+                                        <div className={"item-info--list--row--label"}>
+                                            Description:
+                                        </div>
+                                        <div className={"item-info--list--row--value"}>
+                                            <p>{this.state.data.item.item_description}</p>
+                                        </div>
                                     </div>
-                                    <div className={"item-info--list--row--value"}>
-                                        <p>{this.state.data.item.item_price}</p>
+                                </li>
+                                <li>
+                                    <div className={"item-info--list--row"}>
+                                        <div className={"item-info--list--row--label"}>
+                                            Price:
+                                        </div>
+                                        <div className={"item-info--list--row--value"}>
+                                            <p>{this.state.data.item.item_price}</p>
+                                        </div>
                                     </div>
-                                </div>
-                            </li>
-                            <li>
-                                <div className={"item-info--list--row"}>
-                                    <div className={"item-info--list--row--label"}>
-                                        Currency:
+                                </li>
+                                <li>
+                                    <div className={"item-info--list--row"}>
+                                        <div className={"item-info--list--row--label"}>
+                                            Currency:
+                                        </div>
+                                        <div className={"item-info--list--row--value"}>
+                                            <p>{this.state.data.item.item_item_currency}</p>
+                                        </div>
                                     </div>
-                                    <div className={"item-info--list--row--value"}>
-                                        <p>{this.state.data.item.item_item_currency}</p>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                     }
                 </Modal.Body>
