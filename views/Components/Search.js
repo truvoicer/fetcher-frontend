@@ -1,6 +1,8 @@
 import ListingsFilterTextItem from "./Widgets/ListingsFilter/Items/ListingsFilterTextItem";
 import React from "react";
 import {ListingsContext} from "../Context/ListingsContext";
+import {connect} from "react-redux";
+import {addListingsQueryDataString} from "../../redux/actions/listings-actions";
 
 class Search extends React.Component {
     constructor(props) {
@@ -14,10 +16,7 @@ class Search extends React.Component {
 
     formClickHandler(e) {
         e.preventDefault();
-        let keywords = document.getElementById("keywords");
-        let listingsQueryData = this.context.listingsQueryData;
-        listingsQueryData["query"] = this.state.query;
-        this.context.setListingsQueryData(listingsQueryData);
+        this.props.addListingsQueryDataString("query", this.state.query, true)
     }
 
     formChangeHandler(e) {
@@ -42,5 +41,7 @@ class Search extends React.Component {
     }
 }
 
-Search.contextType = ListingsContext;
-export default Search;
+export default connect(
+    null,
+    {addListingsQueryDataString}
+)(Search);

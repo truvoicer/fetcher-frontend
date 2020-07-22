@@ -1,10 +1,9 @@
 import React from "react";
 import {ListingsContext} from "../../Context/ListingsContext";
-import {getDefaultImage, runSearch} from "../../../library/api/fetcher/search";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import EventInfo from "../Modals/Events/EventInfo";
-import {isSet} from "../../../library/utils";
+import {getDefaultImage, isSet} from "../../../library/utils";
 
 
 class ListingsBlockEvent extends React.Component {

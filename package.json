@@ -24,6 +24,7 @@
     "swr": "^0.2.2"
   },
   "devDependencies": {
+    "immer": "^7.0.5",
     "react-redux": "^7.2.0",
     "redux": "^4.0.5",
     "redux-saga": "^1.1.3",

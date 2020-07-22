@@ -1,4 +1,6 @@
 import React from "react";
+import {connect} from "react-redux";
+import {addListingsQueryDataString} from "../../../../../redux/actions/listings-actions";
 
 class ListingsFilterTextItem extends React.Component {
     constructor(props) {
@@ -11,7 +13,8 @@ class ListingsFilterTextItem extends React.Component {
             name: e.target.name,
             value: e.target.value
         };
-        this.props.onChangeCallback(data)
+
+        this.props.addListingsQueryDataString(e.target.name, e.target.value)
     }
     render() {
         return (
@@ -29,4 +32,7 @@ class ListingsFilterTextItem extends React.Component {
     }
 }
 
-export default ListingsFilterTextItem;
+export default connect(
+    null,
+    {addListingsQueryDataString}
+)(ListingsFilterTextItem);

@@ -6,6 +6,7 @@ import {
 import thunk from "redux-thunk";
 import {pageReducer} from "../reducers/page-reducer";
 import {listingsReducer} from "../reducers/listings-reducer";
+import {searchReducer} from "../reducers/search-reducer";
 
 const middleware = [
     ...getDefaultMiddleware(),
@@ -13,7 +14,8 @@ const middleware = [
 ];
 const reducer = {
     page: pageReducer,
-    listings: listingsReducer
+    listings: listingsReducer,
+    search: searchReducer
 }
 
 const store = configureStore({

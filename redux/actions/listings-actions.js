@@ -1,28 +1,66 @@
-import { setListingsData, setListingsDataProviders, setListingsError} from "../reducers/listings-reducer"
 import React from "react";
 import store from "../store/index";
-import {setPageData, setPageError} from "../reducers/page-reducer";
 import {fetchData} from "../../library/api/fetcher/middleware";
+import {
+    setListingsData,
+    setListingsQueryData,
+    setListingsDataProviders,
+    setListingsError
+} from "../reducers/listings-reducer"
+import {isSet} from "../../library/utils";
+import {runSearch} from "./search-actions";
 
-export function getProviders(category) {
-    console.log(category)
+
+export function getListingsProviders(category) {
     fetchData("list", [category, "providers"], {}, getProvidersCallback);
 
 }
 export function getProvidersCallback(status, data) {
     if (status === 200) {
-        console.log(data.data)
+        // console.log(data.data)
         store.dispatch(setListingsDataProviders(data.data))
     } else {
-        console.error(data.message)
+        // console.error(data.message)
         store.dispatch(setListingsError(data.message))
     }
 }
 
-export function setListingsQueryData() {
+export function addArrayItem(key, value) {
     return function(dispatch) {
-        // notify about fetch start
-        dispatch({ type: "FETCH_USERS_REQUEST" });
+        let listingsQueryData = {...store.getState().listings.listingsQueryData}
+        const object = Object.assign({}, listingsQueryData, {
+            [key]: (isSet(listingsQueryData[key]))? listingsQueryData[key].concat(value) : [value]
+        });
+        dispatch(setListingsQueryData(object))
+    }
+}
 
-    };
+export function removeArrayItem(key, value) {
+    return function(dispatch) {
+        let listingsQueryData = {...store.getState().listings.listingsQueryData}
+        let index = listingsQueryData[key].indexOf(value);
+        const newArray = [...listingsQueryData[key]]
+        newArray.splice(index, 1)
+        if (index === -1) return;
+
+        const object = Object.assign({}, listingsQueryData, {
+            [key]: newArray
+        });
+        dispatch(setListingsQueryData(object))
+    }
+}
+
+export function addListingsQueryDataString(key, value, search = false) {
+    return function(dispatch) {
+        let listingsQueryData = {...store.getState().listings.listingsQueryData}
+
+        const object = Object.assign({}, listingsQueryData, {
+                [key]: value
+        });
+        // console.log(object)
+        dispatch(setListingsQueryData(object))
+        if (search) {
+            runSearch();
+        }
+    }
 }

@@ -7,18 +7,19 @@ import ListingsFilterTextItem from "./Items/ListingsFilterTextItem";
 import ListingsFilterListItem from "./Items/ListingsFilterListItem";
 import ListingsFilterApiListItem from "./Items/ListingsFilterApiListItem";
 import {isSet} from "../../../../library/utils";
+import {connect} from "react-redux";
+import {buildListingsQueryData} from "../../../../redux/actions/listings-actions";
 
 class ListingsFilter extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            listingType: this.props.data.listing_type,
             listingFilters: [],
             controlPrefix: "filter_control_",
             data: {}
         }
         this.listingFilters = [];
-        this.getListingFilters = this.getListingFilters.bind(this);
+        this.getListingFilterData = this.getListingFilterData.bind(this);
         this.formChangeHandler = this.formChangeHandler.bind(this);
         this.showControl = this.showControl.bind(this)
         this.getDataList = this.getDataList.bind(this)
@@ -30,10 +31,7 @@ class ListingsFilter extends React.Component {
         this.setState({
             data: data
         })
-
-        let listingsQueryData = this.context.listingsQueryData;
-        listingsQueryData[e.name] = e.value;
-        this.context.setListingsQueryData(listingsQueryData);
+        this.props.buildListingsQueryData(data)
     }
 
     showControl(e) {
@@ -54,7 +52,7 @@ class ListingsFilter extends React.Component {
                     onChangeCallback={this.formChangeHandler}/>
             );
         } else if (item.type === "list" && item.list_source === "api") {
-            if (isSet(this.context.listingsData) && isSet(this.context.listingsData.listing_block_category)) {
+            if (isSet(this.props.listings.listingsData.listing_block_category)) {
                 return (
                     <ListingsFilterApiListItem
                         controlPrefix={this.state.controlPrefix}
@@ -68,50 +66,64 @@ class ListingsFilter extends React.Component {
         return null
     }
 
-    getListingFilters() {
-        return this.props.data.listings_filters
+    getListingFilterData() {
+        if (isSet(this.props.listings.listingsData.show_filters)) {
+            return this.props.listings.listingsData.filters;
+        }
+        return false;
     }
 
     render() {
-        this.listingFilters = this.getListingFilters()
+        const listingsFilterData = this.getListingFilterData();
+        // console.log(listingsFilterData)
         return (
             <div id={"listings_filter"} className={"listings-filter"}>
-                <header className="major">
-                    <h2>{this.props.data.filter_heading}</h2>
-                </header>
-                <form>
-                    <ul>
-                        {this.listingFilters.map((item, index) => (
+                {listingsFilterData &&
+                <>
+                    <header className="major">
+                        <h2>{listingsFilterData.filter_heading}</h2>
+                    </header>
+                    <form>
+                        <ul>
+                            {listingsFilterData.listings_filters.map((item, index) => (
 
-                            <li className={"listings-filter--item"} key={index}>
-                                <span className="opener" onClick={this.showControl}>{item.label}</span>
+                                <li className={"listings-filter--item"} key={index}>
+                                    <span className="opener" onClick={this.showControl}>{item.label}</span>
 
-                                {item.type === "text" &&
-                                <ListingsFilterTextItem
-                                    controlPrefix={this.state.controlPrefix}
-                                    data={item}
-                                    value={this.state.data[item.name]}
-                                    onChangeCallback={this.formChangeHandler}/>
-                                }
-                                {item.type === "date" &&
-                                <ListingsFilterDateItem
-                                    controlPrefix={this.state.controlPrefix}
-                                    data={item}
-                                    value={this.state.data[item.name]}
-                                    onChangeCallback={this.formChangeHandler}/>
-                                }
-                                {item.type === "list" &&
-                                    this.getDataList(item)
-                                }
-                            </li>
-                        ))}
+                                    {item.type === "text" &&
+                                    <ListingsFilterTextItem
+                                        controlPrefix={this.state.controlPrefix}
+                                        data={item}
+                                        value={this.state.data[item.name]}/>
+                                    }
+                                    {item.type === "date" &&
+                                    <ListingsFilterDateItem
+                                        controlPrefix={this.state.controlPrefix}
+                                        data={item}
+                                        value={this.state.data[item.name]}/>
+                                    }
+                                    {item.type === "list" &&
+                                        this.getDataList(item)
+                                    }
+                                </li>
+                            ))}
 
-                    </ul>
-                </form>
+                        </ul>
+                    </form>
+                </>
+                }
             </div>
         )
     }
 }
 
-ListingsFilter.contextType = ListingsContext;
-export default ListingsFilter;
+function mapStateToProps(state) {
+    // console.log(state)
+    return {
+        listings: state.listings
+    };
+}
+
+export default connect(
+    mapStateToProps
+)(ListingsFilter);

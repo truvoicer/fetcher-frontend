@@ -1,34 +1,21 @@
 import React from "react";
 import Form from "react-bootstrap/Form";
-import {fetchData} from "../../../../../library/api/fetcher/middleware";
-import {ListingsContext} from "../../../../Context/ListingsContext";
+import {connect} from "react-redux";
+import {addArrayItem, removeArrayItem} from "../../../../../redux/actions/listings-actions";
 
 class ListingsFilterListItem extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-            listItems: [],
-            apiList: []
-        }
         this.formChangeHandler = this.formChangeHandler.bind(this);
     }
 
     formChangeHandler(e) {
-        let list = this.state.listItems;
         if (e.target.checked) {
-            list.push(e.target.value)
-        } else {
-            let index = list.indexOf(e.target.value);
-            if (index !== -1) list.splice(index, 1);
+            this.props.addArrayItem(this.props.data.name, e.target.value)
         }
-        this.setState({
-            listItems: list
-        })
-        let data = {
-            name: this.props.data.name,
-            value: list
-        };
-        this.props.onChangeCallback(data)
+        else {
+            this.props.removeArrayItem(this.props.data.name, e.target.value)
+        }
     }
     render() {
         return (
@@ -55,5 +42,14 @@ class ListingsFilterListItem extends React.Component {
         )
     }
 }
-ListingsFilterListItem.contextType = ListingsContext;
-export default ListingsFilterListItem;
+
+function mapStateToProps(state) {
+    return {
+        listings: state.listings
+    };
+}
+
+export default connect(
+    mapStateToProps,
+    {addArrayItem, removeArrayItem}
+)(ListingsFilterListItem);

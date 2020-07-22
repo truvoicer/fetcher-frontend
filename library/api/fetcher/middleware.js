@@ -1,46 +1,27 @@
 import {wpApiConfig} from "../../../config/wp-api-config";
 import {fetcherApiConfig} from "../../../config/fetcher-api-config";
 import {getSessionObject, getToken, isAuthenticated, setSession} from "./session/authenticate";
-import {isSet} from "../../utils";
+import {isEmpty, isSet} from "../../utils";
 
 const axios = require('axios');
 const vsprintf = require("sprintf").vsprintf;
-
-// let searchCompleted = false;
 
 export const validateRequestParams = (requiredParams, queryData) => {
     if (isEmpty(queryData)) {
         return false;
     }
+    let failParams = [];
     for(let i=0;i<queryData.length;i++) {
         for(let r=0;r<requiredParams.length;r++) {
             if (!Object.keys(queryData).contains(requiredParams[r])) {
-                console.log(requiredParams[r])
-                return false;
+                failParams.push(requiredParams[r])
             }
         }
     }
-    return true;
-}
-
-export const isEmpty = (object) => {
-    for(let key in object) {
-        if(object.hasOwnProperty(key))
-            return false;
+    if (failParams.length > 0) {
+        return failParams;
     }
     return true;
-}
-
-export const fetchSearchData = (data, callback, completed = false) => {
-    // console.log(data)
-    if (!validateRequestParams(["keywords"], data)) {
-        console.error("Search params validate error");
-        return false;
-    }
-    data.limit = 10;
-    data.location = "london";
-    console.log(data.provider)
-    return fetchData("operation", ["list"], data, callback, completed)
 }
 
 export const fetchData = (endpoint, operation, queryData = {}, callback = false, completed = false) => {

@@ -1,14 +1,14 @@
 import React from "react";
 import Form from "react-bootstrap/Form";
-import {fetchData, responseHandler} from "../../../../../library/api/fetcher/middleware";
-import {ListingsContext} from "../../../../Context/ListingsContext";
+import {fetchData} from "../../../../../library/api/fetcher/middleware";
+import {connect} from "react-redux";
+import {addArrayItem, removeArrayItem} from "../../../../../redux/actions/listings-actions";
 
 class ListingsFilterApiListItem extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             listItems: [],
-            checkedListItems: []
         }
         this.formChangeHandler = this.formChangeHandler.bind(this);
         this.getApiListCallback = this.getApiListCallback.bind(this);
@@ -19,7 +19,7 @@ class ListingsFilterApiListItem extends React.Component {
     }
 
     getApiList() {
-        let category = this.context.listingsData.listing_block_category;
+        let category = this.props.listings.listingsData.listing_block_category;
         fetchData("list", [category, this.props.data.api_endpoint], {}, this.getApiListCallback);
     }
 
@@ -30,18 +30,12 @@ class ListingsFilterApiListItem extends React.Component {
     }
 
     formChangeHandler(e) {
-        let list = this.state.checkedListItems;
         if (e.target.checked) {
-            list.push(e.target.value)
-        } else {
-            let index = list.indexOf(e.target.value);
-            if (index !== -1) list.splice(index, 1);
+            this.props.addArrayItem(this.props.data.api_endpoint, e.target.value)
         }
-        let data = {
-            name: this.props.data.api_endpoint,
-            value: list
-        };
-        this.props.onChangeCallback(data)
+        else {
+            this.props.removeArrayItem(this.props.data.api_endpoint, e.target.value)
+        }
     }
     render() {
         return (
@@ -67,5 +61,14 @@ class ListingsFilterApiListItem extends React.Component {
         )
     }
 }
-ListingsFilterApiListItem.contextType = ListingsContext;
-export default ListingsFilterApiListItem;
+
+function mapStateToProps(state) {
+    return {
+        listings: state.listings
+    };
+}
+
+export default connect(
+    mapStateToProps,
+    {addArrayItem, removeArrayItem}
+)(ListingsFilterApiListItem);

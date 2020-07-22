@@ -33,14 +33,14 @@ class PageComponent extends React.Component {
                 {this.props.pageData
                     ?
                     <>
-                        {/*<Head>*/}
-                        {/*    <title>{this.props.pageData.seo_title}</title>*/}
-                        {/*</Head>*/}
+                        <Head>
+                            <title>{this.props.pageData.seo_title? this.props.pageData.seo_title : "Loading.."}</title>
+                        </Head>
                     <Header data={this.props.pageData}/>
 
                         <h1>{this.props.pageData.post_title}</h1>
-                        {/*/!*{ReactHtmlParser(this.props.pageData.post_content, this.htmlParserOptions)}*!/*/}
-                        {this.props.pageData.post_content}
+                        {ReactHtmlParser(this.props.pageData.post_content, this.htmlParserOptions)}
+                        {/*{this.props.pageData.post_content}*/}
                     </>
                     :
                     <div>Loading...</div>
@@ -51,7 +51,7 @@ class PageComponent extends React.Component {
 }
 PageComponent.contextType = ListingsContext;
 function mapStateToProps(state) {
-    console.log(state)
+    // console.log(state)
     return {
         pageData: state.page.post
     };

@@ -1,6 +1,8 @@
 import React from "react";
 import FetcherApp from "../views/App";
 import Router from "next/router";
+import {Provider} from "react-redux";
+import store from "../redux/store/index";
 
 class Page extends React.Component {
     static async getInitialProps(ctx) {
@@ -28,7 +30,10 @@ class Page extends React.Component {
 
     render() {
         return (
+
+            <Provider store={store}>
             <FetcherApp data={this.state.data}/>
+            </Provider>
         )
     }
 }

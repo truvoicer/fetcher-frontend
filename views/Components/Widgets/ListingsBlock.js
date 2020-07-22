@@ -1,6 +1,5 @@
 import React from "react";
 import {ListingsContext} from "../../Context/ListingsContext";
-import {getDefaultImage, runSearch} from "../../../library/api/fetcher/search";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import EventInfo from "../Modals/Events/EventInfo";
@@ -8,6 +7,9 @@ import {isSet} from "../../../library/utils";
 import ListingsBlockItem from "./ListingsBlockItem";
 import ListingsBlockEvent from "./ListingsBlockEvent";
 import ItemInfo from "../Modals/Items/ItemInfo";
+import {connect} from "react-redux";
+import {addArrayItem, removeArrayItem} from "../../../redux/actions/listings-actions";
+import {SEARCH_REQUEST_COMPLETED} from "../../../redux/constants/search";
 
 
 class ListingsBlock extends React.Component {
@@ -28,7 +30,7 @@ class ListingsBlock extends React.Component {
         this.onScroll = this.onScroll.bind(this)
         this.threshold = 10
         this.lastScrollTop = 0
-        window.addEventListener('scroll', this.onScroll);
+        // window.addEventListener('scroll', this.onScroll);
     }
 
     onScroll(e) {
@@ -40,7 +42,7 @@ class ListingsBlock extends React.Component {
             }
             if (((window.scrollY + window.innerHeight) >= (loader.offsetTop - this.threshold) ||
                 (window.scrollY + window.innerHeight) <= (loader.offsetTop - this.threshold)) &&
-                this.context.listingsRequestStatus) {
+                this.props.search.requestStatus) {
                 // console.log((window.scrollY + window.innerHeight), loader.offsetTop)
                 this.context.setListingsRequestStatus(false)
                 this.loadMore()
@@ -71,7 +73,7 @@ class ListingsBlock extends React.Component {
     }
 
     loadMore() {
-        // console.log(this.context.listingsRequestStatus)
+        // console.log(this.props.search.requestStatus)
         let listingsQueryData = this.context.listingsQueryData;
         if (isSet(this.context.listingsSearchResults.listData.page_number)) {
             let pageNumber = parseInt(this.context.listingsSearchResults.listData.page_number);
@@ -88,35 +90,36 @@ class ListingsBlock extends React.Component {
     }
 
     render() {
-        console.log(this.context.listingsSearchResults)
+        console.log(this.props.search)
+        // console.log(this.context.listingsSearchResults)
         return (
             <div id={"listing_block"} className={"listings-block"}>
                 <div className={"sort-bar"}>
-
+                    Listings block
                 </div>
-                {this.context.listingsSearchResults.listItems ?
+                {this.props.search.searchList.length > 0 ?
                     <>
                         <Row>
-                            {this.context.listingsSearchResults.listItems.map((item, index) => (
+                            {this.props.search.searchList.map((item, index) => (
                                 <React.Fragment key={index}>
-                                    {this.context.listingsSearchResults.category === "retail" &&
+                                    {this.props.search.category === "retail" &&
                                     <ListingsBlockItem data={item} showInfoCallback={this.showInfo}/>
                                     }
-                                    {this.context.listingsSearchResults.category === "events" &&
+                                    {this.props.search.category === "events" &&
                                     <ListingsBlockEvent data={item} showInfoCallback={this.showInfo}/>
                                     }
                                 </React.Fragment>
                             ))}
-                            {this.context.listingsRequestStatus &&
+                            {this.props.search.requestStatus === SEARCH_REQUEST_COMPLETED &&
                             <div className="loader" key={0}>Loading ...</div>
                             }
                         </Row>
-                        {this.context.listingsSearchResults.category === "events" && this.state.modalData.show &&
-                        <EventInfo data={this.state.modalData} close={this.closeModal}/>
-                        }
-                        {this.context.listingsSearchResults.category === "retail" && this.state.modalData.show &&
-                        <ItemInfo data={this.state.modalData} close={this.closeModal}/>
-                        }
+                        {/*{this.props.search.category === "events" && this.state.modalData.show &&*/}
+                        {/*<EventInfo data={this.state.modalData} close={this.closeModal}/>*/}
+                        {/*}*/}
+                        {/*{this.props.search.category === "retail" && this.state.modalData.show &&*/}
+                        {/*<ItemInfo data={this.state.modalData} close={this.closeModal}/>*/}
+                        {/*}*/}
                     </>
                     :
                     <p>loading</p>
@@ -126,5 +129,12 @@ class ListingsBlock extends React.Component {
     }
 }
 
-ListingsBlock.contextType = ListingsContext;
-export default ListingsBlock;
+function mapStateToProps(state) {
+    return {
+        listings: state.listings,
+        search: state.search
+    };
+}
+export default connect(
+    mapStateToProps
+)(ListingsBlock);

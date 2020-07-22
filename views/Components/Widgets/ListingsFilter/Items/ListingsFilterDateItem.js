@@ -1,5 +1,7 @@
 import React from "react";
 import DatePicker from "react-datepicker";
+import {connect} from "react-redux";
+import {addListingsQueryDataString} from "../../../../../redux/actions/listings-actions";
 const dateFormat = require('dateformat');
 
 class ListingsFilterDateItem extends React.Component {
@@ -21,7 +23,7 @@ class ListingsFilterDateItem extends React.Component {
         this.setState({
             startDate: date,
         });
-        this.onChangeCallback("start_date", dateFormat(date, this.dateFormatString))
+        this.props.addListingsQueryDataString("start_date", dateFormat(date, this.dateFormatString))
     };
 
     handleEndDateChange(date) {
@@ -29,7 +31,7 @@ class ListingsFilterDateItem extends React.Component {
             endDate: date,
         });
         // this.onChangeCallback("start_date", dateFormat(this.dateFormatString, this.state.startDate))
-        this.onChangeCallback("end_date", dateFormat(date, this.dateFormatString))
+        this.props.addListingsQueryDataString("end_date", dateFormat(date, this.dateFormatString))
     };
 
     onChangeCallback(name, value) {
@@ -38,6 +40,7 @@ class ListingsFilterDateItem extends React.Component {
             value: value
         };
         this.props.onChangeCallback(data)
+        this.props.addListingsQueryDataString(name, value)
     }
     render() {
         return (
@@ -65,4 +68,7 @@ class ListingsFilterDateItem extends React.Component {
     }
 }
 
-export default ListingsFilterDateItem;
+export default connect(
+    null,
+    {addListingsQueryDataString}
+)(ListingsFilterDateItem);

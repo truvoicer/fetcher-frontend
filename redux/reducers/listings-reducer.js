@@ -18,10 +18,12 @@ export const listingsSlice = createSlice({
             state.listingsData = action.payload;
         },
         setListingsQueryData: (state, action) => {
-            state.listingsData = action.payload;
+            // console.log(action.payload)
+            state.listingsQueryData = action.payload;
+            console.log(state.listingsQueryData)
         },
         setListingsSearchResults: (state, action) => {
-            state.listingsData = action.payload;
+            state.listingsSearchResults = action.payload;
         },
         setListingsDataProviders: (state, action) => {
             state.listingsData.providers = action.payload;
@@ -32,7 +34,9 @@ export const listingsSlice = createSlice({
     },
 });
 
+
 export const listingsReducer = listingsSlice.reducer;
+
 export const {
     setListingsData,
     setListingsDataProviders,

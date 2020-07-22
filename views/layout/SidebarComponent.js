@@ -12,20 +12,13 @@ class SidebarComponent extends React.Component {
     constructor(props) {
         super(props);
         this.getSidebar = this.getSidebar.bind(this)
-        this.getListingFilterData = this.getListingFilterData.bind(this);
     }
 
     componentDidMount() {
         this.getSidebar();
     }
 
-    getListingFilterData() {
-        if (typeof this.props.listingsData !== "undefined" &&
-            this.props.listingsData.show_filters) {
-            return this.props.listingsData.filters;
-        }
-        return false;
-    }
+
 
     getSidebar() {
         this.props.getSidebarData(buildWpApiUrl(wpApiConfig.endpoints.sidebar))
@@ -43,8 +36,7 @@ class SidebarComponent extends React.Component {
                                     {item.search &&
                                     <div>
                                         <Search data={item.search}/>
-                                        {this.getListingFilterData() &&
-                                        <ListingsFilter data={this.getListingFilterData()}/>}
+                                        <ListingsFilter />
                                     </div>
                                     }
 
