@@ -8,48 +8,54 @@ import ListingsBlockItem from "./ListingsBlockItem";
 import ListingsBlockEvent from "./ListingsBlockEvent";
 import ItemInfo from "../Modals/Items/ItemInfo";
 import {connect} from "react-redux";
-import {addArrayItem, removeArrayItem} from "../../../redux/actions/listings-actions";
-import {SEARCH_REQUEST_COMPLETED} from "../../../redux/constants/search";
-
+import {addArrayItem, removeArrayItem, addListingsQueryDataString} from "../../../redux/middleware/listings-middleware";
+import {setSearchRequestOperation, setSearchRequestStatus} from "../../../redux/actions/search-actions";
+import {
+    APPEND_SEARCH_REQUEST,
+    SEARCH_REQUEST_COMPLETED,
+    SEARCH_REQUEST_STARTED
+} from "../../../redux/constants/search-constants";
+import InfiniteScroll from 'react-infinite-scroller';
 
 class ListingsBlock extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            items: [],
             modalData: {
                 show: false,
                 item: {},
                 provider: ""
             },
-            hasMore: true
+            hasMore: false
         }
         this.showInfo = this.showInfo.bind(this)
         this.closeModal = this.closeModal.bind(this)
         this.loadMore = this.loadMore.bind(this)
         this.getListItems = this.getListItems.bind(this)
-        this.onScroll = this.onScroll.bind(this)
-        this.threshold = 10
-        this.lastScrollTop = 0
+        // this.onScroll = this.onScroll.bind(this)
+        // this.threshold = 10
+        // this.lastScrollTop = 0
         // window.addEventListener('scroll', this.onScroll);
     }
 
-    onScroll(e) {
-        let st = window.pageYOffset;
-        if (st > this.lastScrollTop) {
-            let loader = document.getElementsByClassName("loader")[0];
-            if (!isSet(loader)) {
-                return false;
-            }
-            if (((window.scrollY + window.innerHeight) >= (loader.offsetTop - this.threshold) ||
-                (window.scrollY + window.innerHeight) <= (loader.offsetTop - this.threshold)) &&
-                this.props.search.requestStatus) {
-                // console.log((window.scrollY + window.innerHeight), loader.offsetTop)
-                this.context.setListingsRequestStatus(false)
-                this.loadMore()
-            }
-        }
-        this.lastScrollTop = st <= 0 ? 0 : st; // For Mobile or negative scrolling
-    }
+    // onScroll(e) {
+    //     let st = window.pageYOffset;
+    //     if (st > this.lastScrollTop) {
+    //         let loader = document.getElementsByClassName("loader")[0];
+    //         if (!isSet(loader)) {
+    //             return false;
+    //         }
+    //         if (((window.scrollY + window.innerHeight) >= (loader.offsetTop - this.threshold) ||
+    //             (window.scrollY + window.innerHeight) <= (loader.offsetTop - this.threshold)) &&
+    //             this.props.search.requestStatus) {
+    //             // console.log((window.scrollY + window.innerHeight), loader.offsetTop)
+    //             this.context.setListingsRequestStatus(false)
+    //             this.loadMore()
+    //         }
+    //     }
+    //     this.lastScrollTop = st <= 0 ? 0 : st; // For Mobile or negative scrolling
+    // }
 
     showInfo(item, e) {
         e.preventDefault()
@@ -74,13 +80,16 @@ class ListingsBlock extends React.Component {
 
     loadMore() {
         // console.log(this.props.search.requestStatus)
-        let listingsQueryData = this.context.listingsQueryData;
-        if (isSet(this.context.listingsSearchResults.listData.page_number)) {
-            let pageNumber = parseInt(this.context.listingsSearchResults.listData.page_number);
-            // listingsQueryData.page_number = pageNumber + 1;
+        if (this.props.search.searchStatus !== SEARCH_REQUEST_COMPLETED) {
+            return false;
+        }
+        if (isSet(this.props.search.extraData.page_number)) {
+            this.props.setSearchRequestStatus(SEARCH_REQUEST_STARTED);
+            let pageNumber = parseInt(this.props.search.extraData.page_number);
             //     console.log("pageNumber")
-            //     console.log(listingsQueryData.page_number)
-            this.context.setListingsQueryData(listingsQueryData, false);
+                console.log(pageNumber)
+            this.props.setSearchRequestOperation(APPEND_SEARCH_REQUEST);
+            this.props.addListingsQueryDataString("page_number", pageNumber + 1)
         }
         // console.log(listingsQueryData);
     }
@@ -90,8 +99,10 @@ class ListingsBlock extends React.Component {
     }
 
     render() {
-        console.log(this.props.search)
+        // console.log(this.props.listings)
+        // console.log(this.props.search)
         // console.log(this.context.listingsSearchResults)
+        const extraData = this.props.search.extraData;
         return (
             <div id={"listing_block"} className={"listings-block"}>
                 <div className={"sort-bar"}>
@@ -99,6 +110,13 @@ class ListingsBlock extends React.Component {
                 </div>
                 {this.props.search.searchList.length > 0 ?
                     <>
+                    <InfiniteScroll
+                        pageStart={0}
+                        initialLoad={false}
+                        loadMore={this.loadMore}
+                        hasMore={extraData.page_number < extraData.page_count}
+                        loader={<div className="loader" key={0}>Loading ...</div>}
+                    >
                         <Row>
                             {this.props.search.searchList.map((item, index) => (
                                 <React.Fragment key={index}>
@@ -110,20 +128,22 @@ class ListingsBlock extends React.Component {
                                     }
                                 </React.Fragment>
                             ))}
-                            {this.props.search.requestStatus === SEARCH_REQUEST_COMPLETED &&
-                            <div className="loader" key={0}>Loading ...</div>
-                            }
+                            {/*{this.props.search.requestStatus === SEARCH_REQUEST_COMPLETED &&*/}
+                            {/*<div className="loader" key={0}>Loading ...</div>*/}
+                            {/*}*/}
                         </Row>
-                        {/*{this.props.search.category === "events" && this.state.modalData.show &&*/}
-                        {/*<EventInfo data={this.state.modalData} close={this.closeModal}/>*/}
-                        {/*}*/}
-                        {/*{this.props.search.category === "retail" && this.state.modalData.show &&*/}
-                        {/*<ItemInfo data={this.state.modalData} close={this.closeModal}/>*/}
-                        {/*}*/}
+                    </InfiniteScroll>
+                        {this.props.search.category === "events" && this.state.modalData.show &&
+                        <EventInfo data={this.state.modalData} close={this.closeModal}/>
+                        }
+                        {this.props.search.category === "retail" && this.state.modalData.show &&
+                        <ItemInfo data={this.state.modalData} close={this.closeModal}/>
+                        }
                     </>
                     :
                     <p>loading</p>
                 }
+
             </div>
         )
     }
@@ -136,5 +156,6 @@ function mapStateToProps(state) {
     };
 }
 export default connect(
-    mapStateToProps
+    mapStateToProps,
+    {addListingsQueryDataString, setSearchRequestOperation, setSearchRequestStatus}
 )(ListingsBlock);

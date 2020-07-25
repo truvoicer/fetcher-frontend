@@ -1,6 +1,8 @@
 import React from "react";
 import {connect} from "react-redux";
-import {addListingsQueryDataString} from "../../../../../redux/actions/listings-actions";
+import {addListingsQueryDataString} from "../../../../../redux/middleware/listings-middleware";
+import {setSearchRequestOperation} from "../../../../../redux/actions/search-actions";
+import {NEW_SEARCH_REQUEST} from "../../../../../redux/constants/search-constants";
 
 class ListingsFilterTextItem extends React.Component {
     constructor(props) {
@@ -14,6 +16,7 @@ class ListingsFilterTextItem extends React.Component {
             value: e.target.value
         };
 
+        this.props.setSearchRequestOperation(NEW_SEARCH_REQUEST);
         this.props.addListingsQueryDataString(e.target.name, e.target.value)
     }
     render() {
@@ -34,5 +37,5 @@ class ListingsFilterTextItem extends React.Component {
 
 export default connect(
     null,
-    {addListingsQueryDataString}
+    {addListingsQueryDataString, setSearchRequestOperation}
 )(ListingsFilterTextItem);

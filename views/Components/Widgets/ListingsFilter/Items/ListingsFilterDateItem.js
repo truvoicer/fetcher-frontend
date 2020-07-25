@@ -1,7 +1,9 @@
 import React from "react";
 import DatePicker from "react-datepicker";
 import {connect} from "react-redux";
-import {addListingsQueryDataString} from "../../../../../redux/actions/listings-actions";
+import {addListingsQueryDataString} from "../../../../../redux/middleware/listings-middleware";
+import {setSearchRequestOperation} from "../../../../../redux/actions/search-actions";
+import {NEW_SEARCH_REQUEST} from "../../../../../redux/constants/search-constants";
 const dateFormat = require('dateformat');
 
 class ListingsFilterDateItem extends React.Component {
@@ -23,6 +25,7 @@ class ListingsFilterDateItem extends React.Component {
         this.setState({
             startDate: date,
         });
+        this.props.setSearchRequestOperation(NEW_SEARCH_REQUEST);
         this.props.addListingsQueryDataString("start_date", dateFormat(date, this.dateFormatString))
     };
 
@@ -30,6 +33,7 @@ class ListingsFilterDateItem extends React.Component {
         this.setState({
             endDate: date,
         });
+        this.props.setSearchRequestOperation(NEW_SEARCH_REQUEST);
         // this.onChangeCallback("start_date", dateFormat(this.dateFormatString, this.state.startDate))
         this.props.addListingsQueryDataString("end_date", dateFormat(date, this.dateFormatString))
     };
@@ -39,6 +43,7 @@ class ListingsFilterDateItem extends React.Component {
             name: name,
             value: value
         };
+        this.props.setSearchRequestOperation(NEW_SEARCH_REQUEST);
         this.props.onChangeCallback(data)
         this.props.addListingsQueryDataString(name, value)
     }
@@ -70,5 +75,5 @@ class ListingsFilterDateItem extends React.Component {
 
 export default connect(
     null,
-    {addListingsQueryDataString}
+    {addListingsQueryDataString, setSearchRequestOperation}
 )(ListingsFilterDateItem);

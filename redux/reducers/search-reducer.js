@@ -1,11 +1,11 @@
 import store from "../store/index"
 // AUTH STATE
 import {createSlice} from "@reduxjs/toolkit";
-import {SEARCH_REQUEST_COMPLETED, SEARCH_REQUEST_IDLE} from "../constants/search";
-import {setSearchRequestStatus} from "../actions/search-actions";
+import {NEW_SEARCH_REQUEST, SEARCH_REQUEST_COMPLETED, SEARCH_REQUEST_IDLE} from "../constants/search-constants";
 
 const searchState = {
-    requestStatus: SEARCH_REQUEST_IDLE,
+    searchStatus: SEARCH_REQUEST_IDLE,
+    searchOperation: NEW_SEARCH_REQUEST,
     extraData: {},
     searchList: [],
     requestService: "",
@@ -18,9 +18,13 @@ export const searchSlice = createSlice({
     name: "search",
     initialState: searchState,
     reducers: {
-        setRequestStatus: (state, action) => {
-            state.requestStatus = action.payload;
-            console.log(state.requestStatus)
+        setSearchStatus: (state, action) => {
+            state.searchStatus = action.payload;
+            console.log(state.searchStatus)
+        },
+        setSearchOperation: (state, action) => {
+            state.searchOperation = action.payload;
+            console.log(state.searchOperation)
         },
         setExtraData: (state, action) => {
             state.extraData = action.payload;
@@ -48,7 +52,8 @@ export const searchSlice = createSlice({
 export const searchReducer = searchSlice.reducer;
 
 export const {
-    setRequestStatus,
+    setSearchStatus,
+    setSearchOperation,
     setExtraData,
     setSearchList,
     setRequestService,

@@ -3,7 +3,8 @@ import { setPageData, setPageError } from "../reducers/page-reducer"
 import { setListingsData, setListingsDataProviders, setListingsError} from "../reducers/listings-reducer"
 import React from "react";
 import {isSet} from "../../library/utils";
-import {getListingsProviders} from "./listings-actions";
+import {getListingsProviders} from "../middleware/listings-middleware";
+import {initialSearch} from "./search-actions";
 
 export function getPageData(url) {
     return function(dispatch) {

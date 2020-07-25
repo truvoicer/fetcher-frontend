@@ -40,7 +40,6 @@ class PageComponent extends React.Component {
 
                         <h1>{this.props.pageData.post_title}</h1>
                         {ReactHtmlParser(this.props.pageData.post_content, this.htmlParserOptions)}
-                        {/*{this.props.pageData.post_content}*/}
                     </>
                     :
                     <div>Loading...</div>

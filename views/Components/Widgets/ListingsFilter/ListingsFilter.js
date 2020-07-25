@@ -8,7 +8,7 @@ import ListingsFilterListItem from "./Items/ListingsFilterListItem";
 import ListingsFilterApiListItem from "./Items/ListingsFilterApiListItem";
 import {isSet} from "../../../../library/utils";
 import {connect} from "react-redux";
-import {buildListingsQueryData} from "../../../../redux/actions/listings-actions";
+import {buildListingsQueryData} from "../../../../redux/middleware/listings-middleware";
 
 class ListingsFilter extends React.Component {
     constructor(props) {
