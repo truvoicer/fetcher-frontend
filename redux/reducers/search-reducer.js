@@ -8,6 +8,7 @@ const searchState = {
     searchOperation: NEW_SEARCH_REQUEST,
     extraData: {},
     searchList: [],
+    hasMoreResults: false,
     requestService: "",
     provider: "",
     category: "",
@@ -31,6 +32,9 @@ export const searchSlice = createSlice({
         },
         setSearchList: (state, action) => {
             state.searchList = action.payload;
+        },
+        setHasMoreResults: (state, action) => {
+            state.hasMoreResults = action.payload;
         },
         setRequestService: (state, action) => {
             state.requestService = action.payload;
@@ -56,6 +60,7 @@ export const {
     setSearchOperation,
     setExtraData,
     setSearchList,
+    setHasMoreResults,
     setRequestService,
     setProvider,
     setCategory,

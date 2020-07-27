@@ -1,9 +1,9 @@
 import React from "react";
 import Form from "react-bootstrap/Form";
 import {connect} from "react-redux";
-import {addArrayItem, removeArrayItem} from "../../../../../redux/middleware/listings-middleware";
-import {setSearchRequestOperation} from "../../../../../redux/actions/search-actions";
-import {NEW_SEARCH_REQUEST} from "../../../../../redux/constants/search-constants";
+import {addArrayItem, removeArrayItem} from "../../../../../../redux/middleware/listings-middleware";
+import {setSearchRequestOperation} from "../../../../../../redux/actions/search-actions";
+import {NEW_SEARCH_REQUEST} from "../../../../../../redux/constants/search-constants";
 
 class ListingsFilterListItem extends React.Component {
     constructor(props) {

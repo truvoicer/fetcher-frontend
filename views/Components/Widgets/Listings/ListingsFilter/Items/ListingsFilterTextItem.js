@@ -1,8 +1,8 @@
 import React from "react";
 import {connect} from "react-redux";
-import {addListingsQueryDataString} from "../../../../../redux/middleware/listings-middleware";
-import {setSearchRequestOperation} from "../../../../../redux/actions/search-actions";
-import {NEW_SEARCH_REQUEST} from "../../../../../redux/constants/search-constants";
+import {addListingsQueryDataString} from "../../../../../../redux/middleware/listings-middleware";
+import {setSearchRequestOperation} from "../../../../../../redux/actions/search-actions";
+import {NEW_SEARCH_REQUEST} from "../../../../../../redux/constants/search-constants";
 
 class ListingsFilterTextItem extends React.Component {
     constructor(props) {

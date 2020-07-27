@@ -73,7 +73,7 @@ class ItemInfo extends React.Component {
                                             Currency:
                                         </div>
                                         <div className={"item-info--list--row--value"}>
-                                            <p>{this.state.data.item.item_item_currency}</p>
+                                            <p>{this.state.data.item.item_currency}</p>
                                         </div>
                                     </div>
                                 </li>

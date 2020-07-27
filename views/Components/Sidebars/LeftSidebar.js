@@ -1,14 +1,16 @@
-import SidebarMenu from "../Components/Menus/SidebarMenu";
-import Search from "../Components/Search";
-import ListingsFilter from "../Components/Widgets/ListingsFilter/ListingsFilter";
-import {wpApiConfig} from "../../config/wp-api-config";
+import SidebarMenu from "../Menus/SidebarMenu";
+import Search from "../Widgets/Search";
+import ListingsFilter from "../Widgets/Listings/ListingsFilter/ListingsFilter";
+import {wpApiConfig} from "../../../config/wp-api-config";
 import useSwr from "swr";
 import React from "react";
 import {connect} from "react-redux";
-import {getSidebarData} from "../../redux/actions/sidebar-actions"
-import {buildWpApiUrl} from "../../library/api/wp/middleware";
+import {getSidebarData} from "../../../redux/middleware/sidebar-middleware"
+import {buildWpApiUrl} from "../../../library/api/wp/middleware";
+import {SIDEBAR_REQUEST} from "../../../redux/constants/sidebar-constants";
+import Footer from "../../layout/Footer";
 
-class SidebarComponent extends React.Component {
+class LeftSidebar extends React.Component {
     constructor(props) {
         super(props);
         this.getSidebar = this.getSidebar.bind(this)
@@ -21,7 +23,7 @@ class SidebarComponent extends React.Component {
 
 
     getSidebar() {
-        this.props.getSidebarData(buildWpApiUrl(wpApiConfig.endpoints.sidebar))
+        this.props.getSidebarData(buildWpApiUrl(wpApiConfig.endpoints.sidebar), SIDEBAR_REQUEST)
     }
 
     render() {
@@ -40,13 +42,14 @@ class SidebarComponent extends React.Component {
                                     </div>
                                     }
 
-                                    {item.nav_menu && <SidebarMenu data={item.nav_menu}/>}
+                                    {item.nav_menu && <SidebarMenu data={item.nav_menu} sidebar={"sidebar"}/>}
 
                                 </div>
                             ))}
                         </>
                         }
                     </div>
+                    {/*<Footer />*/}
                 </div>
             </div>
         )
@@ -62,6 +65,6 @@ function mapStateToProps(state) {
 const Sidebar = connect(
     mapStateToProps,
     {getSidebarData}
-)(SidebarComponent);
+)(LeftSidebar);
 
 export default Sidebar;

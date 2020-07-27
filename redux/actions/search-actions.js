@@ -7,6 +7,7 @@ import {
     setSearchOperation,
     setRequestService,
     setSearchList,
+    setHasMoreResults,
     setExtraData,
     setProvider,
     setCategory,
@@ -72,9 +73,11 @@ export function setSearchRequestStatus(status) {
     store.dispatch(setSearchStatus(status))
 }
 export function setSearchRequestOperation(operation) {
-    return function (dispatch) {
         store.dispatch(setSearchOperation(operation))
-    }
+}
+
+export function setSearchHasMoreResults(hasMoreResults) {
+    store.dispatch(setHasMoreResults(hasMoreResults))
 }
 
 export function setSearchRequestError(error) {
@@ -89,6 +92,16 @@ export function searchResponseHandler(status, data, completed = false) {
         setSearchRequestService(data.requestService)
         setSearchProvider(data.provider)
         setSearchCategory(data.category)
+
+        if (isSet(data.extraData.page_offset) && isSet(data.extraData.page_size)) {
+            if (parseInt(data.extraData.page_offset) < parseInt(data.extraData.total_items)) {
+                setSearchHasMoreResults(true);
+            }
+        } else if (isSet(data.extraData.page_number)) {
+            if (parseInt(data.extraData.page_number) < parseInt(data.extraData.page_count)) {
+                setSearchHasMoreResults(true);
+            }
+        }
     } else {
         setSearchRequestStatus(SEARCH_REQUEST_ERROR);
         setSearchRequestError(data.message)
@@ -125,6 +138,14 @@ function validateSearchParams() {
     return true;
 }
 
+function getEndpointOperation() {
+    const listingsDataState = store.getState().listings.listingsData;
+    if (isSet(listingsDataState.service_endpoint) && listingsDataState.service_endpoint !== "") {
+        return listingsDataState.service_endpoint;
+    }
+    return fetcherApiConfig.defaultOperation
+}
+
 export const runSearch = () => {
     setSearchRequestStatus(SEARCH_REQUEST_STARTED);
     const listingsDataState = store.getState().listings.listingsData;
@@ -140,7 +161,7 @@ export const runSearch = () => {
         listingsDataState.providers.map((provider, index) => {
             providers.push(provider.provider_name)
             queryData["provider"] = provider.provider_name;
-            fetchData("operation", ["list"], queryData, searchResponseHandler, (listingsDataState.providers.length === index + 1))
+            fetchData("operation", [getEndpointOperation()], queryData, searchResponseHandler, (listingsDataState.providers.length === index + 1))
         });
         providers.map((provider) => {
             addArrayItem("providers", provider)
@@ -148,7 +169,7 @@ export const runSearch = () => {
     } else {
         queryDataState.providers.map((provider, index) => {
             queryData["provider"] = provider;
-            fetchData("operation", ["list"], queryData, searchResponseHandler, (queryDataState.providers.length === index + 1))
+            fetchData("operation", [getEndpointOperation()], queryData, searchResponseHandler, (queryDataState.providers.length === index + 1))
         });
     }
 
@@ -170,6 +191,7 @@ export function initialSearch() {
         setSearchError("Initial search type or value not set...")
         return false;
     }
+    // addListingsQueryDataString(fetcherApiConfig.searchLimitKey, fetcherApiConfig.defaultSearchLimit, true)
     if (initialSearch.search_type === "query") {
         addQueryDataString(fetcherApiConfig.queryKey, initialSearch.search_value, true)
     } else if (initialSearch.search_type === "location") {

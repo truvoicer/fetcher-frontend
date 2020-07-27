@@ -1,5 +1,5 @@
 export const fetcherApiConfig = {
-    apiBaseUrl: "http://localhost:8001/api/",
+    apiBaseUrl: "http://localhost:8081/api/",
     email: "truvoice@local.com",
     password: "Deelite4",
     endpoints: {
@@ -9,5 +9,6 @@ export const fetcherApiConfig = {
     },
     queryKey: "query",
     searchLimitKey: "limit",
-    defaultSearchLimit: 10
+    defaultSearchLimit: 10,
+    defaultOperation: "list"
 }

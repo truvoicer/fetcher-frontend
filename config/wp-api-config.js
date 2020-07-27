@@ -1,8 +1,8 @@
 import {siteConfig} from "./site-config";
-import ListingsBlock from "../views/Components/Widgets/ListingsBlock";
+import ListingsBlock from "../views/Components/Widgets/Listings/ListingsBlock/ListingsBlock";
 
 export const wpApiConfig = {
-    apiBaseUrl: "http://fetcher-wordpress.test/wp-json/",
+    apiBaseUrl: "http://localhost:8080/wp-json/",
     endpoints: {
         posts: "wp/v2/posts",
         page: "wp/v2/page/%s",
@@ -10,6 +10,7 @@ export const wpApiConfig = {
         media: "wp/v2/media",
         menu: "wp/v2/menu/%s",
         sidebar: "wp/v2/sidebar/"+siteConfig.sidebarName,
+        topBar: "wp/v2/sidebar/"+siteConfig.topBarName,
         settings: "wp/v2/settings"
     },
     widgets:  {
@@ -17,5 +18,4 @@ export const wpApiConfig = {
             component: ListingsBlock
         }
     }
-
 }

@@ -1,62 +1,16 @@
-import {wpApiConfig} from "../../../config/wp-api-config";
-import useSwr from "swr";
-import {siteConfig} from "../../../config/site-config";
-import Link from "next/link";
-const sprintf = require("sprintf").sprintf;
+import MenuList from "./MenuList";
 import React from 'react';
-
-const fetcher = (url) => fetch(url).then((res) => res.json())
 
 class HeaderMenu extends React.Component {
     constructor(props) {
         super(props);
-        this.getMenu = this.getMenu.bind(this)
-        this.showSubMenu = this.showSubMenu.bind(this)
-    }
-    showSubMenu(e) {
-        if (e.target.classList.contains("active")) {
-            e.target.classList.remove("active")
-        } else {
-            e.target.classList.add("active")
-        }
-    }
-    getMenu() {
-        const endpoint = sprintf(wpApiConfig.apiBaseUrl + wpApiConfig.endpoints.menu, siteConfig.headerMenu);
-        const {data, error} = useSwr(endpoint, fetcher)
-
-        if (error) return <div>Failed to load menu</div>
-        if (!data) return <div>Loading...</div>
-
-        return (
-            <nav id="menu" className={"horizontal-nav"}>
-                <ul>
-                    {data.map((item, index) => (
-                    item.menu_sub_items
-                        ?
-                        <li key={"sidebar_menu_item_"+index.toString()}>
-                            <span className="opener" onClick={this.showSubMenu}>{item.menu_item.title}</span>
-                            <ul>
-                                {item.menu_sub_items.map((subItem, subIndex) => (
-                                <li key={"sidebar_sub_menu_item_"+index+subIndex}>
-                                    <a href={"/"+subItem.title.toLowerCase()}>{subItem.title}</a>
-                                </li>
-                                ))}
-                            </ul>
-                        </li>
-                        :
-                        <li key={"sidebar_menu_item_"+index.toString()}>
-                            <a href={"/"+item.menu_item.title.toLowerCase()}>{item.menu_item.title}</a>
-                        </li>
-
-                    ))}
-                </ul>
-            </nav>
-        )
     }
 
     render() {
         return (
-            <this.getMenu/>
+            <nav id="menu" className={"horizontal-nav"}>
+                <MenuList data={this.props.data}/>
+            </nav>
         )
     }
 }
