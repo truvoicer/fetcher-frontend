@@ -2,6 +2,7 @@ import axios from 'axios';
 import React from 'react'
 import {fetcherApiConfig} from "../../../../config/fetcher-api-config";
 
+
 export const getToken = async () => {
     let data = {
         email: fetcherApiConfig.email,
