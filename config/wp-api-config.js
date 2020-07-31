@@ -2,7 +2,7 @@ import {siteConfig} from "./site-config";
 import ListingsBlock from "../views/Components/Widgets/Listings/ListingsBlock/ListingsBlock";
 
 export const wpApiConfig = {
-    apiBaseUrl: "http://localhost:8080/wp-json/",
+    apiBaseUrl: process.env.NEXT_PUBLIC_WP_API_URL,
     endpoints: {
         posts: "wp/v2/posts",
         page: "wp/v2/page/%s",

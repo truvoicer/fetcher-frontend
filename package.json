@@ -27,6 +27,7 @@
     "swr": "^0.2.2"
   },
   "devDependencies": {
+    "dotenv": "^8.2.0",
     "immer": "^7.0.5",
     "react-redux": "^7.2.0",
     "redux": "^4.0.5",
