@@ -3,7 +3,7 @@ import {ListingsContext} from "../../../../../../../Context/ListingsContext";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import EventInfo from "../../../../../../Modals/Events/EventInfo";
-import {getDefaultImage, isSet} from "../../../../../../../../library/utils";
+import {formatDate, getDefaultImage, isSet} from "../../../../../../../../library/utils";
 
 
 class EventItemCompact extends React.Component {
@@ -26,7 +26,8 @@ class EventItemCompact extends React.Component {
                         <h3><a href="#"
                                onClick={this.props.showInfoCallback.bind(this, this.props.data)}>{this.props.data.item_name}</a>
                         </h3>
-                        {/*<address>Don St, Brooklyn, New York</address>*/}
+                        <p>{this.props.data.item_venue}</p>
+                        <p>{formatDate(this.props.data.item_start_date)}</p>
                         <p className="mb-0">
                             <span className="icon-star text-warning"></span>
                             <span className="icon-star text-warning"></span>

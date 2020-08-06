@@ -22,7 +22,8 @@ class ListingsFilterTextItem extends React.Component {
 
     render() {
         return (
-            <div className={"form-group"}>
+            <div className={"form-group filter-text"}>
+                <p className={"section-label"}>{this.props.data.label}</p>
                 <input type={"text"}
                        name={this.props.data.name}
                        value={this.props.value && this.props.value[this.props.data.name]}

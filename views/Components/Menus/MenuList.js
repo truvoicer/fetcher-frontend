@@ -26,7 +26,6 @@ class MenuList extends React.Component {
 
     pageClickHandler(item, e) {
         e.preventDefault()
-        console.log(item)
         let url = e.target.getAttribute("href");
         // Router.push(null, url, { shallow: true })
 
@@ -35,7 +34,6 @@ class MenuList extends React.Component {
     }
 
     render() {
-        console.log(this.props.data.menu_items)
         return (
             <ul className="site-menu js-clone-nav mr-auto d-none d-lg-block">
                 {this.props.data.menu_items.map((item, index) => (

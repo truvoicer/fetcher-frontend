@@ -26,6 +26,7 @@ import EventItemDetailed from "../ListingsItem/Grid/Detailed/Event/EventItemDeta
 import ProductItemList from "../ListingsItem/Grid/List/Product/ProductItemList";
 import EventItemList from "../ListingsItem/Grid/List/Event/EventItemList";
 import RightSidebar from "../../../Sidebars/RightSidebar";
+import ListingsSortBar from "./ListingsSortBar";
 
 class ListingsBlock extends React.Component {
     constructor(props) {
@@ -154,15 +155,16 @@ class ListingsBlock extends React.Component {
 
     render() {
         // console.log(this.props.listings)
-        // console.log(this.props.search)
-        // console.log(this.context.listingsSearchResults)
+        console.log(this.props.search)
         return (
             <div className="site-section">
                 <div className="container">
                     <div className="row">
                         <div className="col-lg-8">
+                            <div className={"listings-block"}>
                             {this.props.search.searchList.length > 0 ?
                                 <>
+                                    <ListingsSortBar />
                                     <InfiniteScroll
                                         pageStart={0}
                                         initialLoad={false}
@@ -188,6 +190,7 @@ class ListingsBlock extends React.Component {
                                 :
                                 <LoaderComponent key={"loader"}/>
                             }
+                            </div>
                         </div>
                         <div className="col-lg-3 ml-auto">
                             <RightSidebar />

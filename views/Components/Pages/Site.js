@@ -6,6 +6,7 @@ import {buildWpApiUrl} from "../../../library/api/wp/middleware";
 import Head from "next/head";
 import {connect} from "react-redux";
 import {getPageData} from "../../../redux/middleware/page-middleware";
+import HeroBlock from "../HeroBlock";
 
 class SiteComponent extends React.Component {
     constructor(props) {
@@ -26,8 +27,7 @@ class SiteComponent extends React.Component {
                             <title>{this.props.pageData.seo_title ? this.props.pageData.seo_title : "Loading.."}</title>
                             <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
                         </Head>
-
-                        <h1>{this.props.pageData.post_title}</h1>
+                        <HeroBlock />
                         {ReactHtmlParser(this.props.pageData.post_content, this.htmlParserOptions)}
                     </>
                     :

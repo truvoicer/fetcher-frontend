@@ -31,7 +31,6 @@ class Search extends React.Component {
 
     render() {
         return (
-            <section id="search" className="alt">
                 <form method="post" onSubmit={this.formClickHandler}>
                         <input type="text"
                                placeholder="Search"
@@ -39,7 +38,6 @@ class Search extends React.Component {
                                onChange={this.formChangeHandler}/>
                     <span className={"search-icon"} onClick={this.formClickHandler}/>
                 </form>
-            </section>
         )
     }
 }

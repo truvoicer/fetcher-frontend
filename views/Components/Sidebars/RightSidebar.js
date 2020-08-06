@@ -31,22 +31,22 @@ class RightSidebar extends React.Component {
                 {this.props.sidebarData.length > 0 &&
                 <>
                     {this.props.sidebarData.map((item, index) => (
-                        <div key={"sidebar_widget_" + index}>
+                        <React.Fragment key={index.toString()}>
                             {item.search &&
-                            <div>
+                                <>
                                 <Search data={item.search}/>
                                 <ListingsFilter />
-                            </div>
+                                </>
                             }
 
                             {item.nav_menu && <SidebarMenu data={item.nav_menu} sidebar={"sidebar"}/>}
 
-                        </div>
+                        </React.Fragment>
                     ))}
                 </>
                 }
             </div>
-            
+
         )
     }
 }

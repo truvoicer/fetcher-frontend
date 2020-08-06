@@ -4,6 +4,7 @@ import {createSlice} from "@reduxjs/toolkit";
 
 const pageState = {
     post: {},
+    blocksData: {},
     siteConfig: {},
     sidebar: [],
     topBar: [],
@@ -18,6 +19,9 @@ export const pageSlice = createSlice({
         setPageData: (state, action) => {
             state.post = action.payload.post;
             state.siteConfig = action.payload.site_config;
+        },
+        setBlocksData: (state, action) => {
+            state.blocksData = action.payload;
         },
         setSidebarData: (state, action) => {
             state.sidebar = action.payload;
@@ -36,4 +40,4 @@ export const pageSlice = createSlice({
 });
 
 export const pageReducer = pageSlice.reducer;
-export const { setPageData, setSidebarData, setTopBarData, setFooterData, setPageError } = pageSlice.actions;
+export const { setPageData, setBlocksData, setSidebarData, setTopBarData, setFooterData, setPageError } = pageSlice.actions;

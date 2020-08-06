@@ -1,5 +1,6 @@
 import {siteConfig} from "./site-config";
 import ListingsBlock from "../views/Components/Widgets/Listings/ListingsBlock/ListingsBlock";
+import HeroBlock from "../views/Components/HeroBlock";
 
 export const wpApiConfig = {
     apiBaseUrl: process.env.NEXT_PUBLIC_WP_API_URL,
@@ -11,6 +12,7 @@ export const wpApiConfig = {
         menu: "wp/v2/menu/%s",
         sidebar: "wp/v2/sidebar/"+siteConfig.sidebarName,
         topBar: "wp/v2/sidebar/"+siteConfig.topBarName,
+        footer: "wp/v2/sidebar/"+siteConfig.footerName,
         settings: "wp/v2/settings"
     },
     widgets:  {

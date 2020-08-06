@@ -43,13 +43,12 @@ class ListingsFilterApiListItem extends React.Component {
 
     render() {
         return (
-                <div className="form-group">
-                    <p>{this.props.data.label}</p>
+                <div className="form-group filter-list">
+                    <p className={"section-label"}>{this.props.data.label}</p>
                     <ul className="list-unstyled">
                         {this.state.listItems &&
                         this.state.listItems.map((item, index) => (
-                            <li className={"listings-filter--item-control"}
-                                key={"api_list_control_" + index.toString()}>
+                            <li key={"api_list_control_" + index.toString()}>
                                 <Form.Check
                                     type={"checkbox"}
                                     label={item.provider_label}

@@ -22,14 +22,13 @@ class ListingsFilterListItem extends React.Component {
 
     render() {
         return (
-            <div className="form-group">
+            <div className="form-group filter-list">
                 <ul className="list-unstyled">
-                    <p>{this.props.data.label}</p>
+                    <p className={"section-label"}>{this.props.data.label}</p>
                     {this.props.data.list_source === "wordpress" &&
                     this.props.data.list.map((item, index) => (
 
-                        <li className={"listings-filter--item-control"}
-                            key={"list_control_" + index.toString()}>
+                        <li key={"list_control_" + index.toString()}>
                             <Form.Check
                                 type={"checkbox"}
                                 label={item.label}

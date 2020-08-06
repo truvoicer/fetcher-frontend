@@ -10,6 +10,9 @@
 @import "site-navbar";
 /* Blocks */
 @import "site-blocks";
+@import "layout/site-footer";
 
 @import 'components/loader';
+@import 'components/listings-filters';
+@import 'components/listings-block';
 @import "~react-datepicker/src/stylesheets/datepicker";

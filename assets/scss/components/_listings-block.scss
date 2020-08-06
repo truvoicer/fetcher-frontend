@@ -1,0 +1,23 @@
+.listings-block {
+  .sort-bar {
+    height: auto;
+    margin: 20px 0;
+    box-shadow: 0 3px 4px rgba(125, 125, 125, 0.1);
+    padding: 10px;
+    border-radius: 5px;
+    ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      li {
+        display: inline-block;
+        &:first-child {
+          padding-left: 0;
+        }
+      }
+    }
+    .sort-bar--form-control {
+
+    }
+  }
+}

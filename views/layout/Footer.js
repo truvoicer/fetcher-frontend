@@ -1,6 +1,28 @@
+import {connect} from "react-redux";
+import {getSidebarData} from "../../redux/middleware/sidebar-middleware";
+import {buildWpApiUrl} from "../../library/api/wp/middleware";
+import {wpApiConfig} from "../../config/wp-api-config";
+import {FOOTER_REQUEST, SIDEBAR_REQUEST} from "../../redux/constants/sidebar-constants";
+import React from "react";
+import Search from "../Components/Widgets/Search";
+import ListingsFilter from "../Components/Widgets/Listings/ListingsFilter/ListingsFilter";
+import SidebarMenu from "../Components/Menus/SidebarMenu";
+import FooterMenu from "../Components/Menus/FooterMenu";
+import TextWidget from "../Components/Widgets/TextWidget";
+import SocialIconsWidget from "../Components/Widgets/SocialIconsWidget";
+
 class Footer extends React.Component {
     constructor(props) {
         super(props);
+        this.getFooter = this.getFooter.bind(this)
+    }
+
+    componentDidMount() {
+        this.getFooter();
+    }
+
+    getFooter() {
+        this.props.getSidebarData(buildWpApiUrl(wpApiConfig.endpoints.footer), FOOTER_REQUEST)
     }
 
     render() {
@@ -8,50 +30,28 @@ class Footer extends React.Component {
             <footer className="site-footer">
                 <div className="container">
                     <div className="row">
-                        <div className="col-md-9">
-                            <div className="row">
-                                <div className="col-md-6">
-                                    <h2 className="footer-heading mb-4">About</h2>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Provident rerum unde
-                                        possimus molestias dolorem fuga, illo quis fugiat!</p>
-                                </div>
+                        {this.props.footerData.length > 0 &&
+                        <>
+                            {this.props.footerData.map((item, index) => (
+                                <div className={"col"} key={index.toString()}>
 
-                                <div className="col-md-3">
-                                    <h2 className="footer-heading mb-4">Navigations</h2>
-                                    <ul className="list-unstyled">
-                                        <li><a href="#">About Us</a></li>
-                                        <li><a href="#">Services</a></li>
-                                        <li><a href="#">Testimonials</a></li>
-                                        <li><a href="#">Contact Us</a></li>
-                                    </ul>
+                                    {item.nav_menu &&
+                                    <FooterMenu data={item.nav_menu} sidebar={"footer"}/>
+                                    }
+                                    {item.text &&
+                                    <TextWidget data={item.text} />
+                                    }
+                                    {item.social_media_widget &&
+                                    <SocialIconsWidget data={item.social_media_widget} />
+                                    }
+
                                 </div>
-                                <div className="col-md-3">
-                                    <h2 className="footer-heading mb-4">Follow Us</h2>
-                                    <a href="#" className="pl-0 pr-3"><span className="icon-facebook"/></a>
-                                    <a href="#" className="pl-3 pr-3"><span className="icon-twitter"/></a>
-                                    <a href="#" className="pl-3 pr-3"><span className="icon-instagram"/></a>
-                                    <a href="#" className="pl-3 pr-3"><span className="icon-linkedin"/></a>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-md-3">
-                            <form action="#" method="post">
-                                <div className="input-group mb-3">
-                                    <input type="text"
-                                           className="form-control border-secondary text-white bg-transparent"
-                                           placeholder="Search products..." aria-label="Enter Email"
-                                           aria-describedby="button-addon2"/>
-                                        <div className="input-group-append">
-                                            <button className="btn btn-primary text-white" type="button"
-                                                    id="button-addon2">Search
-                                            </button>
-                                        </div>
-                                </div>
-                            </form>
-                        </div>
+                            ))}
+                        </>
+                        }
                     </div>
                     <div className="row pt-5 mt-5 text-center">
-                        <div className="col-md-12">
+                        <div className="col">
                             <div className="border-top pt-5">
                                 <p>
                                 </p>
@@ -64,4 +64,14 @@ class Footer extends React.Component {
         )
     }
 }
-export default Footer;
+
+function mapStateToProps(state) {
+    return {
+        footerData: state.page.footer
+    };
+}
+
+export default connect(
+    mapStateToProps,
+    {getSidebarData}
+)(Footer);

@@ -13,20 +13,21 @@ class ProductItemCompact extends React.Component {
     }
 
     render() {
+        console.log(this.props.data)
         return (
             <Col sm={12} md={6} lg={6}>
                 <div className="d-block d-md-flex listing vertical">
                     <a href="#" className="img d-block"
-                       style={{backgroundImage: "url('" + getDefaultImage(this.props.data) + "')"}}/>
+                       style={{backgroundImage: "url('" + this.props.data.item_image_url + "')"}}/>
                     <div className="lh-content">
                         <span className="category">Cars &amp; Vehicles</span>
                         <a href="#" className="bookmark">
                             <span className="icon-heart"></span>
                         </a>
                         <h3><a href="#"
-                               onClick={this.props.showInfoCallback.bind(this, this.props.data)}>{this.props.data.item_name}</a>
+                               onClick={this.props.showInfoCallback.bind(this, this.props.data)}>{this.props.data.item_title}</a>
                         </h3>
-                        {/*<address>Don St, Brooklyn, New York</address>*/}
+                        {/*<p>{}</p>*/}
                         <p className="mb-0">
                             <span className="icon-star text-warning"></span>
                             <span className="icon-star text-warning"></span>

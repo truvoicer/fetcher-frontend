@@ -24,7 +24,7 @@ import {
     SEARCH_REQUEST_IDLE,
     SEARCH_REQUEST_STARTED,
     APPEND_SEARCH_REQUEST,
-    NEW_SEARCH_REQUEST
+    NEW_SEARCH_REQUEST, SEARCH_RESET
 } from "../constants/search-constants";
 
 export function setSearchExtraData(extraData) {
@@ -42,8 +42,8 @@ export function setSearchListData(listData) {
     const searchStatus = searchState.searchStatus;
 
     const nextState = produce(searchState.searchList, (draftState) => {
-        if (searchOperation === NEW_SEARCH_REQUEST && searchStatus === SEARCH_REQUEST_COMPLETED) {
-            console.log("new")
+        if ((searchOperation === NEW_SEARCH_REQUEST)) {
+            store.dispatch(setSearchOperation(APPEND_SEARCH_REQUEST));
             draftState.splice(0, draftState.length + 1);
 
         } else if (searchOperation === APPEND_SEARCH_REQUEST) {

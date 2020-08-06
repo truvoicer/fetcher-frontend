@@ -79,8 +79,8 @@ class ListingsFilter extends React.Component {
         return (
             <>
                 {listingsFilterData &&
-                <>
-                    <h3 className="h5 text-black mb-3">Filters</h3>
+                <div className={"listings-filters"}>
+                    <h3 className="h5 text-black mb-1 mt-3">Filters</h3>
                     <form>
                         {listingsFilterData.listings_filters.map((item, index) => (
                             <React.Fragment key={index}>
@@ -102,7 +102,7 @@ class ListingsFilter extends React.Component {
                             </React.Fragment>
                         ))}
                     </form>
-                </>
+                </div>
                 }
             </>
         )

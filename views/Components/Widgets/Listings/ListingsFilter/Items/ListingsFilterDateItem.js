@@ -52,15 +52,21 @@ class ListingsFilterDateItem extends React.Component {
     render() {
         return (
 
-            <div className={"form-group"}>
+            <div className={"form-group filter-date"}>
+                <p className={"section-label"}>{this.props.data.label}</p>
+
+                <label>Start Date:</label>
                 <DatePicker
+                    className={"filter-datepicker"}
                     selected={this.state.startDate}
                     onChange={this.handleStartDateChange}
                     startDate={this.state.startDate}
                     endDate={this.state.endDate}
                     selectsStart
                 />
+                <label>End Date:</label>
                 <DatePicker
+                    className={"filter-datepicker"}
                     selected={this.state.endDate}
                     onChange={this.handleEndDateChange}
                     startDate={this.state.startDate}
