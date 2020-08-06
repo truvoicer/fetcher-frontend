@@ -2,8 +2,9 @@ import React from "react";
 import DatePicker from "react-datepicker";
 import {connect} from "react-redux";
 import {addListingsQueryDataString} from "../../../../../../redux/middleware/listings-middleware";
-import {setSearchRequestOperation} from "../../../../../../redux/actions/search-actions";
+import {setSearchRequestOperation} from "../../../../../../redux/middleware/search-middleware";
 import {NEW_SEARCH_REQUEST} from "../../../../../../redux/constants/search-constants";
+
 const dateFormat = require('dateformat');
 
 class ListingsFilterDateItem extends React.Component {
@@ -47,28 +48,26 @@ class ListingsFilterDateItem extends React.Component {
         this.props.onChangeCallback(data)
         this.props.addListingsQueryDataString(name, value)
     }
+
     render() {
         return (
-            <>
-                <ul>
-                    <li className={"listings-filter--item-control"}>
-                        <DatePicker
-                            selected={this.state.startDate}
-                            onChange={this.handleStartDateChange}
-                            startDate={this.state.startDate}
-                            endDate={this.state.endDate}
-                            selectsStart
-                        />
-                        <DatePicker
-                            selected={this.state.endDate}
-                            onChange={this.handleEndDateChange}
-                            startDate={this.state.startDate}
-                            endDate={this.state.endDate}
-                            selectsEnd
-                        />
-                    </li>
-                </ul>
-            </>
+
+            <div className={"form-group"}>
+                <DatePicker
+                    selected={this.state.startDate}
+                    onChange={this.handleStartDateChange}
+                    startDate={this.state.startDate}
+                    endDate={this.state.endDate}
+                    selectsStart
+                />
+                <DatePicker
+                    selected={this.state.endDate}
+                    onChange={this.handleEndDateChange}
+                    startDate={this.state.startDate}
+                    endDate={this.state.endDate}
+                    selectsEnd
+                />
+            </div>
         )
     }
 }

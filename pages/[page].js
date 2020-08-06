@@ -1,8 +1,11 @@
 import React from "react";
 import FetcherApp from "../views/App";
 import Router from "next/router";
-import {Provider} from "react-redux";
+import {connect, Provider} from "react-redux";
 import store from "../redux/store/index";
+import {getPageData} from "../redux/middleware/page-middleware";
+import {buildWpApiUrl} from "../library/api/wp/middleware";
+import {wpApiConfig} from "../config/wp-api-config";
 
 class Page extends React.Component {
     static async getInitialProps(ctx) {
@@ -13,29 +16,22 @@ class Page extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {
-            data: {
-                pageName: ""
-            }
-        }
     }
+
     componentDidMount() {
         const {page} = Router.query;
-        this.setState({
-            data: {
-                pageName: page
-            }
-        })
+        this.props.getPageData(buildWpApiUrl(wpApiConfig.endpoints.page, page));
+
     }
 
     render() {
         return (
-
-            <Provider store={store}>
-            <FetcherApp data={this.state.data}/>
-            </Provider>
+                <FetcherApp />
         )
     }
 }
 
-export default Page;
+export default connect(
+    null,
+    {getPageData}
+)(Page);

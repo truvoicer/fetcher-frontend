@@ -77,42 +77,34 @@ class ListingsFilter extends React.Component {
         const listingsFilterData = this.getListingFilterData();
         // console.log(listingsFilterData)
         return (
-            <div id={"listings_filter"} className={"listings-filter"}>
+            <>
                 {listingsFilterData &&
                 <>
-                    <header className="major">
-                        <h2>{listingsFilterData.filter_heading}</h2>
-                    </header>
+                    <h3 className="h5 text-black mb-3">Filters</h3>
                     <form>
-                        <ul>
-                            {listingsFilterData.listings_filters.map((item, index) => (
-
-                                <li className={"listings-filter--item"} key={index}>
-                                    <span className="opener" onClick={this.showControl}>{item.label}</span>
-
-                                    {item.type === "text" &&
-                                    <ListingsFilterTextItem
-                                        controlPrefix={this.state.controlPrefix}
-                                        data={item}
-                                        value={this.state.data[item.name]}/>
-                                    }
-                                    {item.type === "date" &&
-                                    <ListingsFilterDateItem
-                                        controlPrefix={this.state.controlPrefix}
-                                        data={item}
-                                        value={this.state.data[item.name]}/>
-                                    }
-                                    {item.type === "list" &&
-                                        this.getDataList(item)
-                                    }
-                                </li>
-                            ))}
-
-                        </ul>
+                        {listingsFilterData.listings_filters.map((item, index) => (
+                            <React.Fragment key={index}>
+                                {item.type === "text" &&
+                                <ListingsFilterTextItem
+                                    controlPrefix={this.state.controlPrefix}
+                                    data={item}
+                                    value={this.state.data[item.name]}/>
+                                }
+                                {item.type === "date" &&
+                                <ListingsFilterDateItem
+                                    controlPrefix={this.state.controlPrefix}
+                                    data={item}
+                                    value={this.state.data[item.name]}/>
+                                }
+                                {item.type === "list" &&
+                                this.getDataList(item)
+                                }
+                            </React.Fragment>
+                        ))}
                     </form>
                 </>
                 }
-            </div>
+            </>
         )
     }
 }

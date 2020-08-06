@@ -3,7 +3,7 @@ import Form from "react-bootstrap/Form";
 import {fetchData} from "../../../../../../library/api/fetcher/middleware";
 import {connect} from "react-redux";
 import {addArrayItem, removeArrayItem} from "../../../../../../redux/middleware/listings-middleware";
-import {setSearchRequestOperation} from "../../../../../../redux/actions/search-actions";
+import {setSearchRequestOperation} from "../../../../../../redux/middleware/search-middleware";
 import {NEW_SEARCH_REQUEST} from "../../../../../../redux/constants/search-constants";
 
 class ListingsFilterApiListItem extends React.Component {
@@ -16,6 +16,7 @@ class ListingsFilterApiListItem extends React.Component {
         this.getApiListCallback = this.getApiListCallback.bind(this);
         this.getApiList = this.getApiList.bind(this);
     }
+
     componentDidMount() {
         this.getApiList()
     }
@@ -34,33 +35,34 @@ class ListingsFilterApiListItem extends React.Component {
     formChangeHandler(e) {
         this.props.setSearchRequestOperation(NEW_SEARCH_REQUEST);
         if (e.target.checked) {
-            this.props.addArrayItem(this.props.data.api_endpoint, e.target.value)
-        }
-        else {
-            this.props.removeArrayItem(this.props.data.api_endpoint, e.target.value)
+            this.props.addArrayItem(this.props.data.api_endpoint, e.target.value, true)
+        } else {
+            this.props.removeArrayItem(this.props.data.api_endpoint, e.target.value, true)
         }
     }
+
     render() {
         return (
-            <>
-                <ul>
-                    {this.state.listItems &&
-                    this.state.listItems.map((item, index) => (
-                        <li className={"listings-filter--item-control"}
-                            key={"api_list_control_" + index.toString()}>
-                            <Form.Check
-                                type={"checkbox"}
-                                label={item.provider_label}
-                                id={this.props.controlPrefix + item.provider_name}
-                                name={this.props.data.api_endpoint + "[]"}
-                                value={item.provider_name}
-                                onChange={this.formChangeHandler}
-                            />
-                        </li>
-                    ))
-                    }
-                </ul>
-            </>
+                <div className="form-group">
+                    <p>{this.props.data.label}</p>
+                    <ul className="list-unstyled">
+                        {this.state.listItems &&
+                        this.state.listItems.map((item, index) => (
+                            <li className={"listings-filter--item-control"}
+                                key={"api_list_control_" + index.toString()}>
+                                <Form.Check
+                                    type={"checkbox"}
+                                    label={item.provider_label}
+                                    id={this.props.controlPrefix + item.provider_name}
+                                    name={this.props.data.api_endpoint + "[]"}
+                                    value={item.provider_name}
+                                    onChange={this.formChangeHandler}
+                                />
+                            </li>
+                        ))
+                        }
+                    </ul>
+                </div>
         )
     }
 }

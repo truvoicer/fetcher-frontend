@@ -3,7 +3,7 @@ import React from "react";
 import {ListingsContext} from "../../Context/ListingsContext";
 import {connect} from "react-redux";
 import {addListingsQueryDataString} from "../../../redux/middleware/listings-middleware";
-import {setSearchRequestOperation} from "../../../redux/actions/search-actions";
+import {setSearchRequestOperation} from "../../../redux/middleware/search-middleware";
 import {fetcherApiConfig} from "../../../config/fetcher-api-config";
 import {NEW_SEARCH_REQUEST} from "../../../redux/constants/search-constants";
 

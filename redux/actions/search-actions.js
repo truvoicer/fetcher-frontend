@@ -17,7 +17,7 @@ import {isEmpty, isSet} from "../../library/utils";
 import {setListingsQueryData} from "../reducers/listings-reducer";
 import produce from "immer";
 import {addArrayItem, addListingsQueryDataString} from "../middleware/listings-middleware";
-import {addQueryDataString} from "./listings-actions";
+import {addQueryDataObject, addQueryDataString} from "./listings-actions";
 import {
     SEARCH_REQUEST_COMPLETED,
     SEARCH_REQUEST_ERROR,
@@ -42,7 +42,7 @@ export function setSearchListData(listData) {
     const searchStatus = searchState.searchStatus;
 
     const nextState = produce(searchState.searchList, (draftState) => {
-        if (searchOperation === NEW_SEARCH_REQUEST && draftState.length === 0) {
+        if (searchOperation === NEW_SEARCH_REQUEST && searchStatus === SEARCH_REQUEST_COMPLETED) {
             console.log("new")
             draftState.splice(0, draftState.length + 1);
 
@@ -191,10 +191,12 @@ export function initialSearch() {
         setSearchError("Initial search type or value not set...")
         return false;
     }
-    // addListingsQueryDataString(fetcherApiConfig.searchLimitKey, fetcherApiConfig.defaultSearchLimit, true)
+    let queryData = {};
+    queryData[fetcherApiConfig.searchLimitKey] = fetcherApiConfig.defaultSearchLimit;
     if (initialSearch.search_type === "query") {
-        addQueryDataString(fetcherApiConfig.queryKey, initialSearch.search_value, true)
+        queryData[fetcherApiConfig.queryKey] = initialSearch.search_value
     } else if (initialSearch.search_type === "location") {
-        addQueryDataString("location", initialSearch.search_value, true)
+        queryData.location = initialSearch.search_value
     }
+    addQueryDataObject(queryData, true);
 }

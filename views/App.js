@@ -4,6 +4,9 @@ import {AddAxiosInterceptors} from "../library/api/global-scripts"
 import React from "react";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
+import Header from "./layout/Header";
+import Site from "./Components/Pages/Site";
+import Footer from "./layout/Footer";
 
 class FetcherApp extends React.Component {
     constructor(props) {
@@ -16,19 +19,15 @@ class FetcherApp extends React.Component {
 
     render() {
         return (
+            <div className="site-wrap">
 
-            <div id="wrapper">
-                <SidebarComponent/>
-                <div id="main">
-                    <Row>
-                        <Col sm={12} md={12} lg={12}>
-                            {this.props.data.pageName !== "" &&
-                            <PageComponent data={this.props.data}/>
-                            }
-                        </Col>
-                    </Row>
-                </div>
+                <Header/>
+                <Site />
+
+
+            <Footer />
             </div>
+
         )
     }
 }

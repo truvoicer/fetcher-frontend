@@ -15,10 +15,7 @@ import {
 } from "../../../../../redux/constants/search-constants";
 import InfiniteScroll from 'react-infinite-scroller';
 import LoaderComponent from "../../Loader";
-import Button from '@material-ui/core/Button';
 import FormControl from "@material-ui/core/FormControl";
-import NativeSelect from "@material-ui/core/NativeSelect";
-import FormHelperText from "@material-ui/core/FormHelperText";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -28,6 +25,7 @@ import ProductItemDetailed from "../ListingsItem/Grid/Detailed/Product/ProductIt
 import EventItemDetailed from "../ListingsItem/Grid/Detailed/Event/EventItemDetailed";
 import ProductItemList from "../ListingsItem/Grid/List/Product/ProductItemList";
 import EventItemList from "../ListingsItem/Grid/List/Event/EventItemList";
+import RightSidebar from "../../../Sidebars/RightSidebar";
 
 class ListingsBlock extends React.Component {
     constructor(props) {
@@ -159,76 +157,45 @@ class ListingsBlock extends React.Component {
         // console.log(this.props.search)
         // console.log(this.context.listingsSearchResults)
         return (
-            <div id={"listing_block"} className={"listings-block"}>
-                <Row>
-                    <Col sm={12} md={12} lg={12}>
-                        <div className={"sort-bar"}>
-                            <ul>
-                                <li>
-                                    <FormControl className={"sort-bar--form-control"}>
-                                        <InputLabel id="sort-bar-limit-input-label">Limit</InputLabel>
-                                        <Select
-                                            labelId="sort-bar-limit-label"
-                                            id="sort-bar-limit-select"
-                                            name="sort-limit"
-                                            value={this.state.limit}
-                                            onChange={this.limitChangeHandler}
-                                        >
-                                            {this.state.limitSelectOptions.map((option, index) => (
-                                                <MenuItem key={index} value={option.value}>{option.label}</MenuItem>
+            <div className="site-section">
+                <div className="container">
+                    <div className="row">
+                        <div className="col-lg-8">
+                            {this.props.search.searchList.length > 0 ?
+                                <>
+                                    <InfiniteScroll
+                                        pageStart={0}
+                                        initialLoad={false}
+                                        loadMore={this.loadMore}
+                                        hasMore={this.props.search.hasMoreResults}
+                                        loader={<LoaderComponent key={"loader"}/>}
+                                    >
+                                        <Row>
+                                            {this.props.search.searchList.map((item, index) => (
+                                                <React.Fragment key={index}>
+                                                    {this.getGridItem(item)}
+                                                </React.Fragment>
                                             ))}
-                                        </Select>
-                                    </FormControl>
-                                </li>
-                                <li>
-                                    <FormControl className={"sort-bar--form-control"}>
-                                        <InputLabel id="sort-bar-grid-input-label">Grid</InputLabel>
-                                        <Select
-                                            labelId="sort-bar-grid-label"
-                                            id="sort-bar-grid-select"
-                                            name={"grid"}
-                                            value={this.state.grid}
-                                            onChange={this.gridChangeHandler}
-                                        >
-                                            {this.state.gridSelectOptions.map((option, index) => (
-                                                <MenuItem key={index} value={option.value}>{option.label}</MenuItem>
-                                            ))}
-                                        </Select>
-                                    </FormControl>
-                                </li>
-                            </ul>
+                                        </Row>
+                                    </InfiniteScroll>
+                                    {this.props.search.category === "events" && this.state.modalData.show &&
+                                    <EventInfo data={this.state.modalData} close={this.closeModal}/>
+                                    }
+                                    {this.props.search.category === "retail" && this.state.modalData.show &&
+                                    <ItemInfo data={this.state.modalData} close={this.closeModal}/>
+                                    }
+                                    </>
+                                :
+                                <LoaderComponent key={"loader"}/>
+                            }
                         </div>
-                    </Col>
-                </Row>
-                {this.props.search.searchList.length > 0 ?
-                    <div className={"listings-block--results"}>
-                        <InfiniteScroll
-                            pageStart={0}
-                            initialLoad={false}
-                            loadMore={this.loadMore}
-                            hasMore={this.props.search.hasMoreResults}
-                            loader={<LoaderComponent key={"loader"}/>}
-                        >
-                            <Row>
-                                {this.props.search.searchList.map((item, index) => (
-                                    <React.Fragment key={index}>
-                                        {this.getGridItem(item)}
-                                    </React.Fragment>
-                                ))}
-                            </Row>
-                        </InfiniteScroll>
-                        {this.props.search.category === "events" && this.state.modalData.show &&
-                        <EventInfo data={this.state.modalData} close={this.closeModal}/>
-                        }
-                        {this.props.search.category === "retail" && this.state.modalData.show &&
-                        <ItemInfo data={this.state.modalData} close={this.closeModal}/>
-                        }
+                        <div className="col-lg-3 ml-auto">
+                            <RightSidebar />
+                        </div>
                     </div>
-                    :
-                    <LoaderComponent key={"loader"}/>
-                }
-
+                </div>
             </div>
+
         )
     }
 }

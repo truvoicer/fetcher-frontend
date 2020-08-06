@@ -3,7 +3,7 @@ import {ListingsContext} from "../../../../../../../Context/ListingsContext";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import EventInfo from "../../../../../../Modals/Events/EventInfo";
-import {isSet} from "../../../../../../../../library/utils";
+import {getDefaultImage, isSet} from "../../../../../../../../library/utils";
 
 
 class ProductItemCompact extends React.Component {
@@ -14,16 +14,27 @@ class ProductItemCompact extends React.Component {
 
     render() {
         return (
-            <Col sm={12} md={4} lg={4}>
-                <div className={"listings-block--item listings-block--item--grid-compact"}>
-                    <div className={"listings-block--item--image"}>
-                        <a href="#" className="image">
-                            <img className={"default-image"} src={this.props.data.item_image_url}/>
+            <Col sm={12} md={6} lg={6}>
+                <div className="d-block d-md-flex listing vertical">
+                    <a href="#" className="img d-block"
+                       style={{backgroundImage: "url('" + getDefaultImage(this.props.data) + "')"}}/>
+                    <div className="lh-content">
+                        <span className="category">Cars &amp; Vehicles</span>
+                        <a href="#" className="bookmark">
+                            <span className="icon-heart"></span>
                         </a>
-                    </div>
-                    <h3 className={"listings-block--item--title"}>{this.props.data.item_title}</h3>
-                    <div className={"listings-block--item--actions"}>
-                        <a className="button" onClick={this.props.showInfoCallback.bind(this, this.props.data)}>More</a>
+                        <h3><a href="#"
+                               onClick={this.props.showInfoCallback.bind(this, this.props.data)}>{this.props.data.item_name}</a>
+                        </h3>
+                        {/*<address>Don St, Brooklyn, New York</address>*/}
+                        <p className="mb-0">
+                            <span className="icon-star text-warning"></span>
+                            <span className="icon-star text-warning"></span>
+                            <span className="icon-star text-warning"></span>
+                            <span className="icon-star text-warning"></span>
+                            <span className="icon-star text-secondary"></span>
+                            <span className="review">(3 Reviews)</span>
+                        </p>
                     </div>
                 </div>
             </Col>

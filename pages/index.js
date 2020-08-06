@@ -1,27 +1,31 @@
 import React from "react";
 import FetcherApp from "../views/App";
 import { render } from "react-dom";
-import { Provider } from "react-redux";
+import {connect, Provider} from "react-redux";
 import store from "../redux/store/index";
+import Router from "next/router";
+import {buildWpApiUrl} from "../library/api/wp/middleware";
+import {wpApiConfig} from "../config/wp-api-config";
+import {getPageData} from "../redux/middleware/page-middleware";
 
 class Home extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {
-            data: {
-                pageName: "home"
-            }
-        }
+    }
+
+    componentDidMount() {
+        this.props.getPageData(buildWpApiUrl(wpApiConfig.endpoints.page, "home"));
+
     }
 
     render() {
         return (
-            <Provider store={store}>
-            <FetcherApp data={this.state.data}/>
-            </Provider>
+            <FetcherApp />
         )
     }
 }
-
-export default Home;
+export default connect(
+    null,
+    {getPageData}
+)(Home);

@@ -1,7 +1,7 @@
 import React from "react";
 import {connect} from "react-redux";
 import {addListingsQueryDataString} from "../../../../../../redux/middleware/listings-middleware";
-import {setSearchRequestOperation} from "../../../../../../redux/actions/search-actions";
+import {setSearchRequestOperation} from "../../../../../../redux/middleware/search-middleware";
 import {NEW_SEARCH_REQUEST} from "../../../../../../redux/constants/search-constants";
 
 class ListingsFilterTextItem extends React.Component {
@@ -19,18 +19,15 @@ class ListingsFilterTextItem extends React.Component {
         this.props.setSearchRequestOperation(NEW_SEARCH_REQUEST);
         this.props.addListingsQueryDataString(e.target.name, e.target.value)
     }
+
     render() {
         return (
-            <>
-                <ul>
-                    <li className={"listings-filter--item-control"}>
-                        <input type={"text"}
-                               name={this.props.data.name}
-                               value={this.props.value && this.props.value[this.props.data.name]}
-                               onChange={this.formChangeHandler}/>
-                    </li>
-                </ul>
-            </>
+            <div className={"form-group"}>
+                <input type={"text"}
+                       name={this.props.data.name}
+                       value={this.props.value && this.props.value[this.props.data.name]}
+                       onChange={this.formChangeHandler}/>
+            </div>
         )
     }
 }
