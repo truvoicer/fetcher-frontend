@@ -17,7 +17,7 @@ import {isEmpty, isSet} from "../../library/utils";
 import {setListingsQueryData} from "../reducers/listings-reducer";
 import produce from "immer";
 import {addArrayItem, addListingsQueryDataString} from "../middleware/listings-middleware";
-import {addQueryDataObject, addQueryDataString} from "./listings-actions";
+import {addQueryDataObjectAction, addQueryDataString} from "./listings-actions";
 import {
     SEARCH_REQUEST_COMPLETED,
     SEARCH_REQUEST_ERROR,
@@ -198,5 +198,5 @@ export function initialSearch() {
     } else if (initialSearch.search_type === "location") {
         queryData.location = initialSearch.search_value
     }
-    addQueryDataObject(queryData, true);
+    addQueryDataObjectAction(queryData, true);
 }

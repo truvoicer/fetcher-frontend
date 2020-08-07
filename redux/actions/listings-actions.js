@@ -23,7 +23,7 @@ export function addQueryDataString(key, value, search = false) {
     }
 }
 
-export function addQueryDataObject(queryData, search = false) {
+export function addQueryDataObjectAction(queryData, search = false) {
     let listingsQueryData = {...store.getState().listings.listingsQueryData}
     let newQueryData = {};
     Object.keys(queryData).map(value => {
@@ -36,5 +36,4 @@ export function addQueryDataObject(queryData, search = false) {
     if (search) {
         runSearch();
     }
-
 }

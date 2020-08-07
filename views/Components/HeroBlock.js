@@ -2,6 +2,7 @@ import React from "react";
 import {connect} from "react-redux";
 import {getPageData} from "../../redux/middleware/page-middleware";
 import {isSet} from "../../library/utils";
+import SearchBar from "./Widgets/Listings/SearchBar";
 
 class HeroBlock extends React.Component {
     constructor(props) {
@@ -28,7 +29,7 @@ class HeroBlock extends React.Component {
                                     <p className="mb-0">{heroData && heroData.hero_text? heroData.hero_text : ""}</p>
                                 </div>
                             </div>
-
+                            {heroData && heroData.hero_search && <SearchBar />}
 
                         </div>
                     </div>

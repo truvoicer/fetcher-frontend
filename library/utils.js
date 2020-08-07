@@ -65,3 +65,19 @@ export const getDefaultImage = (item) => {
     }
     return null;
 }
+
+export const getNumberRange = (value, step) => {
+    let array = [];
+    for (let i = value; i <= value - step; i--) {
+        if (i > 0) {
+            array.push(i)
+        }
+    }
+    array.push(value);
+    for (let i = value; i <= value + step; i++) {
+        if (i > 0) {
+            array.push(i)
+        }
+    }
+    return array
+}

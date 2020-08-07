@@ -58,6 +58,10 @@ class ListingsBlock extends React.Component {
         this.limitChangeHandler = this.limitChangeHandler.bind(this)
         this.gridChangeHandler = this.gridChangeHandler.bind(this)
         this.getGridItem = this.getGridItem.bind(this)
+        this.loadItems = this.loadItems.bind(this)
+        this.loadNextPageNumber = this.loadNextPageNumber.bind(this)
+        this.loadNextOffset = this.loadNextOffset.bind(this)
+        this.getPagination = this.getPagination.bind(this)
     }
 
     showInfo(item, e) {
@@ -81,33 +85,66 @@ class ListingsBlock extends React.Component {
         })
     }
 
-    loadNextPageNumber() {
+    loadNextPageNumber(pageNumber) {
         this.props.setSearchRequestStatus(SEARCH_REQUEST_STARTED);
-        let pageNumber = parseInt(this.props.search.extraData.page_number);
         //     console.log("pageNumber")
         // console.log(pageNumber)
         this.props.setSearchRequestOperation(APPEND_SEARCH_REQUEST);
         this.props.addListingsQueryDataString("page_number", pageNumber + 1, true)
     }
 
-    loadNextOffset() {
+    loadNextOffset(pageOffset, pageSize) {
         this.props.setSearchRequestStatus(SEARCH_REQUEST_STARTED);
-        let pageOffset = parseInt(this.props.search.extraData.page_offset);
-        let pageSize = parseInt(this.props.search.extraData.page_size)
         // console.log(pageOffset, pageSize)
         this.props.setSearchRequestOperation(APPEND_SEARCH_REQUEST);
         this.props.addListingsQueryDataString("page_offset", pageOffset + pageSize, true)
+    }
+
+    getPagination() {
+        let paginationPageCount;
+        let pageNumber = this.props.search.extraData.page_number;
+        let pageSize = this.props.search.extraData.page_size;
+        let totalItems = this.props.search.extraData.total_items;
+        let apiPageCount = this.props.search.extraData.page_count
+
+
+        if (isSet(apiPageCount) && apiPageCount !== "") {
+            paginationPageCount = parseInt(apiPageCount)
+        } else if (isSet(pageSize) && isSet(totalItems) && pageSize !== "" && totalItems !== "") {
+            paginationPageCount = (parseInt(totalItems) / parseInt(pageSize));
+        } else {
+            return null;
+        }
+        return (
+            <div className="col-12 mt-5 text-center">
+                <div className="custom-pagination">
+                    {paginationPageCount.map((index) => (
+                        (pageNumber === index
+                            ?
+                            <span>{index}</span>
+                            :
+                            <a href="#">{index}</a>)
+                    ))}
+                    <span>1</span>
+                    <a href="#">2</a>
+                    <a href="#">3</a>
+                    <span className="more-page">...</span>
+                    <a href="#">10</a>
+                </div>
+            </div>
+        )
     }
 
     loadMore() {
         if (this.props.search.searchStatus !== SEARCH_REQUEST_COMPLETED) {
             return false;
         }
-
         if (isSet(this.props.search.extraData.page_offset) && isSet(this.props.search.extraData.page_size)) {
-            this.loadNextOffset();
+            let pageOffset = parseInt(this.props.search.extraData.page_offset);
+            let pageSize = parseInt(this.props.search.extraData.page_size)
+            this.loadNextOffset(pageOffset, pageSize);
         } else if (isSet(this.props.search.extraData.page_number)) {
-            this.loadNextPageNumber();
+            this.loadNextPageNumber(parseInt(this.props.search.extraData.page_number));
         }
     }
 
@@ -153,6 +190,18 @@ class ListingsBlock extends React.Component {
         }
     }
 
+    loadItems() {
+        return (
+            <Row>
+                {this.props.search.searchList.map((item, index) => (
+                    <React.Fragment key={index}>
+                        {this.getGridItem(item)}
+                    </React.Fragment>
+                ))}
+            </Row>
+        )
+    }
+
     render() {
         // console.log(this.props.listings)
         console.log(this.props.search)
@@ -162,38 +211,41 @@ class ListingsBlock extends React.Component {
                     <div className="row">
                         <div className="col-lg-8">
                             <div className={"listings-block"}>
-                            {this.props.search.searchList.length > 0 ?
-                                <>
-                                    <ListingsSortBar />
-                                    <InfiniteScroll
-                                        pageStart={0}
-                                        initialLoad={false}
-                                        loadMore={this.loadMore}
-                                        hasMore={this.props.search.hasMoreResults}
-                                        loader={<LoaderComponent key={"loader"}/>}
-                                    >
-                                        <Row>
-                                            {this.props.search.searchList.map((item, index) => (
-                                                <React.Fragment key={index}>
-                                                    {this.getGridItem(item)}
-                                                </React.Fragment>
-                                            ))}
-                                        </Row>
-                                    </InfiniteScroll>
-                                    {this.props.search.category === "events" && this.state.modalData.show &&
-                                    <EventInfo data={this.state.modalData} close={this.closeModal}/>
-                                    }
-                                    {this.props.search.category === "retail" && this.state.modalData.show &&
-                                    <ItemInfo data={this.state.modalData} close={this.closeModal}/>
-                                    }
+                                {this.props.search.searchList.length > 0 ?
+                                    <>
+                                        <ListingsSortBar/>
+                                        {this.props.listings.listingsData.load_more_type === "pagination" &&
+                                        <>
+                                            <this.loadItems/>
+                                            <this.getPagination />
+                                        </>
+                                        }
+
+                                        {this.props.listings.listingsData.load_more_type === "infinite_scroll" &&
+                                        <InfiniteScroll
+                                            pageStart={0}
+                                            initialLoad={false}
+                                            loadMore={this.loadMore}
+                                            hasMore={this.props.search.hasMoreResults}
+                                            loader={<LoaderComponent key={"loader"}/>}
+                                        >
+                                            <this.loadItems/>
+                                        </InfiniteScroll>
+                                        }
+                                        {this.props.search.category === "events" && this.state.modalData.show &&
+                                        <EventInfo data={this.state.modalData} close={this.closeModal}/>
+                                        }
+                                        {this.props.search.category === "retail" && this.state.modalData.show &&
+                                        <ItemInfo data={this.state.modalData} close={this.closeModal}/>
+                                        }
                                     </>
-                                :
-                                <LoaderComponent key={"loader"}/>
-                            }
+                                    :
+                                    <LoaderComponent key={"loader"}/>
+                                }
                             </div>
                         </div>
                         <div className="col-lg-3 ml-auto">
-                            <RightSidebar />
+                            <RightSidebar/>
                         </div>
                     </div>
                 </div>
