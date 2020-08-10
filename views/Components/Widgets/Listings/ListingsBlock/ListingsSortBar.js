@@ -1,6 +1,12 @@
 import {connect} from "react-redux";
-import {addListingsQueryDataString} from "../../../../../redux/middleware/listings-middleware";
-import {setSearchRequestOperation, setSearchRequestStatus} from "../../../../../redux/middleware/search-middleware";
+import {
+    addListingsQueryDataString,
+    setListingsGridMiddleware
+} from "../../../../../redux/middleware/listings-middleware";
+import {
+    setSearchRequestOperationMiddleware,
+    setSearchRequestStatusMiddleware
+} from "../../../../../redux/middleware/search-middleware";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import FormControl from "@material-ui/core/FormControl";
@@ -10,6 +16,11 @@ import React from "react";
 import {NEW_SEARCH_REQUEST} from "../../../../../redux/constants/search-constants";
 import {fetcherApiConfig} from "../../../../../config/fetcher-api-config";
 import MenuItem from "@material-ui/core/MenuItem";
+import {
+    LISTINGS_GRID_COMPACT,
+    LISTINGS_GRID_DETAILED,
+    LISTINGS_GRID_LIST
+} from "../../../../../redux/constants/listings-constants";
 
 
 class ListingsSortBar extends React.Component {
@@ -17,16 +28,16 @@ class ListingsSortBar extends React.Component {
         super(props);
         this.state = {
             limit: 10,
-            grid: "compact",
+            grid: LISTINGS_GRID_COMPACT,
             limitSelectOptions: [
                 {value: 10, label: 10},
                 {value: 50, label: 50},
                 {value: 100, label: 100},
             ],
             gridSelectOptions: [
-                {value: "compact", label: "Compact"},
-                {value: "list", label: "List"},
-                {value: "detailed", label: "Detailed"},
+                {value: LISTINGS_GRID_COMPACT, label: "Compact"},
+                {value: LISTINGS_GRID_LIST, label: "List"},
+                {value: LISTINGS_GRID_DETAILED, label: "Detailed"},
             ]
         }
         this.limitChangeHandler = this.limitChangeHandler.bind(this)
@@ -46,6 +57,7 @@ class ListingsSortBar extends React.Component {
         this.setState({
             [e.target.name]: e.target.value
         })
+        this.props.setListingsGridMiddleware(e.target.value)
     }
 
     render() {
@@ -93,7 +105,13 @@ class ListingsSortBar extends React.Component {
         );
     }
 }
+
 export default connect(
     null,
-    {addListingsQueryDataString, setSearchRequestOperation, setSearchRequestStatus}
+    {
+        addListingsQueryDataString,
+        setSearchRequestOperationMiddleware,
+        setSearchRequestStatusMiddleware,
+        setListingsGridMiddleware
+    }
 )(ListingsSortBar);

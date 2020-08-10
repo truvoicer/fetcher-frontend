@@ -7,7 +7,7 @@ import {buildWpApiUrl} from "../../../library/api/wp/middleware";
 import {wpApiConfig} from "../../../config/wp-api-config";
 import Router from "next/router";
 import {APPEND_SEARCH_REQUEST, NEW_SEARCH_REQUEST} from "../../../redux/constants/search-constants";
-import {setSearchRequestOperation} from "../../../redux/middleware/search-middleware";
+import {setSearchRequestOperationMiddleware} from "../../../redux/middleware/search-middleware";
 
 class MenuList extends React.Component {
     constructor(props) {
@@ -61,5 +61,5 @@ class MenuList extends React.Component {
 }
 export default connect(
     null,
-    {getPageData, setSearchRequestOperation}
+    {getPageData, setSearchRequestOperation: setSearchRequestOperationMiddleware}
 )(MenuList);

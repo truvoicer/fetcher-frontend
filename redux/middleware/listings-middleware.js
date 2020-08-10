@@ -2,19 +2,18 @@ import React from "react";
 import store from "../store/index";
 import {fetchData} from "../../library/api/fetcher/middleware";
 import {
+    setListingsGrid,
     setListingsData,
     setListingsQueryData,
     setListingsDataProviders,
     setListingsError
 } from "../reducers/listings-reducer"
 import {isSet} from "../../library/utils";
-import {initialSearch, runSearch, setSearchRequestOperation} from "../actions/search-actions";
+import {initialSearch, runSearch, setSearchRequestOperationAction} from "../actions/search-actions";
 import {NEW_SEARCH_REQUEST} from "../constants/search-constants";
-
 
 export function getListingsProviders(category) {
     fetchData("list", [category, "providers"], {}, getProvidersCallback);
-
 }
 
 export function getProvidersCallback(status, data) {
@@ -73,7 +72,6 @@ export function addListingsQueryDataString(key, value, search = false) {
     }
 }
 
-
 export function addQueryDataObjectMiddleware(queryData, search = false) {
     return function (dispatch) {
         let listingsQueryData = {...store.getState().listings.listingsQueryData}
@@ -88,5 +86,11 @@ export function addQueryDataObjectMiddleware(queryData, search = false) {
         if (search) {
             runSearch();
         }
+    }
+}
+
+export function setListingsGridMiddleware(listingsGrid) {
+    return function (dispatch) {
+        dispatch(setListingsGrid(listingsGrid))
     }
 }

@@ -5,11 +5,12 @@ import {
     setListingsData,
     setListingsQueryData,
     setListingsDataProviders,
-    setListingsError
+    setListingsError, setListingsGrid
 } from "../reducers/listings-reducer"
 import {isSet} from "../../library/utils";
-import {initialSearch, runSearch, setSearchRequestOperation} from "./search-actions";
+import {initialSearch, runSearch, setSearchRequestOperationAction} from "./search-actions";
 import {NEW_SEARCH_REQUEST} from "../constants/search-constants";
+import {LISTINGS_GRID_COMPACT, LISTINGS_GRID_DETAILED} from "../constants/listings-constants";
 
 export function addQueryDataString(key, value, search = false) {
     let listingsQueryData = {...store.getState().listings.listingsQueryData}
@@ -36,4 +37,8 @@ export function addQueryDataObjectAction(queryData, search = false) {
     if (search) {
         runSearch();
     }
+}
+
+export function setListingsGridAction(listingsGrid) {
+    store.dispatch(setListingsGrid(listingsGrid))
 }

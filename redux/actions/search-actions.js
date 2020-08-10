@@ -27,13 +27,13 @@ import {
     NEW_SEARCH_REQUEST, SEARCH_RESET
 } from "../constants/search-constants";
 
-export function setSearchExtraData(extraData) {
+export function setSearchExtraDataAction(extraData) {
     const extraDataState = {...store.getState().search.extraData};
     const object = Object.assign({}, extraDataState, extraData);
     store.dispatch(setExtraData(object))
 }
 
-export function setSearchListData(listData) {
+export function setSearchListDataAction(listData) {
     const searchState = {...store.getState().search};
     if (listData.length === 0) {
         return
@@ -43,6 +43,7 @@ export function setSearchListData(listData) {
 
     const nextState = produce(searchState.searchList, (draftState) => {
         if ((searchOperation === NEW_SEARCH_REQUEST)) {
+            console.log(searchOperation)
             store.dispatch(setSearchOperation(APPEND_SEARCH_REQUEST));
             draftState.splice(0, draftState.length + 1);
 
@@ -57,57 +58,57 @@ export function setSearchListData(listData) {
     store.dispatch(setSearchList(nextState))
 }
 
-export function setSearchProvider(provider) {
+export function setSearchProviderAction(provider) {
     store.dispatch(setProvider(provider))
 }
 
-export function setSearchCategory(category) {
+export function setSearchCategoryAction(category) {
     store.dispatch(setCategory(category))
 }
 
-export function setSearchRequestService(requestService) {
+export function setSearchRequestServiceAction(requestService) {
     store.dispatch(setRequestService(requestService))
 }
 
-export function setSearchRequestStatus(status) {
+export function setSearchRequestStatusAction(status) {
     store.dispatch(setSearchStatus(status))
 }
-export function setSearchRequestOperation(operation) {
+export function setSearchRequestOperationAction(operation) {
         store.dispatch(setSearchOperation(operation))
 }
 
-export function setSearchHasMoreResults(hasMoreResults) {
+export function setSearchHasMoreResultsAction(hasMoreResults) {
     store.dispatch(setHasMoreResults(hasMoreResults))
 }
 
-export function setSearchRequestError(error) {
+export function setSearchRequestErrorAction(error) {
     store.dispatch(setSearchError(error))
 }
 
 export function searchResponseHandler(status, data, completed = false) {
     // console.log(status, data)
     if (status === 200) {
-        setSearchListData(data.requestData);
-        setSearchExtraData(data.extraData)
-        setSearchRequestService(data.requestService)
-        setSearchProvider(data.provider)
-        setSearchCategory(data.category)
+        setSearchListDataAction(data.requestData);
+        setSearchExtraDataAction(data.extraData)
+        setSearchRequestServiceAction(data.requestService)
+        setSearchProviderAction(data.provider)
+        setSearchCategoryAction(data.category)
 
         if (isSet(data.extraData.page_offset) && isSet(data.extraData.page_size)) {
             if (parseInt(data.extraData.page_offset) < parseInt(data.extraData.total_items)) {
-                setSearchHasMoreResults(true);
+                setSearchHasMoreResultsAction(true);
             }
         } else if (isSet(data.extraData.page_number)) {
             if (parseInt(data.extraData.page_number) < parseInt(data.extraData.page_count)) {
-                setSearchHasMoreResults(true);
+                setSearchHasMoreResultsAction(true);
             }
         }
     } else {
-        setSearchRequestStatus(SEARCH_REQUEST_ERROR);
-        setSearchRequestError(data.message)
+        setSearchRequestStatusAction(SEARCH_REQUEST_ERROR);
+        setSearchRequestErrorAction(data.message)
     }
     if (completed) {
-        setSearchRequestStatus(SEARCH_REQUEST_COMPLETED);
+        setSearchRequestStatusAction(SEARCH_REQUEST_COMPLETED);
     }
 }
 
@@ -115,7 +116,7 @@ function validateSearchParams() {
     const listingsDataState = store.getState().listings.listingsData;
     const queryDataState = store.getState().listings.listingsQueryData;
     if (!isSet(listingsDataState.listing_block_category)) {
-        setSearchRequestError("No category found...")
+        setSearchRequestErrorAction("No category found...")
         return false;
     }
     // const validateSearchQuery = validateRequestParams([fetcherApiConfig.queryKey], queryDataState);
@@ -128,7 +129,7 @@ function validateSearchParams() {
     //     return false;
     // }
     if (!isSet(queryDataState[fetcherApiConfig.queryKey]) || queryDataState[fetcherApiConfig.queryKey] === "") {
-        setSearchRequestError("Empty search query...")
+        setSearchRequestErrorAction("Empty search query...")
         return false;
         // store.dispatch(addListingsQueryDataString(fetcherApiConfig.queryKey, ""));
     }
@@ -147,11 +148,11 @@ function getEndpointOperation() {
 }
 
 export const runSearch = () => {
-    setSearchRequestStatus(SEARCH_REQUEST_STARTED);
+    setSearchRequestStatusAction(SEARCH_REQUEST_STARTED);
     const listingsDataState = store.getState().listings.listingsData;
     const queryDataState = store.getState().listings.listingsQueryData;
     if (!validateSearchParams()) {
-        setSearchRequestStatus(SEARCH_REQUEST_ERROR);
+        setSearchRequestStatusAction(SEARCH_REQUEST_ERROR);
         return false;
     }
 

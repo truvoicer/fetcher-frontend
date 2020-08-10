@@ -3,7 +3,7 @@ import {fetcherApiConfig} from "../../../../config/fetcher-api-config";
 import {NEW_SEARCH_REQUEST} from "../../../../redux/constants/search-constants";
 import {connect} from "react-redux";
 import {addQueryDataObjectMiddleware} from "../../../../redux/middleware/listings-middleware";
-import {setSearchRequestOperation} from "../../../../redux/middleware/search-middleware";
+import {setSearchRequestOperationMiddleware} from "../../../../redux/middleware/search-middleware";
 
 class SearchBar extends Component {
     constructor(props) {
@@ -88,5 +88,5 @@ class SearchBar extends Component {
 }
 export default connect(
     null,
-    {addQueryDataObjectMiddleware, setSearchRequestOperation}
+    {addQueryDataObjectMiddleware, setSearchRequestOperation: setSearchRequestOperationMiddleware}
 )(SearchBar);

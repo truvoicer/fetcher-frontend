@@ -1,8 +1,10 @@
 import store from "../store/index"
 // AUTH STATE
 import {createSlice} from "@reduxjs/toolkit";
+import {LISTINGS_GRID_COMPACT} from "../constants/listings-constants";
 
 const listingsState = {
+    listingsGrid: LISTINGS_GRID_COMPACT,
     listingsData: {},
     listingsQueryData: {},
     listingsSearchResults: {},
@@ -14,6 +16,9 @@ export const listingsSlice = createSlice({
     name: "listings",
     initialState: listingsState,
     reducers: {
+        setListingsGrid: (state, action) => {
+            state.listingsGrid = action.payload;
+        },
         setListingsData: (state, action) => {
             state.listingsData = action.payload;
         },
@@ -38,6 +43,7 @@ export const listingsSlice = createSlice({
 export const listingsReducer = listingsSlice.reducer;
 
 export const {
+    setListingsGrid,
     setListingsData,
     setListingsDataProviders,
     setListingsQueryData,

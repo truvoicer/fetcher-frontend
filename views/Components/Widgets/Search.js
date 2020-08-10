@@ -3,7 +3,7 @@ import React from "react";
 import {ListingsContext} from "../../Context/ListingsContext";
 import {connect} from "react-redux";
 import {addListingsQueryDataString} from "../../../redux/middleware/listings-middleware";
-import {setSearchRequestOperation} from "../../../redux/middleware/search-middleware";
+import {setSearchRequestOperationMiddleware} from "../../../redux/middleware/search-middleware";
 import {fetcherApiConfig} from "../../../config/fetcher-api-config";
 import {NEW_SEARCH_REQUEST} from "../../../redux/constants/search-constants";
 
@@ -44,5 +44,5 @@ class Search extends React.Component {
 
 export default connect(
     null,
-    {addListingsQueryDataString, setSearchRequestOperation}
+    {addListingsQueryDataString, setSearchRequestOperation: setSearchRequestOperationMiddleware}
 )(Search);

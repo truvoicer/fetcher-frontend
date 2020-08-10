@@ -3,7 +3,7 @@ import Form from "react-bootstrap/Form";
 import {fetchData} from "../../../../../../library/api/fetcher/middleware";
 import {connect} from "react-redux";
 import {addArrayItem, removeArrayItem} from "../../../../../../redux/middleware/listings-middleware";
-import {setSearchRequestOperation} from "../../../../../../redux/middleware/search-middleware";
+import {setSearchRequestOperationMiddleware} from "../../../../../../redux/middleware/search-middleware";
 import {NEW_SEARCH_REQUEST} from "../../../../../../redux/constants/search-constants";
 
 class ListingsFilterApiListItem extends React.Component {
@@ -74,5 +74,5 @@ function mapStateToProps(state) {
 
 export default connect(
     mapStateToProps,
-    {addArrayItem, removeArrayItem, setSearchRequestOperation}
+    {addArrayItem, removeArrayItem, setSearchRequestOperation: setSearchRequestOperationMiddleware}
 )(ListingsFilterApiListItem);
