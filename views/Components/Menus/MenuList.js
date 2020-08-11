@@ -27,10 +27,10 @@ class MenuList extends React.Component {
     pageClickHandler(item, e) {
         e.preventDefault()
         let url = e.target.getAttribute("href");
-        // Router.push(null, url, { shallow: true })
+        Router.push(url, url, { shallow: true })
 
-        this.props.setSearchRequestOperation(NEW_SEARCH_REQUEST);
-        this.props.getPageData(buildWpApiUrl(wpApiConfig.endpoints.page, item.post_name));
+        // this.props.setSearchRequestOperation(NEW_SEARCH_REQUEST);
+        // this.props.getPageData(buildWpApiUrl(wpApiConfig.endpoints.page, item.post_name));
     }
 
     render() {
