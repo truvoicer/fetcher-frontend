@@ -3,7 +3,7 @@ import {ListingsContext} from "../../../../../../../Context/ListingsContext";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import EventInfo from "../../../../../../Modals/Events/EventInfo";
-import {getDefaultImage, isSet} from "../../../../../../../../library/utils";
+import {formatDate, getDefaultImage, isSet} from "../../../../../../../../library/utils";
 
 
 class EventItemList extends React.Component {
@@ -15,39 +15,27 @@ class EventItemList extends React.Component {
     render() {
         return (
             <Col sm={12} md={12} lg={12}>
-                <div className={"listings-block--item listings-block--item--grid-list"}>
-                    <div className={"listings-block--item--grid-list--column"}>
-                        <div className={"listings-block--item--image"}>
-                            <a href="#" className="image">
-                                <img className={"default-image"} src={getDefaultImage(this.props.data)}/>
-                            </a>
-                        </div>
-                    </div>
-                    <div className={"listings-block--item--grid-list--column"}>
-                        <h3 className={"listings-block--item--title"}>{this.props.data.item_name}</h3>
-                    </div>
-                    <div className={"listings-block--item--grid-list--column"}>
-                        <div className={"listings-block--item--info"}>
-                            {this.props.data.item_description}
-                        </div>
-                    </div>
-                    <div className={"listings-block--item--grid-list--column"}>
-                        <div className={"listings-block--item--dates"}>
-                            <span>Start Date:</span>
-                            <span>{this.props.data.item_start_date}</span>
-                        </div>
-                    </div>
-                    <div className={"listings-block--item--grid-list--column"}>
-
-                    </div>
-                    <div className={"listings-block--item--grid-list--column"}>
-
-                    </div>
-                    <div className={"listings-block--item--grid-list--column"}>
-                        <div className={"listings-block--item--actions"}>
-                            <a className="button"
-                               onClick={this.props.showInfoCallback.bind(this, this.props.data)}>More</a>
-                        </div>
+                <div className="d-block d-md-flex listing">
+                    <a href="#" className="img d-block"
+                       style={{backgroundImage: "url('" + getDefaultImage(this.props.data) + "')"}}/>
+                    <div className="lh-content">
+                        <span className="category">Cars &amp; Vehicles</span>
+                        <a href="#" className="bookmark">
+                            <span className="icon-heart"></span>
+                        </a>
+                        <h3><a href="#"
+                               onClick={this.props.showInfoCallback.bind(this, this.props.data)}>{this.props.data.item_name}</a>
+                        </h3>
+                        <p>{this.props.data.item_venue}</p>
+                        <p>{formatDate(this.props.data.item_start_date)}</p>
+                        <p className="mb-0">
+                            <span className="icon-star text-warning"></span>
+                            <span className="icon-star text-warning"></span>
+                            <span className="icon-star text-warning"></span>
+                            <span className="icon-star text-warning"></span>
+                            <span className="icon-star text-secondary"></span>
+                            <span className="review">(3 Reviews)</span>
+                        </p>
                     </div>
                 </div>
             </Col>

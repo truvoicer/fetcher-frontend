@@ -1,7 +1,8 @@
 import {wpApiConfig} from "../../../config/wp-api-config";
 import {fetcherApiConfig} from "../../../config/fetcher-api-config";
-import {getSessionObject, getToken, isAuthenticated, setSession} from "./session/authenticate";
+import {checkApiToken} from "./session/authenticate";
 import {isEmpty, isSet} from "../../utils";
+import {setPageErrorAction} from "../../../redux/actions/page-actions";
 
 const axios = require('axios');
 const vsprintf = require("sprintf").vsprintf;
@@ -29,32 +30,25 @@ export const fetchData = (endpoint, operation, queryData = {}, callback = false,
         console.error("Endpoint not found")
     }
 
-    if (!isAuthenticated()) {
-        getToken().then((response) => {
-            setSession(response.data)
-            if (callback) {
-                responseHandler(fetchFromApi(endpoint, operation, queryData), callback, completed);
-            } else {
-                return fetchFromApi(endpoint, operation, queryData);
-            }
-        })
-    } else {
+    checkApiToken().then((response) => {
+        console.log(response)
         if (callback) {
             responseHandler(fetchFromApi(endpoint, operation, queryData), callback, completed);
         } else {
             return fetchFromApi(endpoint, operation, queryData);
         }
-    }
-
+    })
+    .catch((error) => {
+        setPageErrorAction(error.message)
+    })
 }
 
 const fetchFromApi = (endpoint, operation, queryData) => {
     let config = {
         url: getApiUrl(endpoint, operation, queryData),
         method: "get",
-        headers: {'Authorization': 'Bearer ' + getSessionObject().access_token}
+        headers: {'Authorization': 'Bearer ' + process.env.NEXT_PUBLIC_FETCHER_API_TOKEN}
     }
-    // console.log(config)
 
     return axios.request(config);
 }
@@ -64,22 +58,10 @@ export const responseHandler = (request, callback, completed = false) => {
         callback(response.status, response.data, completed);
     })
     .catch((error) => {
-        if (isSet(error.response)) {
-            if (error.response.status === 401 && error.response.data.message === "token_expired") {
-                getToken().then((response) => {
-                    setSession(response.data)
-                    if (callback) {
-                        error.response.config.headers = {'Authorization': 'Bearer ' + getSessionObject().access_token}
-                        responseHandler(axios.request(error.response.config), callback);
-                    }
-                })
-            } else {
-                if (callback && isSet(error.response)) {
-                    callback(error.response.status, error.response.data);
-                } else {
-                    console.error(error)
-                }
-            }
+        if (callback && isSet(error.response)) {
+            callback(error.response.status, error.response.data);
+        } else {
+            console.error(error)
         }
     })
 }

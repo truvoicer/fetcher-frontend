@@ -987,25 +987,6 @@
 		}
 	}
 }
-.custom-pagination {
-	a, span {
-		text-align: center;
-		width: 40px;
-		height: 40px;
-		line-height: 40px;
-		border-radius: 50%;
-		display: inline-block;
-		background: $primary;
-		color: $white;
-	}
-	span {
-		background: lighten(#ccc, 10%);
-		color: $black;
-	}
-	.more-page {
-		background: none;
-	}
-}
 
 .trending-search {
 	h2 {

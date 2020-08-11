@@ -1,17 +1,15 @@
 import React from "react";
-import EventInfo from "../../../Modals/Events/EventInfo";
-import ItemInfo from "../../../Modals/Items/ItemInfo";
 import {connect} from "react-redux";
 import {addListingsQueryDataString} from "../../../../../redux/middleware/listings-middleware";
 import {
     setSearchRequestOperationMiddleware,
     setSearchRequestStatusMiddleware
 } from "../../../../../redux/middleware/search-middleware";
-import InfiniteScroll from 'react-infinite-scroller';
 import LoaderComponent from "../../Loader";
 import RightSidebar from "../../../Sidebars/RightSidebar";
 import ListingsSortBar from "./ListingsSortBar";
-import Paginate from "./Pagination/Paginate";
+import Paginate from "./Pagination/ListingsPaginate";
+import ListingsInfiniteScroll from "./Pagination/ListingsInfiniteScroll";
 
 class ListingsBlock extends React.Component {
     constructor(props) {
@@ -19,8 +17,6 @@ class ListingsBlock extends React.Component {
     }
 
     render() {
-        // console.log(this.props.listings)
-        // console.log(this.props.search)
         return (
             <div className="site-section">
                 <div className="container">
@@ -34,7 +30,7 @@ class ListingsBlock extends React.Component {
                                         <Paginate/>
                                         }
                                         {this.props.listings.listingsData.load_more_type === "infinite_scroll" &&
-                                        <InfiniteScroll/>
+                                        <ListingsInfiniteScroll />
                                         }
                                     </>
                                     :

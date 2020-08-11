@@ -17,7 +17,7 @@ import InfiniteScroll from 'react-infinite-scroller';
 import LoaderComponent from "../../../Loader";
 import GridItem from "../../ListingsItems/GridItems";
 
-class InfiniteScroll extends React.Component {
+class ListingsInfiniteScroll extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -30,9 +30,9 @@ class InfiniteScroll extends React.Component {
         if (this.props.search.searchStatus !== SEARCH_REQUEST_COMPLETED) {
             return false;
         }
-        this.props.setSearchRequestOperation(APPEND_SEARCH_REQUEST);
+        this.props.setSearchRequestOperationMiddleware(APPEND_SEARCH_REQUEST);
         if (isSet(this.props.search.extraData.page_offset) && isSet(this.props.search.extraData.page_size)) {
-            this.props.loadNextOffsetMiddleware(this.props.search.extraData.page_offset, this.props.search.extraData.page_size);
+            this.props.loadNextOffsetMiddleware(parseInt(this.props.search.extraData.page_offset) + parseInt(this.props.search.extraData.page_size));
         } else if (isSet(this.props.search.extraData.page_number)) {
             this.props.loadNextPageNumberMiddleware(parseInt(this.props.search.extraData.page_number) + 1);
         }
@@ -72,4 +72,4 @@ export default connect(
         loadNextPageNumberMiddleware,
         loadNextOffsetMiddleware
     }
-)(InfiniteScroll);
+)(ListingsInfiniteScroll);

@@ -13,7 +13,7 @@ class ProductItemCompact extends React.Component {
     }
 
     render() {
-        console.log(this.props.data)
+        // console.log(this.props.data)
         return (
             <Col sm={12} md={6} lg={6}>
                 <div className="d-block d-md-flex listing vertical">

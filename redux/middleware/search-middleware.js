@@ -14,6 +14,7 @@ import store from "../store";
 import {SEARCH_REQUEST_STARTED} from "../constants/search-constants";
 import {setSearchRequestStatusAction} from "../actions/search-actions";
 import {addQueryDataString} from "../actions/listings-actions";
+import {addListingsQueryDataString, addQueryDataObjectMiddleware} from "./listings-middleware";
 
 export function setSearchProviderMiddleware(provider) {
     return function (dispatch) {
@@ -58,13 +59,15 @@ export function setSearchRequestErrorMiddleware(error) {
 
 
 export function loadNextPageNumberMiddleware(pageNumber) {
-    setSearchRequestStatusAction(SEARCH_REQUEST_STARTED);
-    this.props.addListingsQueryDataString("page_number", pageNumber, true)
+    return function (dispatch) {
+        setSearchRequestStatusAction(SEARCH_REQUEST_STARTED);
+        addQueryDataString("page_number", pageNumber, true)
+    }
 }
 
-export function loadNextOffsetMiddleware(page_offset, page_size) {
-    setSearchRequestStatusAction(SEARCH_REQUEST_STARTED);
-    let pageOffset = parseInt(page_offset);
-    let pageSize = parseInt(page_size)
-    addQueryDataString("page_offset", pageOffset + pageSize, true)
+export function loadNextOffsetMiddleware(pageOffset) {
+    return function (dispatch) {
+        setSearchRequestStatusAction(SEARCH_REQUEST_STARTED);
+        addQueryDataString("page_offset", pageOffset, true)
+    }
 }

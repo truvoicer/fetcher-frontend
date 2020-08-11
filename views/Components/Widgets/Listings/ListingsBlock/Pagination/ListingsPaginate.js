@@ -15,7 +15,7 @@ import {
 } from "../../../../../../redux/constants/search-constants";
 import GridItem from "../../ListingsItems/GridItems";
 
-class Paginate extends React.Component {
+class ListingsPaginate extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -29,24 +29,31 @@ class Paginate extends React.Component {
     PaginationClickHandler(pageNumber) {
         this.props.setSearchRequestOperationMiddleware(NEW_SEARCH_REQUEST);
         if (isSet(this.props.search.extraData.page_offset) && isSet(this.props.search.extraData.page_size)) {
-            this.props.loadNextOffsetMiddleware(this.props.search.extraData.page_offset, this.props.search.extraData.page_size);
+            this.props.loadNextOffsetMiddleware(this.getOffsetFromPageNUmber(pageNumber));
         } else if (isSet(this.props.search.extraData.page_number)) {
             this.props.loadNextPageNumberMiddleware(pageNumber);
         }
     }
 
-    getPagination() {
-        let pageNumber = parseInt(this.props.search.extraData.page_number);
-        let pageSize = this.props.search.extraData.page_size;
-        let totalItems = parseInt(this.props.search.extraData.total_items);
-        let apiPageCount = this.props.search.extraData.page_count
+    getOffsetFromPageNUmber(pageNumber) {
+        return parseInt(this.props.search.extraData.page_size) * parseInt(pageNumber);
+    }
 
+    getCurrentPageFromOffset(totalItems, totalPageCount, pageSize, pageOffset) {
+        let offsetPageCount = Math.floor(totalItems - pageOffset)
+        if (pageOffset === 0) {
+            return Math.floor(totalPageCount - Math.floor(totalItems / pageSize)) + 1;
+        } else {
+            return Math.floor(totalPageCount - Math.floor((offsetPageCount / pageSize)));
+        }
+    }
+    getPaginationRange(currentPage) {
         let range = [];
-        if (pageNumber > this.state.paginationLimit - this.state.paginationRange) {
-            for (let i = pageNumber - this.state.paginationRange; i < pageNumber; i++) {
+        if (currentPage > this.state.paginationLimit - this.state.paginationRange) {
+            for (let i = currentPage - this.state.paginationRange; i < currentPage; i++) {
                 range.push(i)
             }
-            for (let i = pageNumber; i <= pageNumber + this.state.paginationRange; i++) {
+            for (let i = currentPage; i <= currentPage + this.state.paginationRange; i++) {
                 range.push(i)
             }
         } else {
@@ -54,25 +61,45 @@ class Paginate extends React.Component {
                 range.push(i)
             }
         }
+        return range;
+    }
+
+    getPagination() {
+        const extraData = this.props.search.extraData;
+        if (extraData.total_items === "") {
+            return null;
+        }
+
+        let currentPage;
+        let totalPageCount
+        if (isSet(extraData.page_number)) {
+            currentPage = parseInt(extraData.page_number);
+            totalPageCount = parseInt(extraData.page_count);
+        } else if (isSet(extraData.page_offset) && isSet(extraData.page_size)) {
+            totalPageCount = Math.floor(extraData.total_items / extraData.page_size);
+            currentPage = this.getCurrentPageFromOffset(extraData.total_items, totalPageCount, extraData.page_size, extraData.page_offset)
+        }
+
+        let range = this.getPaginationRange(currentPage);
+
         return (
             <div className="col-12 mt-5 text-center">
-                <div className="custom-pagination">
+                <div className="pagination">
 
-                    {pageNumber > this.state.paginationLimit - this.state.paginationRange && <a href="#">1</a>}
+                    {currentPage > this.state.paginationLimit - this.state.paginationRange &&
+                    <a onClick={this.PaginationClickHandler.bind(this, 1)}>1</a>}
                     {range.map((num, index) => (
                         <React.Fragment key={index.toString()}>
-                            {num === pageNumber
+                            {num === currentPage
                                 ?
-                                <span className="more-page">{num}</span>
+                                <span>{num}</span>
                                 :
                                 <a onClick={this.PaginationClickHandler.bind(this, num)}>{num}</a>
                             }
                         </React.Fragment>
                     ))}
                     <span className="more-page">...</span>
-                    <a onClick={this.PaginationClickHandler}>{totalItems}</a>
-                    {/*<span>1</span>*/}
-                    {/*<a href="#">3</a>*/}
+                    <a onClick={this.PaginationClickHandler.bind(this, totalPageCount)}>{totalPageCount}</a>
                 </div>
             </div>
         )
@@ -80,8 +107,6 @@ class Paginate extends React.Component {
 
 
     render() {
-        // console.log(this.props.listings)
-        // console.log(this.props.search)
         return (
             <>
                 <GridItem/>
@@ -107,4 +132,4 @@ export default connect(
         loadNextOffsetMiddleware,
         loadNextPageNumberMiddleware
     }
-)(Paginate);
+)(ListingsPaginate);

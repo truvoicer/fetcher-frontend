@@ -159,6 +159,7 @@ export const runSearch = () => {
     let queryData = {...queryDataState};
     if (!isSet(queryDataState.providers) || queryDataState.providers.length === 0) {
         let providers = [];
+        queryData["limit"] = calculateLimit(queryData["limit"], listingsDataState.providers.length);
         listingsDataState.providers.map((provider, index) => {
             providers.push(provider.provider_name)
             queryData["provider"] = provider.provider_name;
@@ -168,12 +169,17 @@ export const runSearch = () => {
             addArrayItem("providers", provider)
         })
     } else {
+        queryData["limit"] = calculateLimit(queryData["limit"], queryDataState.providers.length);
         queryDataState.providers.map((provider, index) => {
             queryData["provider"] = provider;
             fetchData("operation", [getEndpointOperation()], queryData, searchResponseHandler, (queryDataState.providers.length === index + 1))
         });
     }
 
+}
+
+function calculateLimit(limit, providerCount) {
+    return Math.floor(limit / providerCount);
 }
 
 export function initialSearch() {

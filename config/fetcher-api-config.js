@@ -1,9 +1,7 @@
 export const fetcherApiConfig = {
     apiBaseUrl: process.env.NEXT_PUBLIC_FETCHER_API_URL,
-    email: "truvoice@local.com",
-    password: "Deelite4",
     endpoints: {
-        getToken: "login",
+        getToken: "admin/user/api-token/authenticate",
         list: "category/%s/%s",
         operation: "operation/%s/",
     },

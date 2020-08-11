@@ -49,7 +49,7 @@ class ListingsSortBar extends React.Component {
             [e.target.name]: e.target.value
         })
 
-        this.props.setSearchRequestOperation(NEW_SEARCH_REQUEST);
+        this.props.setSearchRequestOperationMiddleware(NEW_SEARCH_REQUEST);
         this.props.addListingsQueryDataString(fetcherApiConfig.searchLimitKey, e.target.value, true)
     }
 
