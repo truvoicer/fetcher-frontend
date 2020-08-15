@@ -1,0 +1,24 @@
+.tab-layout {
+  flex-grow: 1;
+  display: flex;
+  &--vertical-panel {
+    width: 100%;
+  }
+  &--list {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+
+    &--row {
+      display: flex;
+
+      &--label {
+        width: 100px;
+      }
+
+      &--value {
+        margin-left: 10px;
+      }
+    }
+  }
+}

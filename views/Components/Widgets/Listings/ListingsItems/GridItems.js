@@ -1,24 +1,13 @@
 import React from "react";
 import Row from "react-bootstrap/Row";
-import ProductItemCompact from ".//Grid/Compact/Product/ProductItemCompact";
-import EventItemCompact from ".//Grid/Compact/Event/EventItemCompact";
 import {connect} from "react-redux";
 import {addListingsQueryDataString} from "../../../../../redux/middleware/listings-middleware";
 import {
     setSearchRequestOperationMiddleware,
     setSearchRequestStatusMiddleware
 } from "../../../../../redux/middleware/search-middleware";
-import ProductItemDetailed from ".//Grid/Detailed/Product/ProductItemDetailed";
-import EventItemDetailed from ".//Grid/Detailed/Event/EventItemDetailed";
-import ProductItemList from ".//Grid/List/Product/ProductItemList";
-import EventItemList from ".//Grid/List/Event/EventItemList";
-import {
-    LISTINGS_GRID_COMPACT,
-    LISTINGS_GRID_DETAILED,
-    LISTINGS_GRID_LIST
-} from "../../../../../redux/constants/listings-constants";
-import EventInfo from "../../../Modals/Events/EventInfo";
-import ItemInfo from "../../../Modals/Items/ItemInfo";
+import {siteConfig} from "../../../../../config/site-config";
+import {isSet} from "../../../../../library/utils";
 
 class GridItems extends React.Component {
     constructor(props) {
@@ -31,6 +20,7 @@ class GridItems extends React.Component {
             },
         }
         this.getGridItem = this.getGridItem.bind(this)
+        this.getModal = this.getModal.bind(this)
         this.showInfo = this.showInfo.bind(this)
         this.closeModal = this.closeModal.bind(this)
     }
@@ -57,35 +47,32 @@ class GridItems extends React.Component {
     }
 
     getGridItem(item) {
-        switch (this.props.listings.listingsGrid) {
-            case LISTINGS_GRID_COMPACT:
-                if (this.props.search.category === "retail") {
-                    return <ProductItemCompact data={item} showInfoCallback={this.showInfo}/>
-                } else if (this.props.search.category === "events") {
-                    return <EventItemCompact data={item} showInfoCallback={this.showInfo}/>
-                }
-                break;
-            case LISTINGS_GRID_DETAILED:
-                if (this.props.search.category === "retail") {
-                    return <ProductItemDetailed data={item} showInfoCallback={this.showInfo}/>
-                } else if (this.props.search.category === "events") {
-                    return <EventItemDetailed data={item} showInfoCallback={this.showInfo}/>
-                }
-                break;
-            case LISTINGS_GRID_LIST:
-                if (this.props.search.category === "retail") {
-                    return <ProductItemList data={item} showInfoCallback={this.showInfo}/>
-                } else if (this.props.search.category === "events") {
-                    return <EventItemList data={item} showInfoCallback={this.showInfo}/>
-                }
-                break;
-
+        const gridConfig = siteConfig.gridItems;
+        if (!isSet(gridConfig[this.props.search.category])) {
+            return null;
         }
+        if (!isSet(gridConfig[this.props.search.category][this.props.listings.listingsGrid])) {
+            return null;
+        }
+        const GridItems = gridConfig[this.props.search.category][this.props.listings.listingsGrid];
+        return <GridItems data={item} showInfoCallback={this.showInfo} />
     }
 
+    getModal(item) {
+        const gridConfig = siteConfig.gridItems;
+        if (!isSet(gridConfig[this.props.search.category])) {
+            return null
+        }
+        if (!isSet(gridConfig[this.props.search.category].modal)) {
+            return null;
+        }
+        const ItemModal = gridConfig[this.props.search.category].modal;
+        return <ItemModal  data={this.state.modalData} close={this.closeModal} />
+
+    }
     render() {
         // console.log(this.props.listings)
-        // console.log(this.props.search)
+        console.log(this.props.search)
         return (
             <>
                 <Row>
@@ -96,11 +83,8 @@ class GridItems extends React.Component {
                     ))}
                 </Row>
 
-                {this.props.search.category === "events" && this.state.modalData.show &&
-                <EventInfo data={this.state.modalData} close={this.closeModal}/>
-                }
-                {this.props.search.category === "retail" && this.state.modalData.show &&
-                <ItemInfo data={this.state.modalData} close={this.closeModal}/>
+                {this.state.modalData.show &&
+                    <this.getModal />
                 }
             </>
         )

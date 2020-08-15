@@ -2,7 +2,7 @@ import React from "react";
 import Form from "react-bootstrap/Form";
 import {connect} from "react-redux";
 import {addArrayItem, removeArrayItem} from "../../../../../../redux/middleware/listings-middleware";
-import {setSearchRequestOperationAction} from "../../../../../../redux/actions/search-actions";
+import {setSearchRequestOperationMiddleware} from "../../../../../../redux/middleware/search-middleware";
 import {NEW_SEARCH_REQUEST} from "../../../../../../redux/constants/search-constants";
 
 class ListingsFilterListItem extends React.Component {
@@ -12,11 +12,11 @@ class ListingsFilterListItem extends React.Component {
     }
 
     formChangeHandler(e) {
-        this.props.setSearchRequestOperation(NEW_SEARCH_REQUEST);
+        this.props.setSearchRequestOperationMiddleware(NEW_SEARCH_REQUEST);
         if (e.target.checked) {
-            this.props.addArrayItem(this.props.data.name, e.target.value)
+            this.props.addArrayItem(this.props.data.name, e.target.value, true)
         } else {
-            this.props.removeArrayItem(this.props.data.name, e.target.value)
+            this.props.removeArrayItem(this.props.data.name, e.target.value, true)
         }
     }
 
@@ -55,5 +55,5 @@ function mapStateToProps(state) {
 
 export default connect(
     mapStateToProps,
-    {addArrayItem, removeArrayItem, setSearchRequestOperation: setSearchRequestOperationAction}
+    {addArrayItem, removeArrayItem, setSearchRequestOperationMiddleware}
 )(ListingsFilterListItem);

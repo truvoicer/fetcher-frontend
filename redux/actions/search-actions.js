@@ -128,11 +128,11 @@ function validateSearchParams() {
     //     store.dispatch(setSearchError(validateSearchQuery.map(value => value).join(", ") + " Field errors..."));
     //     return false;
     // }
-    if (!isSet(queryDataState[fetcherApiConfig.queryKey]) || queryDataState[fetcherApiConfig.queryKey] === "") {
-        setSearchRequestErrorAction("Empty search query...")
-        return false;
-        // store.dispatch(addListingsQueryDataString(fetcherApiConfig.queryKey, ""));
-    }
+    // if (!isSet(queryDataState[fetcherApiConfig.queryKey]) || queryDataState[fetcherApiConfig.queryKey] === "") {
+    //     setSearchRequestErrorAction("Empty search query...")
+    //     return false;
+    //     // store.dispatch(addListingsQueryDataString(fetcherApiConfig.queryKey, ""));
+    // }
     if (!isSet(queryDataState[fetcherApiConfig.searchLimitKey])) {
         addListingsQueryDataString(fetcherApiConfig.searchLimitKey, fetcherApiConfig.defaultSearchLimit);
     }
@@ -194,16 +194,12 @@ export function initialSearch() {
         return false;
     }
     let initialSearch = listingsDataState.initial_search;
-    if (!isSet(initialSearch.search_type || !isSet(initialSearch.search_value))) {
-        setSearchError("Initial search type or value not set...")
+    if (!isSet(initialSearch.parameter_name || !isSet(initialSearch.parameter_value))) {
+        setSearchError("Initial search parameters are not set...")
         return false;
     }
     let queryData = {};
     queryData[fetcherApiConfig.searchLimitKey] = fetcherApiConfig.defaultSearchLimit;
-    if (initialSearch.search_type === "query") {
-        queryData[fetcherApiConfig.queryKey] = initialSearch.search_value
-    } else if (initialSearch.search_type === "location") {
-        queryData.location = initialSearch.search_value
-    }
+    queryData[initialSearch.parameter_name] = initialSearch.parameter_value;
     addQueryDataObjectAction(queryData, true);
 }

@@ -1,4 +1,4 @@
-import {AddAxiosInterceptors} from "../library/api/global-scripts"
+import {AddAxiosInterceptors, LoadEnvironment} from "../library/api/global-scripts"
 import React from "react";
 import Header from "./layout/Header";
 import Site from "./Components/Pages/Site";
@@ -11,6 +11,7 @@ class FetcherApp extends React.Component {
 
     componentDidMount() {
         AddAxiosInterceptors();
+        LoadEnvironment();
     }
 
     render() {
