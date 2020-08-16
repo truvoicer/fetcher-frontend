@@ -201,5 +201,6 @@ export function initialSearch() {
     let queryData = {};
     queryData[fetcherApiConfig.searchLimitKey] = fetcherApiConfig.defaultSearchLimit;
     queryData[initialSearch.parameter_name] = initialSearch.parameter_value;
+    queryData[fetcherApiConfig.pageNumberKey] = 0;
     addQueryDataObjectAction(queryData, true);
 }

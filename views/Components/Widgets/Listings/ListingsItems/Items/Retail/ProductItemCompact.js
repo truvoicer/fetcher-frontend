@@ -15,7 +15,7 @@ class ProductItemCompact extends React.Component {
     render() {
         // console.log(this.props.data)
         return (
-            <Col sm={12} md={6} lg={6}>
+            <Col sm={12} md={4} lg={4}>
                 <div className="d-block d-md-flex listing vertical">
                     <a href="#" className="img d-block"
                        style={{backgroundImage: "url('" + this.props.data.item_image_url + "')"}}/>

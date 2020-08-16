@@ -19,7 +19,7 @@ class EventItemCompact extends React.Component {
                     <a href="#" className="img d-block"
                        style={{backgroundImage: "url('" + getDefaultImage(this.props.data) + "')"}}/>
                     <div className="lh-content">
-                        <span className="category">Cars &amp; Vehicles</span>
+                        <span className="category">{this.props.data.item_type}</span>
                         <a href="#" className="bookmark">
                             <span className="icon-heart"></span>
                         </a>

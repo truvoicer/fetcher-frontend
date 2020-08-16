@@ -27,7 +27,7 @@ class RightSidebar extends React.Component {
 
     render() {
         return (
-            <div className="mb-5">
+            <div className="mb-5 sidebar">
                 {this.props.sidebarData.length > 0 &&
                 <>
                     {this.props.sidebarData.map((item, index) => (

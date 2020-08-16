@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Box from "@material-ui/core/Box";
+import HtmlParser from "react-html-parser";
 
 class TabList extends Component {
     constructor(props) {
@@ -61,13 +62,13 @@ class TabList extends Component {
             {!Array.isArray(item.dataKey)
                 ?
                 <>
-                    {item.image ? <img src={this.props.item[item.dataKey]}/> : <p>{this.props.item[item.dataKey]}</p>}
+                    {item.image ? <img src={this.props.item[item.dataKey]}/> : <p>{HtmlParser(this.props.item[item.dataKey])}</p>}
                 </>
                 :
                 <>
                     {item.dataKey.map((dataKeyName, keyIndex) => (
                         <React.Fragment key={keyIndex.toString()}>
-                            {item.image ? <img src={this.props.item[dataKeyName]}/> : <p>{this.props.item[dataKeyName]}</p>}
+                            {item.image ? <img src={this.props.item[dataKeyName]}/> : <p>{HtmlParser(this.props.item[dataKeyName])}</p>}
                         </React.Fragment>
                     ))}
                 </>

@@ -8,3 +8,39 @@
 .modal {
 
 }
+
+.item-view {
+  &--heading {
+    display: flex;
+    justify-content: space-between;
+  }
+  &--body {
+    display: flex;
+    &--left {
+      img {
+        max-width: 300px;
+      }
+    }
+    &--right {
+      padding-left: 30px;
+    }
+  }
+  &--info-list {
+    padding: 0;
+    li {
+      display: flex;
+    }
+    &--label {
+      width: 200px;
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    &--value {
+      width: 100%;
+    }
+  }
+  h3 {
+    font-weight: 600;
+  }
+}

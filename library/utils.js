@@ -48,17 +48,18 @@ export const imageSelector = (imageSize = "medium", imageArray = []) => {
     return false;
 }
 export const getDefaultImage = (item) => {
-    if (!isSet(item.image_list)) {
-        return null
-    }
-    let selectImage = imageSelector("medium", item.image_list.images);
-    if (selectImage) {
-        return selectImage.url;
+    if (isSet(item.image_list)) {
+
+        let selectImage = imageSelector("medium", item.image_list.images);
+        if (selectImage) {
+            return selectImage.url;
+        }
     }
     if (isSet(item.item_default_image) && item.item_default_image !== "") {
         return item.item_default_image;
     }
-    if (isSet(item.image_list.default_image) &&
+    if (isSet(item.image_list) &&
+        isSet(item.image_list.default_image) &&
         isSet(item.image_list.default_image.url) &&
         item.image_list.default_image.url !== "") {
         return item.image_list.default_image.url;

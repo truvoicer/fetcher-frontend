@@ -7,17 +7,44 @@ export const EventsTabConfig = {
             label: "Overview",
             tabData: [
                 {
-                    label: "Summary:",
-                    dataKey: "item_info"
+                    label: "Event Name:",
+                    dataKey: "item_name"
                 },
                 {
-                    label: "Date:",
+                    label: "Event Start Date:",
                     dataKey: "item_start_date"
+                },
+                {
+                    label: "Event End Date:",
+                    dataKey: "item_stop_date"
                 },
                 {
                     label: "Price:",
                     dataKey: "item_price"
                 },
+            ]
+        },
+        {
+            label: "Description",
+            tabData: [
+                {
+                    label: "Description",
+                    dataKey: "item_description"
+                }
+            ]
+        },
+        {
+            label: "Location",
+            tabData: [
+                {
+                    label: "Location",
+                    dataKey: [
+                        "item_location",
+                        "item_city",
+                        "item_country",
+                        "item_country_abbr",
+                    ]
+                }
             ]
         },
         // {
