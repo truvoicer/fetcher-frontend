@@ -8,6 +8,9 @@ import {
 } from "../../../../../redux/middleware/search-middleware";
 import {siteConfig} from "../../../../../config/site-config";
 import {isSet} from "../../../../../library/utils";
+const sprintf = require("sprintf").sprintf
+import Router from "next/router";
+import {Routes} from "../../../../../config/routes";
 
 class GridItems extends React.Component {
     constructor(props) {
@@ -27,12 +30,21 @@ class GridItems extends React.Component {
 
     showInfo(item, e) {
         e.preventDefault()
-        this.setState({
-            modalData: {
-                show: true,
-                item: item,
-            }
-        })
+
+        const data = {
+            category: this.props.search.category,
+            provider: item.provider,
+            item_id: item.item_id
+        }
+        const url = sprintf(Routes.itemView, data)
+
+        Router.push(url, url, { shallow: true })
+        // this.setState({
+        //     modalData: {
+        //         show: true,
+        //         item: item,
+        //     }
+        // })
 
     }
 
@@ -72,7 +84,7 @@ class GridItems extends React.Component {
     }
     render() {
         // console.log(this.props.listings)
-        console.log(this.props.search)
+        // console.log(this.props.search)
         return (
             <>
                 <Row>

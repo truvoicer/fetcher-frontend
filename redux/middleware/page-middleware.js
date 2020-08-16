@@ -1,6 +1,6 @@
 import store from "../store/index"
 import { setPageData, setBlocksData, setPageError } from "../reducers/page-reducer"
-import { setListingsData } from "../reducers/listings-reducer"
+import { setListingsData, setCategory } from "../reducers/listings-reducer"
 import React from "react";
 import {isSet} from "../../library/utils";
 import {getListingsProviders} from "./listings-middleware";
@@ -21,9 +21,11 @@ export function getPageData(url) {
                     dispatch(setBlocksData(json.blocks_data))
                     dispatch(setListingsData(json.blocks_data.tru_fetcher_listings))
                     if (isSet(json.blocks_data.tru_fetcher_listings) &&
-                        isSet(json.blocks_data.tru_fetcher_listings.listing_block_category)
+                        isSet(json.blocks_data.tru_fetcher_listings.listing_block_category) &&
+                        isSet(json.blocks_data.tru_fetcher_listings.listing_block_category.slug)
                     ) {
-                        const category = json.blocks_data.tru_fetcher_listings.listing_block_category
+                        const category = json.blocks_data.tru_fetcher_listings.listing_block_category.slug
+                        store.dispatch(setCategory(category))
                         getListingsProviders(category)
                     }
                 }

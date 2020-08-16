@@ -2,6 +2,8 @@ import Modal from "react-bootstrap/Modal";
 import React from "react";
 import {formatDate} from "../../../../../../../library/utils";
 import {fetchData, responseHandler} from "../../../../../../../library/api/fetcher/middleware";
+import TabList from "../../../../../Tabs/TabList";
+import {EventsTabConfig} from "../../../../../../../config/tabs/item/events";
 
 class EventInfoModal extends React.Component {
     constructor(props) {
@@ -42,28 +44,9 @@ class EventInfoModal extends React.Component {
                                    target={"_blank"}>More info</a>
                             </div>
                         </div>
-                        <ul className={"item-info--list"}>
-                            <li>
-                                <div className={"item-info--list--row"}>
-                                    <div className={"item-info--list--row--label"}>
-                                        Event Start Date:
-                                    </div>
-                                    <div className={"item-info--list--row--value"}>
-                                        <p>{formatDate(this.state.data.item.item_start_date)}</p>
-                                    </div>
-                                </div>
-                            </li>
-                            <li>
-                                <div className={"item-info--list--row"}>
-                                    <div className={"item-info--list--row--label"}>
-                                        Event details:
-                                    </div>
-                                    <div className={"item-info--list--row--value"}>
-                                        <p>{this.state.data.item.item_info}</p>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
+                        <div className={"item-info--tabs"}>
+                            <TabList data={EventsTabConfig} item={this.state.data.item}/>
+                        </div>
                     </div>
                     }
                 </Modal.Body>

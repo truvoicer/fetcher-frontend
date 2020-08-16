@@ -35,7 +35,7 @@ class RightSidebar extends React.Component {
                             {item.search &&
                                 <>
                                 <Search data={item.search}/>
-                                <ListingsFilter />
+                                    {this.props.listings.listingsData && <ListingsFilter />}
                                 </>
                             }
 
@@ -53,6 +53,7 @@ class RightSidebar extends React.Component {
 
 function mapStateToProps(state) {
     return {
+        listings: state.listings,
         sidebarData: state.page.sidebar
     };
 }

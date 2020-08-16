@@ -8,9 +8,10 @@ class TabList extends Component {
         super(props);
         this.state = {
             tabs: {
-                value: 0
+                value: this.props.data.config.initialTab
             }
         }
+        console.log(this.props.data.config.initialTab)
         this.tabProps = this.tabProps.bind(this)
         this.tabPanel = this.tabPanel.bind(this)
         this.handleTabChange = this.handleTabChange.bind(this)

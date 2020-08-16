@@ -12,8 +12,8 @@ export const validateRequestParams = (requiredParams, queryData) => {
         return false;
     }
     let failParams = [];
-    for(let i=0;i<queryData.length;i++) {
-        for(let r=0;r<requiredParams.length;r++) {
+    for (let i = 0; i < queryData.length; i++) {
+        for (let r = 0; r < requiredParams.length; r++) {
             if (!Object.keys(queryData).contains(requiredParams[r])) {
                 failParams.push(requiredParams[r])
             }
@@ -26,21 +26,15 @@ export const validateRequestParams = (requiredParams, queryData) => {
 }
 
 export const fetchData = (endpoint, operation, queryData = {}, callback = false, completed = false) => {
-    if(!validateEndpoint(endpoint)) {
+    if (!validateEndpoint(endpoint)) {
         console.error("Endpoint not found")
     }
 
-    checkApiToken().then((response) => {
-        console.log(response)
-        if (callback) {
-            responseHandler(fetchFromApi(endpoint, operation, queryData), callback, completed);
-        } else {
-            return fetchFromApi(endpoint, operation, queryData);
-        }
-    })
-    .catch((error) => {
-        setPageErrorAction(error.message)
-    })
+    if (callback) {
+        responseHandler(fetchFromApi(endpoint, operation, queryData), callback, completed);
+    } else {
+        return fetchFromApi(endpoint, operation, queryData);
+    }
 }
 
 const fetchFromApi = (endpoint, operation, queryData) => {
@@ -49,7 +43,6 @@ const fetchFromApi = (endpoint, operation, queryData) => {
         method: "get",
         headers: {'Authorization': 'Bearer ' + process.env.NEXT_PUBLIC_FETCHER_API_TOKEN}
     }
-
     return axios.request(config);
 }
 
@@ -57,19 +50,19 @@ export const responseHandler = (request, callback, completed = false) => {
     request.then((response) => {
         callback(response.status, response.data, completed);
     })
-    .catch((error) => {
-        if (callback && isSet(error.response)) {
-            callback(error.response.status, error.response.data);
-        } else {
-            console.error(error)
-        }
-    })
+        .catch((error) => {
+            if (callback && isSet(error.response)) {
+                callback(error.response.status, error.response.data);
+            } else {
+                console.error(error)
+            }
+        })
 }
 
 const getApiUrl = (endpoint, operation, queryData = {}) => {
     let baseUrl;
     baseUrl = fetcherApiConfig.apiBaseUrl + vsprintf(fetcherApiConfig.endpoints[endpoint], operation);
-    return  baseUrl + (isEmpty(!buildQueryString(queryData))? buildQueryString(queryData) : "");
+    return baseUrl + (isEmpty(!buildQueryString(queryData)) ? buildQueryString(queryData) : "");
 }
 
 const validateEndpoint = (endpoint) => {
