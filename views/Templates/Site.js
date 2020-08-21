@@ -1,12 +1,10 @@
 import React from "react";
 import ReactHtmlParser from "react-html-parser";
-import {filterHtml} from "../../../library/html-parser";
-import {ListingsContext} from "../../Context/ListingsContext";
-import {buildWpApiUrl} from "../../../library/api/wp/middleware";
+import {filterHtml} from "../../library/html-parser";
 import Head from "next/head";
 import {connect} from "react-redux";
-import {getPageData} from "../../../redux/middleware/page-middleware";
-import HeroBlock from "../HeroBlock";
+import {getPageData} from "../../redux/middleware/page-middleware";
+import HeroBlock from "../Components/HeroBlock";
 
 class SiteComponent extends React.Component {
     constructor(props) {

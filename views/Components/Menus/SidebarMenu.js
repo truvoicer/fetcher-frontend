@@ -6,7 +6,7 @@ class SidebarMenu extends React.Component {
         super(props);
     }
     render() {
-        console.log(this.props)
+        // console.log(this.props)
         return (
             <nav id="menu">
                 <header className="major">

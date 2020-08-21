@@ -1,9 +1,6 @@
 import React from "react";
-import {ListingsContext} from "../../../../../../Context/ListingsContext";
-import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import EventInfoModal from "./EventInfoModal";
-import {formatDate, getDefaultImage, isSet} from "../../../../../../../library/utils";
+import {formatDate, getDefaultImage, isSet, uCaseFirst} from "../../../../../../../library/utils";
 
 
 class EventItemCompact extends React.Component {
@@ -19,7 +16,7 @@ class EventItemCompact extends React.Component {
                     <a href="#" className="img d-block"
                        style={{backgroundImage: "url('" + getDefaultImage(this.props.data) + "')"}}/>
                     <div className="lh-content">
-                        <span className="category">{this.props.data.item_type}</span>
+                        <span className="category">{uCaseFirst(this.props.data.provider)}</span>
                         <a href="#" className="bookmark">
                             <span className="icon-heart"></span>
                         </a>
@@ -42,6 +39,4 @@ class EventItemCompact extends React.Component {
         )
     }
 }
-
-EventItemCompact.contextType = ListingsContext;
 export default EventItemCompact;

@@ -24,6 +24,9 @@ export const siteConfig =  {
     sidebarName: "right-sidebar",
     topBarName: "top-bar",
     footerName: "footer",
+    defaultLoginHref: "/login",
+    defaultRegisterHref: "/register",
+    defaultLogoutHref: "/logout",
     gridItems: {
         retail: {
             [LISTINGS_GRID_COMPACT]: ProductItemCompact,

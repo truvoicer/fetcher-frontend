@@ -29,7 +29,7 @@ export const listingsSlice = createSlice({
         setListingsQueryData: (state, action) => {
             // console.log(action.payload)
             state.listingsQueryData = action.payload;
-            console.log(state.listingsQueryData)
+            // console.log(state.listingsQueryData)
         },
         setListingsSearchResults: (state, action) => {
             state.listingsSearchResults = action.payload;

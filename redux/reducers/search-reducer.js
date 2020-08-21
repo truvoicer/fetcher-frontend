@@ -8,7 +8,14 @@ const searchState = {
     searchOperation: NEW_SEARCH_REQUEST,
     extraData: {},
     searchList: [],
-    hasMoreResults: false,
+    pageControls: {
+        paginationRequest: false,
+        hasMore: false,
+        totalItems: 0,
+        totalPages: 0,
+        currentPage: 0,
+        pageSize: 0
+    },
     requestService: "",
     provider: "",
     category: "",
@@ -21,20 +28,23 @@ export const searchSlice = createSlice({
     reducers: {
         setSearchStatus: (state, action) => {
             state.searchStatus = action.payload;
-            console.log(state.searchStatus)
+            // console.log(state.searchStatus)
         },
         setSearchOperation: (state, action) => {
             state.searchOperation = action.payload;
-            console.log(state.searchOperation)
+            // console.log(state.searchOperation)
         },
         setExtraData: (state, action) => {
             state.extraData = action.payload;
+            // console.log(state.extraData)
         },
         setSearchList: (state, action) => {
             state.searchList = action.payload;
+            // console.log(state.searchList)
         },
-        setHasMoreResults: (state, action) => {
-            state.hasMoreResults = action.payload;
+        setPageControls: (state, action) => {
+            state.pageControls = action.payload;
+            // console.log(state.pageControls)
         },
         setRequestService: (state, action) => {
             state.requestService = action.payload;
@@ -60,7 +70,7 @@ export const {
     setSearchOperation,
     setExtraData,
     setSearchList,
-    setHasMoreResults,
+    setPageControls,
     setRequestService,
     setProvider,
     setCategory,

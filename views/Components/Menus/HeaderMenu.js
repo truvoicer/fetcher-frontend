@@ -10,7 +10,7 @@ class HeaderMenu extends React.Component {
         return (
             <div className="col-12 col-md-10 d-none d-xl-block">
                 <nav className="site-navigation position-relative text-right" role="navigation">
-                    <MenuList data={this.props.data}/>
+                    <MenuList data={this.props.data} sessionLinks={true}/>
                 </nav>
             </div>
         )

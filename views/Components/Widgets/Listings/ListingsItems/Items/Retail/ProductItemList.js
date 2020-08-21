@@ -1,9 +1,5 @@
 import React from "react";
-import {ListingsContext} from "../../../../../../Context/ListingsContext";
-import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import EventInfoModal from "../Events/EventInfoModal";
-import {isSet} from "../../../../../../../library/utils";
 
 
 class ProductItemList extends React.Component {
@@ -42,6 +38,4 @@ class ProductItemList extends React.Component {
         )
     }
 }
-
-ProductItemList.contextType = ListingsContext;
 export default ProductItemList;

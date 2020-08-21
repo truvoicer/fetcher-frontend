@@ -132,7 +132,9 @@ class RetailItemView extends Component {
 
                     </div>
 
-                    <p>{HtmlParser(this.props.data.item_description)}</p>
+                    <div className={"item-view--content"}>
+                        {HtmlParser(this.props.data.item_description)}
+                    </div>
 
                     <a href={this.props.data.item_href}
                        className="btn btn-primary">

@@ -9,7 +9,11 @@ import {
     loadNextPageNumberMiddleware
 } from "../../../../../../redux/middleware/search-middleware";
 import {
-    APPEND_SEARCH_REQUEST, NEW_SEARCH_REQUEST,
+    APPEND_SEARCH_REQUEST,
+    NEW_SEARCH_REQUEST,
+    PAGE_CONTROL_CURRENT_PAGE, PAGE_CONTROL_PAGE_SIZE,
+    PAGE_CONTROL_TOTAL_ITEMS,
+    PAGE_CONTROL_TOTAL_PAGES,
     SEARCH_REQUEST_COMPLETED,
     SEARCH_REQUEST_STARTED
 } from "../../../../../../redux/constants/search-constants";
@@ -28,25 +32,9 @@ class ListingsPaginate extends React.Component {
 
     PaginationClickHandler(pageNumber) {
         this.props.setSearchRequestOperationMiddleware(NEW_SEARCH_REQUEST);
-        if (isSet(this.props.search.extraData.page_offset) && isSet(this.props.search.extraData.page_size)) {
-            this.props.loadNextOffsetMiddleware(this.getOffsetFromPageNUmber(pageNumber));
-        } else if (isSet(this.props.search.extraData.page_number)) {
-            this.props.loadNextPageNumberMiddleware(pageNumber);
-        }
+        this.props.loadNextPageNumberMiddleware(pageNumber);
     }
 
-    getOffsetFromPageNUmber(pageNumber) {
-        return parseInt(this.props.search.extraData.page_size) * parseInt(pageNumber);
-    }
-
-    getCurrentPageFromOffset(totalItems, totalPageCount, pageSize, pageOffset) {
-        let offsetPageCount = Math.floor(totalItems - pageOffset)
-        if (pageOffset === 0) {
-            return Math.floor(totalPageCount - Math.floor(totalItems / pageSize)) + 1;
-        } else {
-            return Math.floor(totalPageCount - Math.floor((offsetPageCount / pageSize)));
-        }
-    }
     getPaginationRange(currentPage) {
         let range = [];
         if (currentPage > this.state.paginationLimit - this.state.paginationRange) {
@@ -65,32 +53,22 @@ class ListingsPaginate extends React.Component {
     }
 
     getPagination() {
-        const extraData = this.props.search.extraData;
-        if (extraData.total_items === "") {
+        const pageControls = this.props.search.pageControls;
+        if (pageControls[PAGE_CONTROL_TOTAL_ITEMS] === 0) {
             return null;
         }
 
-        let currentPage;
-        let totalPageCount
-        if (isSet(extraData.page_number)) {
-            currentPage = parseInt(extraData.page_number);
-            totalPageCount = parseInt(extraData.page_count);
-        } else if (isSet(extraData.page_offset) && isSet(extraData.page_size)) {
-            totalPageCount = Math.floor(extraData.total_items / extraData.page_size);
-            currentPage = this.getCurrentPageFromOffset(extraData.total_items, totalPageCount, extraData.page_size, extraData.page_offset)
-        }
-
-        let range = this.getPaginationRange(currentPage);
+        let range = this.getPaginationRange(pageControls[PAGE_CONTROL_CURRENT_PAGE]);
 
         return (
             <div className="col-12 mt-5 text-center">
                 <div className="pagination">
 
-                    {currentPage > this.state.paginationLimit - this.state.paginationRange &&
+                    {pageControls[PAGE_CONTROL_CURRENT_PAGE] > this.state.paginationLimit - this.state.paginationRange &&
                     <a onClick={this.PaginationClickHandler.bind(this, 1)}>1</a>}
                     {range.map((num, index) => (
                         <React.Fragment key={index.toString()}>
-                            {num === currentPage
+                            {num === pageControls[PAGE_CONTROL_CURRENT_PAGE]
                                 ?
                                 <span>{num}</span>
                                 :
@@ -99,7 +77,9 @@ class ListingsPaginate extends React.Component {
                         </React.Fragment>
                     ))}
                     <span className="more-page">...</span>
-                    <a onClick={this.PaginationClickHandler.bind(this, totalPageCount)}>{totalPageCount}</a>
+                    <a onClick={this.PaginationClickHandler.bind(this, pageControls[PAGE_CONTROL_TOTAL_PAGES])}>
+                        {pageControls[PAGE_CONTROL_TOTAL_PAGES]}
+                    </a>
                 </div>
             </div>
         )

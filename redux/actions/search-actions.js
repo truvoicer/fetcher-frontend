@@ -1,36 +1,49 @@
 import React from "react";
 import store from "../store/index";
-import {fetchData, fetchSearchData, validateRequestParams} from "../../library/api/fetcher/middleware";
+import {fetchData} from "../../library/api/fetcher/middleware";
 import {fetcherApiConfig} from "../../config/fetcher-api-config";
 import {
-    setSearchStatus,
-    setSearchOperation,
-    setRequestService,
-    setSearchList,
-    setHasMoreResults,
+    setCategory,
     setExtraData,
     setProvider,
-    setCategory,
+    setRequestService,
     setSearchError,
+    setSearchList,
+    setSearchOperation,
+    setSearchStatus,
+    setSearchResults
 } from "../reducers/search-reducer"
 import {isEmpty, isSet} from "../../library/utils";
-import {setListingsQueryData} from "../reducers/listings-reducer";
 import produce from "immer";
 import {addArrayItem, addListingsQueryDataString} from "../middleware/listings-middleware";
-import {addQueryDataObjectAction, addQueryDataString} from "./listings-actions";
+import {addQueryDataObjectAction} from "./listings-actions";
 import {
+    APPEND_SEARCH_REQUEST,
+    NEW_SEARCH_REQUEST,
+    PAGE_CONTROL_CURRENT_PAGE,
+    PAGE_CONTROL_PAGE_SIZE,
+    PAGE_CONTROL_PAGINATION_REQUEST,
     SEARCH_REQUEST_COMPLETED,
     SEARCH_REQUEST_ERROR,
-    SEARCH_REQUEST_IDLE,
-    SEARCH_REQUEST_STARTED,
-    APPEND_SEARCH_REQUEST,
-    NEW_SEARCH_REQUEST, SEARCH_RESET
+    SEARCH_REQUEST_STARTED
 } from "../constants/search-constants";
+import {
+    addPaginationQueryParameters,
+    setHasMoreSearchPages,
+    setPageControlItemAction,
+    setPageControlsAction
+} from "./pagination-actions";
 
-export function setSearchExtraDataAction(extraData) {
+export function setSearchExtraDataAction(extraData, provider) {
     const extraDataState = {...store.getState().search.extraData};
-    const object = Object.assign({}, extraDataState, extraData);
-    store.dispatch(setExtraData(object))
+
+    const nextState = produce(extraDataState, (draftState) => {
+        if (!isSet(draftState[provider])) {
+            draftState[provider] = {};
+        }
+        draftState[provider] = extraData;
+    })
+    store.dispatch(setExtraData(nextState))
 }
 
 export function setSearchListDataAction(listData) {
@@ -39,22 +52,20 @@ export function setSearchListDataAction(listData) {
         return
     }
     const searchOperation = searchState.searchOperation;
-    const searchStatus = searchState.searchStatus;
 
     const nextState = produce(searchState.searchList, (draftState) => {
         if ((searchOperation === NEW_SEARCH_REQUEST)) {
-            console.log(searchOperation)
+            // console.log(searchOperation)
             store.dispatch(setSearchOperation(APPEND_SEARCH_REQUEST));
             draftState.splice(0, draftState.length + 1);
 
         } else if (searchOperation === APPEND_SEARCH_REQUEST) {
-            console.log("append")
+            // console.log("append")
         }
         listData.map((item) => {
             draftState.push(item)
         })
     })
-    console.log(nextState)
     store.dispatch(setSearchList(nextState))
 }
 
@@ -77,10 +88,6 @@ export function setSearchRequestOperationAction(operation) {
         store.dispatch(setSearchOperation(operation))
 }
 
-export function setSearchHasMoreResultsAction(hasMoreResults) {
-    store.dispatch(setHasMoreResults(hasMoreResults))
-}
-
 export function setSearchRequestErrorAction(error) {
     store.dispatch(setSearchError(error))
 }
@@ -88,26 +95,19 @@ export function setSearchRequestErrorAction(error) {
 export function searchResponseHandler(status, data, completed = false) {
     // console.log(status, data)
     if (status === 200) {
-        setSearchListDataAction(data.requestData);
-        setSearchExtraDataAction(data.extraData)
-        setSearchRequestServiceAction(data.requestService)
+        setSearchListDataAction(data.request_data);
+        setSearchExtraDataAction(data.extra_data, data.provider)
+        setSearchRequestServiceAction(data.request_service)
         setSearchProviderAction(data.provider)
         setSearchCategoryAction(data.category)
+        setPageControlsAction(data.extra_data)
 
-        if (isSet(data.extraData.page_offset) && isSet(data.extraData.page_size)) {
-            if (parseInt(data.extraData.page_offset) < parseInt(data.extraData.total_items)) {
-                setSearchHasMoreResultsAction(true);
-            }
-        } else if (isSet(data.extraData.page_number)) {
-            if (parseInt(data.extraData.page_number) < parseInt(data.extraData.page_count)) {
-                setSearchHasMoreResultsAction(true);
-            }
-        }
     } else {
         setSearchRequestStatusAction(SEARCH_REQUEST_ERROR);
         setSearchRequestErrorAction(data.message)
     }
     if (completed) {
+        setHasMoreSearchPages()
         setSearchRequestStatusAction(SEARCH_REQUEST_COMPLETED);
     }
 }
@@ -119,20 +119,6 @@ function validateSearchParams() {
         setSearchRequestErrorAction("No category found...")
         return false;
     }
-    // const validateSearchQuery = validateRequestParams([fetcherApiConfig.queryKey], queryDataState);
-    // if (!validateSearchQuery) {
-    //     store.dispatch(setSearchError("Search parameters are empty..."))
-    //     return false;
-    // }
-    // if (Array.isArray(validateSearchQuery) && validateSearchQuery.length > 0) {
-    //     store.dispatch(setSearchError(validateSearchQuery.map(value => value).join(", ") + " Field errors..."));
-    //     return false;
-    // }
-    // if (!isSet(queryDataState[fetcherApiConfig.queryKey]) || queryDataState[fetcherApiConfig.queryKey] === "") {
-    //     setSearchRequestErrorAction("Empty search query...")
-    //     return false;
-    //     // store.dispatch(addListingsQueryDataString(fetcherApiConfig.queryKey, ""));
-    // }
     if (!isSet(queryDataState[fetcherApiConfig.searchLimitKey])) {
         addListingsQueryDataString(fetcherApiConfig.searchLimitKey, fetcherApiConfig.defaultSearchLimit);
     }
@@ -151,17 +137,23 @@ export const runSearch = () => {
     setSearchRequestStatusAction(SEARCH_REQUEST_STARTED);
     const listingsDataState = store.getState().listings.listingsData;
     const queryDataState = store.getState().listings.listingsQueryData;
+    const pageControlsState = store.getState().search.pageControls;
     if (!validateSearchParams()) {
         setSearchRequestStatusAction(SEARCH_REQUEST_ERROR);
         return false;
     }
 
+    if (!pageControlsState[PAGE_CONTROL_PAGINATION_REQUEST]) {
+        setPageControlItemAction(PAGE_CONTROL_CURRENT_PAGE, 1);
+    }
+
     let queryData = {...queryDataState};
     if (!isSet(queryDataState.providers) || queryDataState.providers.length === 0) {
         let providers = [];
-        queryData["limit"] = calculateLimit(queryData["limit"], listingsDataState.providers.length);
+        queryData["limit"] = calculateLimit(listingsDataState.providers.length);
         listingsDataState.providers.map((provider, index) => {
             providers.push(provider.provider_name)
+            queryData = addPaginationQueryParameters(queryData, provider.provider_name);
             queryData["provider"] = provider.provider_name;
             fetchData("operation", [getEndpointOperation()], queryData, searchResponseHandler, (listingsDataState.providers.length === index + 1))
         });
@@ -169,8 +161,9 @@ export const runSearch = () => {
             addArrayItem("providers", provider)
         })
     } else {
-        queryData["limit"] = calculateLimit(queryData["limit"], queryDataState.providers.length);
+        queryData["limit"] = calculateLimit(queryDataState.providers.length);
         queryDataState.providers.map((provider, index) => {
+            queryData = addPaginationQueryParameters(queryData, provider.provider_name);
             queryData["provider"] = provider;
             fetchData("operation", [getEndpointOperation()], queryData, searchResponseHandler, (queryDataState.providers.length === index + 1))
         });
@@ -178,8 +171,11 @@ export const runSearch = () => {
 
 }
 
-function calculateLimit(limit, providerCount) {
-    return Math.floor(limit / providerCount);
+function calculateLimit(providerCount) {
+    const pageControlsState = {...store.getState().search.pageControls}
+    let pageSize = pageControlsState[PAGE_CONTROL_PAGE_SIZE];
+    // console.log(pageSize, providerCount, Math.floor(pageSize / providerCount))
+    return Math.floor(pageSize / providerCount);
 }
 
 export function initialSearch() {
@@ -199,8 +195,8 @@ export function initialSearch() {
         return false;
     }
     let queryData = {};
-    queryData[fetcherApiConfig.searchLimitKey] = fetcherApiConfig.defaultSearchLimit;
     queryData[initialSearch.parameter_name] = initialSearch.parameter_value;
-    queryData[fetcherApiConfig.pageNumberKey] = 0;
+    queryData[fetcherApiConfig.pageNumberKey] = 1;
     addQueryDataObjectAction(queryData, true);
 }
+

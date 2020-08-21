@@ -9,7 +9,7 @@ import {
     loadNextPageNumberMiddleware
 } from "../../../../../../redux/middleware/search-middleware";
 import {
-    APPEND_SEARCH_REQUEST, NEW_SEARCH_REQUEST,
+    APPEND_SEARCH_REQUEST, NEW_SEARCH_REQUEST, PAGE_CONTROL_CURRENT_PAGE, PAGE_CONTROL_HAS_MORE, PAGE_CONTROL_PAGE_SIZE,
     SEARCH_REQUEST_COMPLETED,
     SEARCH_REQUEST_STARTED
 } from "../../../../../../redux/constants/search-constants";
@@ -31,11 +31,10 @@ class ListingsInfiniteScroll extends React.Component {
             return false;
         }
         this.props.setSearchRequestOperationMiddleware(APPEND_SEARCH_REQUEST);
-        if (isSet(this.props.search.extraData.page_offset) && isSet(this.props.search.extraData.page_size)) {
-            this.props.loadNextOffsetMiddleware(parseInt(this.props.search.extraData.page_offset) + parseInt(this.props.search.extraData.page_size));
-        } else if (isSet(this.props.search.extraData.page_number)) {
-            this.props.loadNextPageNumberMiddleware(parseInt(this.props.search.extraData.page_number) + 1);
-        }
+        this.props.loadNextPageNumberMiddleware(this.props.search.pageControls[PAGE_CONTROL_CURRENT_PAGE] + 1);
+        // if (isSet(this.props.search.extraData.page_offset) && isSet(this.props.search.pageControls[PAGE_CONTROL_PAGE_SIZE])) {
+        //     this.props.loadNextOffsetMiddleware(parseInt(this.props.search.extraData.page_offset) + parseInt(this.props.search.extraData.page_size));
+        // }
     }
 
     render() {
@@ -46,7 +45,7 @@ class ListingsInfiniteScroll extends React.Component {
                 pageStart={0}
                 initialLoad={false}
                 loadMore={this.loadMore}
-                hasMore={this.props.search.hasMoreResults}
+                hasMore={this.props.search.pageControls[PAGE_CONTROL_HAS_MORE]}
                 loader={<LoaderComponent key={"loader"}/>}
             >
                 <GridItem/>

@@ -49,7 +49,7 @@ class ItemViewWidget extends Component {
             this.setState({
                 showItem: true,
                 error: false,
-                item: data.requestData[0]
+                item: data.request_data[0]
 
             })
         } else {

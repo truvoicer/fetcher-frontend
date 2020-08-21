@@ -1,10 +1,5 @@
 import React from "react";
-import {ListingsContext} from "../../../../../../Context/ListingsContext";
-import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import EventInfoModal from "../Events/EventInfoModal";
-import {getDefaultImage, isSet} from "../../../../../../../library/utils";
-
 
 class RealEstateItemCompact extends React.Component {
     constructor(props) {
@@ -44,6 +39,4 @@ class RealEstateItemCompact extends React.Component {
         )
     }
 }
-
-RealEstateItemCompact.contextType = ListingsContext;
 export default RealEstateItemCompact;

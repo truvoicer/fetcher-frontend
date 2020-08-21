@@ -9,8 +9,13 @@ import {
     setListingsError
 } from "../reducers/listings-reducer"
 import {isSet} from "../../library/utils";
-import {initialSearch, runSearch, setSearchRequestOperationAction} from "../actions/search-actions";
-import {NEW_SEARCH_REQUEST} from "../constants/search-constants";
+import {
+    initialSearch,
+    runSearch,
+    setSearchRequestOperationAction
+} from "../actions/search-actions";
+import {NEW_SEARCH_REQUEST, PAGE_CONTROL_PAGE_SIZE} from "../constants/search-constants";
+import {getSearchLimit, setPageControlItemAction} from "../actions/pagination-actions";
 
 export function getListingsProviders(category) {
     fetchData("list", [category, "providers"], {}, getProvidersCallback);
@@ -20,6 +25,7 @@ export function getProvidersCallback(status, data) {
     if (status === 200) {
         // console.log(data.data)
         store.dispatch(setListingsDataProviders(data.data))
+        setPageControlItemAction(PAGE_CONTROL_PAGE_SIZE, getSearchLimit())
         initialSearch();
     } else {
         // console.error(data.message)

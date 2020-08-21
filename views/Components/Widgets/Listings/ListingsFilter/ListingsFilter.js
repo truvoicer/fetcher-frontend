@@ -1,14 +1,10 @@
 import React from "react";
-import {ListingsContext} from "../../../../Context/ListingsContext";
-import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
 import ListingsFilterDateItem from "./Items/ListingsFilterDateItem";
 import ListingsFilterTextItem from "./Items/ListingsFilterTextItem";
 import ListingsFilterListItem from "./Items/ListingsFilterListItem";
 import ListingsFilterApiListItem from "./Items/ListingsFilterApiListItem";
 import {isSet} from "../../../../../library/utils";
 import {connect} from "react-redux";
-import {buildListingsQueryData} from "../../../../../redux/middleware/listings-middleware";
 
 class ListingsFilter extends React.Component {
     constructor(props) {

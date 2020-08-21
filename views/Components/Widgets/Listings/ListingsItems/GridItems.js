@@ -7,7 +7,7 @@ import {
     setSearchRequestStatusMiddleware
 } from "../../../../../redux/middleware/search-middleware";
 import {siteConfig} from "../../../../../config/site-config";
-import {isSet} from "../../../../../library/utils";
+import {convertImageObjectsToArray, isSet} from "../../../../../library/utils";
 const sprintf = require("sprintf").sprintf
 import Router from "next/router";
 import {Routes} from "../../../../../config/routes";
@@ -59,6 +59,10 @@ class GridItems extends React.Component {
     }
 
     getGridItem(item) {
+        let gridItem = {...item};
+        if (isSet(gridItem.image_list)) {
+            gridItem.image_list = convertImageObjectsToArray(gridItem.image_list);
+        }
         const gridConfig = siteConfig.gridItems;
         if (!isSet(gridConfig[this.props.search.category])) {
             return null;
@@ -67,7 +71,7 @@ class GridItems extends React.Component {
             return null;
         }
         const GridItems = gridConfig[this.props.search.category][this.props.listings.listingsGrid];
-        return <GridItems data={item} showInfoCallback={this.showInfo} />
+        return <GridItems data={gridItem} showInfoCallback={this.showInfo} />
     }
 
     getModal(item) {
@@ -84,7 +88,7 @@ class GridItems extends React.Component {
     }
     render() {
         // console.log(this.props.listings)
-        // console.log(this.props.search)
+        // console.log(this.props.search.searchList)
         return (
             <>
                 <Row>

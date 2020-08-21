@@ -1,6 +1,6 @@
 import React from "react";
 import Col from "react-bootstrap/Col";
-import {formatDate, getDefaultImage, isSet} from "../../../../../../../library/utils";
+import {formatDate, getDefaultImage, isSet, uCaseFirst} from "../../../../../../../library/utils";
 
 
 class EventItemDetailed extends React.Component {
@@ -16,7 +16,7 @@ class EventItemDetailed extends React.Component {
                     <a href="#" className="img d-block"
                        style={{backgroundImage: "url('" + getDefaultImage(this.props.data) + "')"}}/>
                     <div className="lh-content">
-                        <span className="category">Cars &amp; Vehicles</span>
+                        <span className="category">{uCaseFirst(this.props.data.provider)}</span>
                         <a href="#" className="bookmark">
                             <span className="icon-heart"></span>
                         </a>

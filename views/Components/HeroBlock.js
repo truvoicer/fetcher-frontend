@@ -3,6 +3,7 @@ import {connect} from "react-redux";
 import {getPageData} from "../../redux/middleware/page-middleware";
 import {isSet} from "../../library/utils";
 import SearchBar from "./Widgets/Listings/SearchBar";
+import { Parallax, Background } from 'react-parallax';
 
 class HeroBlock extends React.Component {
     constructor(props) {
@@ -15,13 +16,17 @@ class HeroBlock extends React.Component {
             heroData = this.props.blocksData.tru_fetcher_hero;
         }
         return (
-            <div className="site-blocks-cover inner-page-cover overlay"
-                 style={{backgroundImage: "url('" + (heroData && heroData.hero_background_image? heroData.hero_background_image : "") + "')"}}>
-                <div className="container">
+            <Parallax
+                blur={0}
+                bgImage={heroData && heroData.hero_background_image? heroData.hero_background_image : ""}
+                bgImageAlt="the cat"
+                strength={100}
+                className={"site-blocks-cover inner-page-cover overlay"}
+                contentClassName={"container"}
+                bgClassName={"bgClassName"}
+            >
                     <div className="row align-items-center justify-content-center text-center">
-
-                        <div className="col-md-10" data-aos="fade-up" data-aos-delay="400">
-
+                        <div className="col-md-10">
 
                             <div className="row justify-content-center mt-5">
                                 <div className="col-md-8 text-center">
@@ -33,8 +38,7 @@ class HeroBlock extends React.Component {
 
                         </div>
                     </div>
-                </div>
-            </div>
+            </Parallax>
         )
     }
 }function mapStateToProps(state) {

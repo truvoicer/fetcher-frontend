@@ -13,7 +13,9 @@
 	@include media-breakpoint-down(sm) {
 		top: 0;
 	}
-
+	a {
+		cursor: pointer;
+	}
 	.site-logo {
 		position: relative;
 		left: 0;

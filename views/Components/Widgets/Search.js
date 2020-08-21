@@ -1,6 +1,4 @@
-import ListingsFilterTextItem from "./Listings/ListingsFilter/Items/ListingsFilterTextItem";
 import React from "react";
-import {ListingsContext} from "../../Context/ListingsContext";
 import {connect} from "react-redux";
 import {addListingsQueryDataString} from "../../../redux/middleware/listings-middleware";
 import {setSearchRequestOperationMiddleware} from "../../../redux/middleware/search-middleware";

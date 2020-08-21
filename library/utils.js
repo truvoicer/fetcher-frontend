@@ -47,10 +47,17 @@ export const imageSelector = (imageSize = "medium", imageArray = []) => {
     }
     return false;
 }
-export const getDefaultImage = (item) => {
-    if (isSet(item.image_list)) {
 
-        let selectImage = imageSelector("medium", item.image_list.images);
+export const convertImageObjectsToArray = (imagesArray) => {
+    if (typeof imagesArray === "object" && imagesArray !== null) {
+        return Object.keys(imagesArray).map(key => imagesArray[key])
+    }
+    return imagesArray;
+}
+
+export const getDefaultImage = (item) => {
+    if (isSet(item.image_list) && item.image_list !== null) {
+        let selectImage = imageSelector("medium", item.image_list);
         if (selectImage) {
             return selectImage.url;
         }
@@ -58,11 +65,9 @@ export const getDefaultImage = (item) => {
     if (isSet(item.item_default_image) && item.item_default_image !== "") {
         return item.item_default_image;
     }
-    if (isSet(item.image_list) &&
-        isSet(item.image_list.default_image) &&
-        isSet(item.image_list.default_image.url) &&
-        item.image_list.default_image.url !== "") {
-        return item.image_list.default_image.url;
-    }
     return null;
+}
+
+export const uCaseFirst = (string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1);
 }

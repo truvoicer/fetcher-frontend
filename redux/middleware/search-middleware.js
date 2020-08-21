@@ -8,13 +8,21 @@ import {
     setProvider,
     setCategory,
     setSearchError,
-    setHasMoreResults,
+    setPageControls,
 } from "../reducers/search-reducer"
 import store from "../store";
-import {SEARCH_REQUEST_STARTED} from "../constants/search-constants";
-import {setSearchRequestStatusAction} from "../actions/search-actions";
+import {
+    PAGE_CONTROL_CURRENT_PAGE,
+    PAGE_CONTROL_PAGINATION_REQUEST,
+    SEARCH_REQUEST_STARTED
+} from "../constants/search-constants";
+import {
+    getCurrentPage, runSearch,
+    setSearchRequestStatusAction
+} from "../actions/search-actions";
 import {addQueryDataString} from "../actions/listings-actions";
 import {addListingsQueryDataString, addQueryDataObjectMiddleware} from "./listings-middleware";
+import {getCurrentPageFromOffset, setPageControlItemAction} from "../actions/pagination-actions";
 
 export function setSearchProviderMiddleware(provider) {
     return function (dispatch) {
@@ -45,9 +53,13 @@ export function setSearchRequestOperationMiddleware(operation) {
     }
 }
 
-export function setSearchHasMoreResultsMiddleware(hasMoreResults) {
+export function setPageControlItemMiddleware(key, value) {
     return function (dispatch) {
-        dispatch(setHasMoreResults(hasMoreResults))
+        let pageControlsState = {...store.getState().search.pageControls}
+        const pageControlsObject = Object.assign({}, pageControlsState, {
+            [key]: value
+        });
+        dispatch(setPageControls(pageControlsObject))
     }
 }
 
@@ -61,13 +73,19 @@ export function setSearchRequestErrorMiddleware(error) {
 export function loadNextPageNumberMiddleware(pageNumber) {
     return function (dispatch) {
         setSearchRequestStatusAction(SEARCH_REQUEST_STARTED);
-        addQueryDataString("page_number", pageNumber, true)
+        setPageControlItemAction(PAGE_CONTROL_PAGINATION_REQUEST, true)
+        setPageControlItemAction(PAGE_CONTROL_CURRENT_PAGE, parseInt(pageNumber))
+        // addQueryDataString("page_number", pageNumber, true)
+        runSearch()
     }
 }
 
 export function loadNextOffsetMiddleware(pageOffset) {
     return function (dispatch) {
         setSearchRequestStatusAction(SEARCH_REQUEST_STARTED);
+        setPageControlItemAction(PAGE_CONTROL_PAGINATION_REQUEST, true)
+        setPageControlItemAction(PAGE_CONTROL_CURRENT_PAGE, getCurrentPageFromOffset(parseInt(pageOffset)))
         addQueryDataString("page_offset", pageOffset, true)
     }
 }
+

@@ -22,7 +22,7 @@ class ListingsFilterApiListItem extends React.Component {
     }
 
     getApiList() {
-        console.log(this.props.listings.category)
+        // console.log(this.props.listings.category)
         if (this.props.listings.category !== "") {
             fetchData("list", [this.props.listings.category, this.props.data.api_endpoint], {}, this.getApiListCallback);
         }

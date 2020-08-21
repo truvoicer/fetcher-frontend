@@ -8,7 +8,7 @@ import {connect} from "react-redux";
 import {getSidebarData} from "../../../redux/middleware/sidebar-middleware"
 import {buildWpApiUrl} from "../../../library/api/wp/middleware";
 import {SIDEBAR_REQUEST} from "../../../redux/constants/sidebar-constants";
-import Footer from "../../layout/Footer";
+import Footer from "../../Layout/Footer";
 
 class RightSidebar extends React.Component {
     constructor(props) {
