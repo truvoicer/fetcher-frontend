@@ -43,6 +43,7 @@ const fetchFromApi = (endpoint, operation, queryData) => {
         method: "get",
         headers: {'Authorization': 'Bearer ' + process.env.NEXT_PUBLIC_FETCHER_API_TOKEN}
     }
+    console.log(endpoint, operation, queryData)
     return axios.request(config);
 }
 

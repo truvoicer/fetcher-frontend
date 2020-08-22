@@ -21,7 +21,11 @@ const sessionState = {
         [SESSION_USER_TOKEN]: "",
     },
     [SESSION_AUTHENTICATED]: false,
-    [SESSION_ERROR]: {}
+    [SESSION_ERROR]: {
+        show: false,
+        message: "",
+        data: {}
+    }
 };
 
 export const sessionSlice = createSlice({

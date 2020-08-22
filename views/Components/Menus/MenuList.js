@@ -69,7 +69,7 @@ class MenuList extends React.Component {
                 {this.props.sessionLinks && this.props.session.authenticated &&
                     <>
                         <li className="ml-xl-3">
-                            <a href="/account">
+                            <a href={siteConfig.defaultUserAccountHref}>
                                 <span className="border-left pl-xl-4"/>
                                 My Account
                             </a>

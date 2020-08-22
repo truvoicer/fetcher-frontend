@@ -13,6 +13,7 @@ import {
 } from "../constants/session-constants";
 import {buildWpApiUrl} from "../../library/api/wp/middleware";
 import {wpApiConfig} from "../../config/wp-api-config";
+import {isSet} from "../../library/utils";
 
 const axios = require("axios")
 
@@ -31,8 +32,28 @@ export function setSessionUserAction(data, authenticated) {
     store.dispatch(setAuthenticated(authenticated))
 }
 
+export function resetSessionErrorAction() {
+    let sessionErrorState = {...store.getState().session.error};
+    const nextState = produce(sessionErrorState, (draftState) => {
+        draftState.show = false;
+        draftState.message = "";
+        draftState.data = {};
+    });
+    store.dispatch(setSessionError(nextState))
+}
+
 export function setSessionErrorAction(error) {
-    store.dispatch(setSessionError(error))
+    let sessionErrorState = {...store.getState().session.error};
+    const nextState = produce(sessionErrorState, (draftState) => {
+        draftState.show = true;
+        // draftState.data = error;
+        if (isSet(error.response) && isSet(error.response.data) && isSet(error.response.data.message)) {
+            draftState.message = error.response.data.message;
+        } else {
+            draftState.message = "Session Error";
+        }
+    });
+    store.dispatch(setSessionError(nextState))
 }
 
 export function getSessionUserAction() {
@@ -47,10 +68,11 @@ export function validateToken() {
     if(!getSessionObject()) {
         return false;
     }
-    if (new Date().getTime() > getSessionObject().expires_at) {
-        removeLocalSession()
-        return false;
-    }
+    console.log(getSessionObject())
+    // if (new Date().getTime() > getSessionObject().expires_at) {
+    //     removeLocalSession()
+    //     return false;
+    // }
     let config = {
         url: buildWpApiUrl(wpApiConfig.endpoints.validateToken),
         method: "post",
@@ -104,6 +126,11 @@ export const getSessionObject = () => {
     }
     try {
         let expiresAt = localStorage.getItem('expires_at');
+        let token = localStorage.getItem('token');
+        if (!isSet(expiresAt) || expiresAt === null || expiresAt === "" ||
+            !isSet(token) || token === null || token === "") {
+            return false;
+        }
         return {
             token: localStorage.getItem('token'),
             expires_at: JSON.parse(expiresAt)

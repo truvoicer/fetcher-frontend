@@ -27,6 +27,7 @@ export const siteConfig =  {
     defaultLoginHref: "/login",
     defaultRegisterHref: "/register",
     defaultLogoutHref: "/logout",
+    defaultUserAccountHref: "/my-account",
     gridItems: {
         retail: {
             [LISTINGS_GRID_COMPACT]: ProductItemCompact,

@@ -1,0 +1,13 @@
+.site-form {
+  &--error {
+    &--block {
+      padding: 10px 0;
+      font-size: 14px;
+      color: #f23a2e;
+    }
+    &--field {
+      padding-left: 20px;
+      color: #f23a2e;
+    }
+  }
+}
