@@ -49,7 +49,6 @@ class UserAccountBlock extends Component {
                 tabIndex = index
             }
         });
-        console.log(tabIndex)
         return tabIndex;
     }
 

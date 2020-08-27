@@ -4,7 +4,7 @@ import Tab from "@material-ui/core/Tab";
 import Box from "@material-ui/core/Box";
 import HtmlParser from "react-html-parser";
 
-class TabList extends Component {
+class ItemViewVerticalTabList extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -114,4 +114,4 @@ class TabList extends Component {
     }
 }
 
-export default TabList;
+export default ItemViewVerticalTabList;

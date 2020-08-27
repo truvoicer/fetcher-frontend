@@ -29,6 +29,7 @@ export const wpApiConfig = {
         updateUser: "wp/v2/public/users/update",
         saveItem: "wp/v2/public/users/save-item",
         savedItemsList: "wp/v2/public/users/saved-items-list",
+        savedItemsListByUser: "wp/v2/public/users/saved-items-list-by-user",
     },
     widgets:  {
         listing_block: {

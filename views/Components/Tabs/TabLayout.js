@@ -11,7 +11,7 @@ class TabLayout extends Component {
         super(props);
         this.state = {
             tabs: {
-                value: null
+                value: 0
             }
         }
         this.tabProps = this.tabProps.bind(this)
@@ -73,10 +73,7 @@ class TabLayout extends Component {
     }
 
     render() {
-        console.log(this.state.tabs.value)
         return (
-            <>
-            {this.state.tabs.value &&
             <div>
                 <AppBar position="static">
                     <Tabs
@@ -104,8 +101,6 @@ class TabLayout extends Component {
                     </this.tabPanel>
                     ))}
             </div>
-            }
-            </>
         );
     }
 }

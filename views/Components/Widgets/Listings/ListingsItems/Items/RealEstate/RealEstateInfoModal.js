@@ -1,7 +1,7 @@
 import Modal from "react-bootstrap/Modal";
 import React from "react";
 import {fetchData, responseHandler} from "../../../../../../../library/api/fetcher/middleware";
-import TabList from "../../../../../Tabs/TabList";
+import ItemViewVerticalTabList from "../../../../../Tabs/ItemViewVerticalTabList";
 import {RealEstateTabConfig} from "../../../../../../../config/tabs/item/real-estate";
 
 class RealEstateInfoModal extends React.Component {
@@ -60,7 +60,7 @@ class RealEstateInfoModal extends React.Component {
                             </a>
                         </div>
                         <div className={"item-info--tabs"}>
-                            <TabList data={RealEstateTabConfig} item={this.state.data.item}/>
+                            <ItemViewVerticalTabList data={RealEstateTabConfig} item={this.state.data.item}/>
                         </div>
                     </div>
                     }

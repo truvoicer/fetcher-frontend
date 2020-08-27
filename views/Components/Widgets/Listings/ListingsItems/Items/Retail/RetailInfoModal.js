@@ -2,7 +2,7 @@ import Modal from "react-bootstrap/Modal";
 import React from "react";
 import {formatDate} from "../../../../../../../library/utils";
 import {fetchData, responseHandler} from "../../../../../../../library/api/fetcher/middleware";
-import TabList from "../../../../../Tabs/TabList";
+import ItemViewVerticalTabList from "../../../../../Tabs/ItemViewVerticalTabList";
 import {EventsTabConfig} from "../../../../../../../config/tabs/item/events";
 import {RetailTabConfig} from "../../../../../../../config/tabs/item/retail";
 
@@ -46,7 +46,7 @@ class RetailInfoModal extends React.Component {
                             </div>
                         </div>
                         <div className={"item-info--tabs"}>
-                            <TabList data={RetailTabConfig} item={this.state.data.item}/>
+                            <ItemViewVerticalTabList data={RetailTabConfig} item={this.state.data.item}/>
                         </div>
                     </div>
                     }

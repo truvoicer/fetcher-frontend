@@ -35,9 +35,12 @@ import {
     setPageControlsAction
 } from "./pagination-actions";
 import {buildWpApiUrl, getSavedItemsList} from "../../library/api/wp/middleware";
+import {Routes} from "../../config/routes";
+import Router from "next/router";
 import {wpApiConfig} from "../../config/wp-api-config";
 
 const axios = require('axios');
+const sprintf = require("sprintf").sprintf;
 
 export function setSearchExtraDataAction(extraData, provider) {
     const extraDataState = {...store.getState().search.extraData};
@@ -107,6 +110,49 @@ export function getSavedItemsCallback(error, data) {
         })
     })
     store.dispatch(setSavedItemsList(nextState))
+}
+
+export function updateSavedItemAction(data) {
+    const searchState = {...store.getState().search};
+    const nextState = produce(searchState.savedItemsList, (draftState) => {
+        if (isSavedItemAction(data.item_id, data.provider_name, data.category, data.user_id)) {
+            draftState.splice(getSavedItemIndexAction(data.item_id, data.provider_name, data.category, data.user_id), 1);
+        } else {
+            draftState.push(data)
+        }
+    })
+    store.dispatch(setSavedItemsList(nextState))
+}
+
+export function isSavedItemAction(item_id, provider, category, user_id) {
+    const savedItemsList = [...store.getState().search.savedItemsList];
+    const isSaved = savedItemsList.filter(savedItem => {
+        if(
+            parseInt(savedItem.user_id) === parseInt(user_id) &&
+            savedItem.item_id === item_id &&
+            savedItem.provider_name === provider &&
+            savedItem.category === category
+        ) {
+            return savedItem;
+        }
+    });
+    return isSaved.length > 0;
+}
+
+export function getSavedItemIndexAction(item_id, provider, category, user_id) {
+    let index;
+    const savedItemsList = [...store.getState().search.savedItemsList];
+    savedItemsList.map((savedItem, savedItemIndex) => {
+        if(
+            parseInt(savedItem.user_id) === parseInt(user_id) &&
+            savedItem.item_id === item_id &&
+            savedItem.provider_name === provider &&
+            savedItem.category === category
+        ) {
+            index = savedItemIndex;
+        }
+    });
+    return index;
 }
 
 export function setSearchProviderAction(provider) {
@@ -241,3 +287,42 @@ export function initialSearch() {
     addQueryDataObjectAction(queryData, true);
 }
 
+export function showInfo(item, category, e) {
+    e.preventDefault()
+
+    const data = {
+        category: category,
+        provider: item.provider,
+        item_id: item.item_id
+    }
+    const url = sprintf(Routes.itemView, data)
+    Router.push(url, url, { shallow: true })
+}
+
+export function saveItemAction(requestData, callback) {
+    axios.post(buildWpApiUrl(wpApiConfig.endpoints.saveItem), requestData)
+        .then(response => {
+            callback(false, response.data);
+        })
+        .catch(error => {
+            console.error(error)
+            callback(true, error);
+        });
+}
+
+export function saveItemCallback(provider, category, itemId, user_id, e) {
+    const data = {
+        provider_name: provider,
+        category: category,
+        item_id: itemId,
+        user_id: user_id
+    }
+    console.log(data)
+    saveItemAction(data, saveItemRequestCallback)
+    updateSavedItemAction(data)
+}
+
+
+export function saveItemRequestCallback(error, data) {
+    console.log(error, data)
+}

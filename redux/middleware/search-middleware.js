@@ -17,12 +17,15 @@ import {
     SEARCH_REQUEST_STARTED
 } from "../constants/search-constants";
 import {
-    getCurrentPage, runSearch,
-    setSearchRequestStatusAction
+    runSearch, saveItemAction,
+    setSearchRequestStatusAction, updateSavedItemAction
 } from "../actions/search-actions";
 import {addQueryDataString} from "../actions/listings-actions";
-import {addListingsQueryDataString, addQueryDataObjectMiddleware} from "./listings-middleware";
 import {getCurrentPageFromOffset, setPageControlItemAction} from "../actions/pagination-actions";
+import {buildWpApiUrl} from "../../library/api/wp/middleware";
+import {wpApiConfig} from "../../config/wp-api-config";
+
+const axios = require('axios');
 
 export function setSearchProviderMiddleware(provider) {
     return function (dispatch) {
@@ -89,3 +92,14 @@ export function loadNextOffsetMiddleware(pageOffset) {
     }
 }
 
+export function saveItemMiddleware(requestData, callback) {
+    return function(dispatch) {
+        saveItemAction(requestData, callback)
+    }
+}
+
+export function updateSavedItemMiddleware(data) {
+    return function (dispatch) {
+        updateSavedItemAction(data);
+    }
+}

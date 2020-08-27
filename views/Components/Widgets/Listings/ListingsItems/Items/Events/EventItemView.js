@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import TabList from "../../../../../Tabs/TabList";
+import ItemViewVerticalTabList from "../../../../../Tabs/ItemViewVerticalTabList";
 import {RealEstateTabConfig} from "../../../../../../../config/tabs/item/real-estate";
 import {EventsTabConfig} from "../../../../../../../config/tabs/item/events";
 import {formatDate, getDefaultImage} from "../../../../../../../library/utils";

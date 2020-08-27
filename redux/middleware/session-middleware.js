@@ -9,6 +9,7 @@ import {
 } from "../actions/session-actions";
 import {buildWpApiUrl, runApiRequest} from "../../library/api/wp/middleware";
 import {wpApiConfig} from "../../config/wp-api-config";
+import {updateSavedItemAction} from "../actions/search-actions";
 
 const axios = require('axios');
 
@@ -50,7 +51,7 @@ export function updateUserMiddleware(requestData, callback) {
     return function(dispatch) {
         return axios.post(buildWpApiUrl(wpApiConfig.endpoints.updateUser), requestData)
             .then(response => {
-                callback(false, response.data);
+                callback(false, response.data);getSavedItemsListByUserMiddleware
             })
             .catch(error => {
                 console.error(error)
@@ -66,9 +67,10 @@ export function updateUserSessionData(data) {
 }
 
 
-export function saveItemMiddleware(requestData, callback) {
+export function getSavedItemsListByUserMiddleware(requestData, callback) {
     return function(dispatch) {
-        return axios.post(buildWpApiUrl(wpApiConfig.endpoints.saveItem), requestData)
+        console.log(requestData)
+        return axios.post(buildWpApiUrl(wpApiConfig.endpoints.savedItemsListByUser), requestData)
             .then(response => {
                 callback(false, response.data);
             })

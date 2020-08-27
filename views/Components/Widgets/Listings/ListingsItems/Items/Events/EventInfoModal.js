@@ -2,7 +2,7 @@ import Modal from "react-bootstrap/Modal";
 import React from "react";
 import {formatDate} from "../../../../../../../library/utils";
 import {fetchData, responseHandler} from "../../../../../../../library/api/fetcher/middleware";
-import TabList from "../../../../../Tabs/TabList";
+import ItemViewVerticalTabList from "../../../../../Tabs/ItemViewVerticalTabList";
 import {EventsTabConfig} from "../../../../../../../config/tabs/item/events";
 
 class EventInfoModal extends React.Component {
@@ -25,7 +25,7 @@ class EventInfoModal extends React.Component {
     fetchItemCallback(status, data) {
         this.setState({
             data: {
-                item: data.requestData[0]
+                item: data.request_data[0]
             }
         })
     }
@@ -45,7 +45,7 @@ class EventInfoModal extends React.Component {
                             </div>
                         </div>
                         <div className={"item-info--tabs"}>
-                            <TabList data={EventsTabConfig} item={this.state.data.item}/>
+                            <ItemViewVerticalTabList data={EventsTabConfig} item={this.state.data.item}/>
                         </div>
                     </div>
                     }
