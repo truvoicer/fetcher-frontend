@@ -8,6 +8,7 @@ export const formatDate = (dateString, formatString = "dd mmmm yyyy") => {
     // console.log(date)
     if (isSet(date)) {
         return DateFormat(date, formatString);
+        // return date;
     }
     return null
 }

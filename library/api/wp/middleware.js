@@ -10,7 +10,7 @@ export const buildWpApiUrl = (endpoint, param = "") => {
 }
 
 export const runApiRequest = (method, endpoint, endpointParam = "", requestData = {}, callback = false) => {
-    if(!getSessionUserAction().authenticated) {
+    if (!getSessionUserAction().authenticated) {
         console.error("User not authenticated");
     }
     if (callback) {
@@ -35,11 +35,22 @@ export const responseHandler = (request, callback) => {
     request.then((response) => {
         callback(response.status, response.data);
     })
-    .catch((error) => {
-        if (callback && isSet(error.response)) {
-            callback(error.response.status, error.response.data);
-        } else {
+        .catch((error) => {
+            if (callback && isSet(error.response)) {
+                callback(error.response.status, error.response.data);
+            } else {
+                console.error(error)
+            }
+        })
+}
+
+export function getSavedItemsList(requestData, callback) {
+    axios.post(buildWpApiUrl(wpApiConfig.endpoints.savedItemsList), requestData)
+        .then(response => {
+            callback(false, response.data);
+        })
+        .catch(error => {
             console.error(error)
-        }
-    })
+            callback(true, error);
+        });
 }

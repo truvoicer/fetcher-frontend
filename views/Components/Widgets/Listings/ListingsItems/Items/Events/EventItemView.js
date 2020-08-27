@@ -46,7 +46,8 @@ class EventItemView extends Component {
                                         Event Start Date:
                                     </div>
                                     <div className={"item-view--info-list--value"}>
-                                        {formatDate(this.props.data.item_start_date)}
+                                        {this.props.data.item_start_date}
+                                        {/*{formatDate(this.props.data.item_start_date)}*/}
                                     </div>
                                 </li>
                                 <li>
@@ -54,7 +55,8 @@ class EventItemView extends Component {
                                         Event End Date:
                                     </div>
                                     <div className={"item-view--info-list--value"}>
-                                        {formatDate(this.props.data.item_stop_date)}
+                                        {this.props.data.item_stop_date}
+                                        {/*{formatDate(this.props.data.item_stop_date)}*/}
                                     </div>
                                 </li>
                                 <li>

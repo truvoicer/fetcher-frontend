@@ -8,7 +8,7 @@ import {
     SESSION_USER_FIRSTNAME,
     SESSION_USER_ID,
     SESSION_USER_LASTNAME,
-    SESSION_USER_NICE_NAME,
+    SESSION_USER_NICE_NAME, SESSION_USER_NICK_NAME,
     SESSION_USER_TOKEN
 } from "../constants/session-constants";
 import {buildWpApiUrl} from "../../library/api/wp/middleware";
@@ -22,11 +22,12 @@ export function setSessionUserAction(data, authenticated) {
     const nextState = produce(sessionUserState, (draftState) => {
         draftState[SESSION_USER_TOKEN] = data.token;
         draftState[SESSION_USER_ID] = data.id;
-        draftState[SESSION_USER_EMAIL] = data.email;
-        draftState[SESSION_USER_DISPLAY_NAME] = data.displayName;
-        draftState[SESSION_USER_NICE_NAME] = data.nicename;
-        draftState[SESSION_USER_FIRSTNAME] = data.firstName;
-        draftState[SESSION_USER_LASTNAME] = data.lastName;
+        draftState[SESSION_USER_EMAIL] = data.user_email;
+        draftState[SESSION_USER_DISPLAY_NAME] = data.display_name;
+        draftState[SESSION_USER_NICE_NAME] = data.user_nicename;
+        draftState[SESSION_USER_FIRSTNAME] = data.first_name;
+        draftState[SESSION_USER_LASTNAME] = data.last_name;
+        draftState[SESSION_USER_NICK_NAME] = data.nickname;
     })
     store.dispatch(setUser(nextState))
     store.dispatch(setAuthenticated(authenticated))
@@ -80,7 +81,7 @@ export function validateToken() {
     }
     axios.request(config)
         .then((response) => {
-            console.log(response.data)
+            // console.log(response.data)
             if (response.data.success) {
                 setSessionUserAction(response.data.data, true)
             } else {

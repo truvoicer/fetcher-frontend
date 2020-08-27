@@ -3,7 +3,7 @@ import ReactHtmlParser from "react-html-parser";
 import {filterHtml} from "../../library/html-parser";
 import Head from "next/head";
 import {connect} from "react-redux";
-import {getPageData} from "../../redux/middleware/page-middleware";
+import {getPageDataMiddleware} from "../../redux/middleware/page-middleware";
 import HeroBlock from "../Components/HeroBlock";
 
 class SiteComponent extends React.Component {
@@ -46,5 +46,5 @@ function mapStateToProps(state) {
 
 export default connect(
     mapStateToProps,
-    {getPageData}
+    {getPageDataMiddleware}
 )(SiteComponent);

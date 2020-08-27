@@ -14,7 +14,7 @@ export const wpApiConfig = {
     apiBaseUrl: process.env.NEXT_PUBLIC_WP_API_URL,
     endpoints: {
         posts: "wp/v2/public/posts",
-        page: "wp/v2/public/page/%s",
+        page: "wp/v2/public/page/",
         pages: "wp/v2/public/pages",
         template: "wp/v2/public/template/item-view/%s",
         media: "wp/v2/public/media",
@@ -25,7 +25,10 @@ export const wpApiConfig = {
         settings: "wp/v2/public/settings",
         token: "jwt-auth/v1/token",
         validateToken: "jwt-auth/v1/token/validate",
-        createUser: "wp/v2/public/users/create-user",
+        createUser: "wp/v2/public/users/create",
+        updateUser: "wp/v2/public/users/update",
+        saveItem: "wp/v2/public/users/save-item",
+        savedItemsList: "wp/v2/public/users/saved-items-list",
     },
     widgets:  {
         listing_block: {
@@ -51,7 +54,7 @@ export const wpApiConfig = {
         saved_items: {
             component: UserSavedItems
         },
-        profile: {
+        user_profile: {
             component: UserProfile
         },
         messages: {

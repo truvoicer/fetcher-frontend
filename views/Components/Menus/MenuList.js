@@ -2,7 +2,7 @@ import {connect} from "react-redux";
 
 const sprintf = require("sprintf").sprintf;
 import React from 'react';
-import {getPageData} from "../../../redux/middleware/page-middleware";
+import {getPageDataMiddleware} from "../../../redux/middleware/page-middleware";
 import {buildWpApiUrl} from "../../../library/api/wp/middleware";
 import {wpApiConfig} from "../../../config/wp-api-config";
 import Router from "next/router";
@@ -38,7 +38,7 @@ class MenuList extends React.Component {
         Router.push(url, url, {shallow: true})
 
         // this.props.setSearchRequestOperation(NEW_SEARCH_REQUEST);
-        // this.props.getPageData(buildWpApiUrl(wpApiConfig.endpoints.page, item.post_name));
+        // this.props.getPageDataMiddleware(buildWpApiUrl(wpApiConfig.endpoints.page, item.post_name));
     }
 
     render() {
@@ -110,5 +110,5 @@ function mapStateToProps(state) {
 
 export default connect(
     mapStateToProps,
-    {getPageData, setSearchRequestOperationMiddleware}
+    {getPageDataMiddleware, setSearchRequestOperationMiddleware}
 )(MenuList);

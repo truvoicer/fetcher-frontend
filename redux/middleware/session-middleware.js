@@ -45,3 +45,36 @@ export function createUserMiddleware(requestData, callback) {
             });
     }
 }
+
+export function updateUserMiddleware(requestData, callback) {
+    return function(dispatch) {
+        return axios.post(buildWpApiUrl(wpApiConfig.endpoints.updateUser), requestData)
+            .then(response => {
+                callback(false, response.data);
+            })
+            .catch(error => {
+                console.error(error)
+                callback(true, error);
+            });
+    }
+}
+
+export function updateUserSessionData(data) {
+    return function(dispatch) {
+        setSessionUserAction(data, true)
+    }
+}
+
+
+export function saveItemMiddleware(requestData, callback) {
+    return function(dispatch) {
+        return axios.post(buildWpApiUrl(wpApiConfig.endpoints.saveItem), requestData)
+            .then(response => {
+                callback(false, response.data);
+            })
+            .catch(error => {
+                console.error(error)
+                callback(true, error);
+            });
+    }
+}

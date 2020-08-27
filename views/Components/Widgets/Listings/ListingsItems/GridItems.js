@@ -2,6 +2,7 @@ import React from "react";
 import Row from "react-bootstrap/Row";
 import {connect} from "react-redux";
 import {addListingsQueryDataString} from "../../../../../redux/middleware/listings-middleware";
+import {saveItemMiddleware} from "../../../../../redux/middleware/session-middleware";
 import {
     setSearchRequestOperationMiddleware,
     setSearchRequestStatusMiddleware
@@ -11,6 +12,7 @@ import {convertImageObjectsToArray, isSet} from "../../../../../library/utils";
 const sprintf = require("sprintf").sprintf
 import Router from "next/router";
 import {Routes} from "../../../../../config/routes";
+import {SESSION_USER, SESSION_USER_ID} from "../../../../../redux/constants/session-constants";
 
 class GridItems extends React.Component {
     constructor(props) {
@@ -26,6 +28,8 @@ class GridItems extends React.Component {
         this.getModal = this.getModal.bind(this)
         this.showInfo = this.showInfo.bind(this)
         this.closeModal = this.closeModal.bind(this)
+        this.saveItemCallback = this.saveItemCallback.bind(this)
+        this.saveItemRequestCallback = this.saveItemRequestCallback.bind(this)
     }
 
     showInfo(item, e) {
@@ -48,6 +52,21 @@ class GridItems extends React.Component {
 
     }
 
+    saveItemCallback(provider, category, itemId, e) {
+        const data = {
+            provider_name: provider,
+            category: category,
+            item_id: itemId,
+            user_id: this.props.user[SESSION_USER_ID]
+        }
+        console.log(data)
+        this.props.saveItemMiddleware(data, this.saveItemRequestCallback)
+    }
+
+    saveItemRequestCallback(error, data) {
+        console.log(error, data)
+    }
+
     closeModal() {
         this.setState({
             modalData: {
@@ -56,6 +75,14 @@ class GridItems extends React.Component {
                 provider: this.state.modalData.provider,
             }
         })
+    }
+
+    isSavedItem(item) {
+        const isSaved = this.props.search.savedItemsList.filter(savedItem => savedItem.item_id === item.item_id);
+        if (isSaved.length > 0) {
+            return true;
+        }
+        return false;
     }
 
     getGridItem(item) {
@@ -70,8 +97,12 @@ class GridItems extends React.Component {
         if (!isSet(gridConfig[this.props.search.category][this.props.listings.listingsGrid])) {
             return null;
         }
+        gridItem.saved_item = this.isSavedItem(gridItem);
         const GridItems = gridConfig[this.props.search.category][this.props.listings.listingsGrid];
-        return <GridItems data={gridItem} showInfoCallback={this.showInfo} />
+        return <GridItems data={gridItem}
+                          searchCategory={this.props.search.category}
+                          showInfoCallback={this.showInfo}
+                          saveItemCallback={this.saveItemCallback} />
     }
 
     getModal(item) {
@@ -109,6 +140,7 @@ class GridItems extends React.Component {
 
 function mapStateToProps(state) {
     return {
+        user: state.session[SESSION_USER],
         listings: state.listings,
         search: state.search
     };
@@ -119,6 +151,7 @@ export default connect(
     {
         addListingsQueryDataString,
         setSearchRequestOperationMiddleware,
-        setSearchRequestStatusMiddleware
+        setSearchRequestStatusMiddleware,
+        saveItemMiddleware
     }
 )(GridItems);

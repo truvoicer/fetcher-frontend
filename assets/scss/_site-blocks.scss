@@ -1172,7 +1172,7 @@
 			top: 50%;
 			transform: translate(-50%, -50%);
 		}
-		&:hover {
+		&:hover, &.saved {
 			background: $danger;
 			span {
 				color: $white;
@@ -1247,7 +1247,7 @@
 				top: 50%;
 				transform: translate(-50%, -50%);
 			}
-			&:hover {
+			&:hover, &.saved  {
 				background: $danger;
 				span {
 					color: $white;

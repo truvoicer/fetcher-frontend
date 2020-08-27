@@ -21,6 +21,7 @@ import RealEstateItemView from "../views/Components/Widgets/Listings/ListingsIte
 export const siteConfig =  {
     sidebarMenu: "main-menu",
     headerMenu: "main-menu",
+    myAccountMenu: "my-account-menu",
     sidebarName: "right-sidebar",
     topBarName: "top-bar",
     footerName: "footer",

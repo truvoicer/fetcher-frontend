@@ -6,5 +6,6 @@ export const SESSION_USER_NICE_NAME = "nicename";
 export const SESSION_USER_FIRSTNAME = "firstName";
 export const SESSION_USER_LASTNAME = "lastName";
 export const SESSION_USER_DISPLAY_NAME = "displayName";
+export const SESSION_USER_NICK_NAME = "nickname";
 export const SESSION_USER_TOKEN = "token";
 export const SESSION_ERROR = "error";

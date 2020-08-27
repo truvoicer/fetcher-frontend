@@ -9,6 +9,7 @@ import {
     setRequestService,
     setSearchError,
     setSearchList,
+    setSavedItemsList,
     setSearchOperation,
     setSearchStatus,
     setSearchResults
@@ -33,6 +34,10 @@ import {
     setPageControlItemAction,
     setPageControlsAction
 } from "./pagination-actions";
+import {buildWpApiUrl, getSavedItemsList} from "../../library/api/wp/middleware";
+import {wpApiConfig} from "../../config/wp-api-config";
+
+const axios = require('axios');
 
 export function setSearchExtraDataAction(extraData, provider) {
     const extraDataState = {...store.getState().search.extraData};
@@ -69,6 +74,41 @@ export function setSearchListDataAction(listData) {
     store.dispatch(setSearchList(nextState))
 }
 
+export function setSavedItemsListAction(data, provider, category) {
+    if (data.length === 0) {
+        return false;
+    }
+    const itemsList = data.map((item) => {
+        return item.item_id;
+    })
+    const requestData = {
+        provider_name: provider,
+        category: category,
+        id_list: itemsList
+    }
+    getSavedItemsList(requestData, getSavedItemsCallback)
+}
+
+export function getSavedItemsCallback(error, data) {
+    console.log(error, data)
+    if (error) {
+        return false;
+    }
+    const searchState = {...store.getState().search};
+    const searchOperation = searchState.searchOperation;
+    const nextState = produce(searchState.savedItemsList, (draftState) => {
+        if ((searchOperation === NEW_SEARCH_REQUEST)) {
+            draftState.splice(0, draftState.length + 1);
+        } else if (searchOperation === APPEND_SEARCH_REQUEST) {
+            // console.log("append")
+        }
+        data.data.map((item) => {
+            draftState.push(item)
+        })
+    })
+    store.dispatch(setSavedItemsList(nextState))
+}
+
 export function setSearchProviderAction(provider) {
     store.dispatch(setProvider(provider))
 }
@@ -95,6 +135,7 @@ export function setSearchRequestErrorAction(error) {
 export function searchResponseHandler(status, data, completed = false) {
     // console.log(status, data)
     if (status === 200) {
+        setSavedItemsListAction(data.request_data, data.provider, data.category)
         setSearchListDataAction(data.request_data);
         setSearchExtraDataAction(data.extra_data, data.provider)
         setSearchRequestServiceAction(data.request_service)

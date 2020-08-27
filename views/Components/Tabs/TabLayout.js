@@ -11,7 +11,7 @@ class TabLayout extends Component {
         super(props);
         this.state = {
             tabs: {
-                value: 0
+                value: null
             }
         }
         this.tabProps = this.tabProps.bind(this)
@@ -20,6 +20,13 @@ class TabLayout extends Component {
         this.handleTabChange = this.handleTabChange.bind(this)
     }
 
+    componentDidMount() {
+        this.setState({
+            tabs: {
+                value: this.props.tabIndex
+            }
+        })
+    }
 
     handleTabChange(e, value) {
         this.setState({
@@ -66,7 +73,10 @@ class TabLayout extends Component {
     }
 
     render() {
+        console.log(this.state.tabs.value)
         return (
+            <>
+            {this.state.tabs.value &&
             <div>
                 <AppBar position="static">
                     <Tabs
@@ -85,15 +95,17 @@ class TabLayout extends Component {
                 </AppBar>
                 {this.props.data.map((tabItem, index) => (
                     <this.tabPanel
-                        key={index.toString()}
-                        value={this.state.tabs.value}
-                        index={index}
+                    key={index.toString()}
+                    value={this.state.tabs.value}
+                    index={index}
                     >
-                        <p>{tabItem.panel_heading}</p>
-                        {this.getTabComponent(tabItem)}
+                    {/*<h2>{tabItem.panel_heading}</h2>*/}
+                    {this.getTabComponent(tabItem)}
                     </this.tabPanel>
-                ))}
+                    ))}
             </div>
+            }
+            </>
         );
     }
 }

@@ -8,25 +8,15 @@ import {buildWpApiUrl} from "../../../../../library/api/wp/middleware";
 import {wpApiConfig} from "../../../../../config/wp-api-config";
 import FetcherApp from "../../../../../views/App";
 import {connect} from "react-redux";
-import {getPageData} from "../../../../../redux/middleware/page-middleware";
+import {getPageDataMiddleware} from "../../../../../redux/middleware/page-middleware";
 
 class ProviderItemPage extends Component {
-    static async getInitialProps(ctx) {
-        return {
-            props: {}
-        }
-    }
-
-    constructor(props) {
-        super(props);
-    }
-
-    componentDidMount() {
-        const {category, provider, item_id} = Router.query
-        this.props.getPageData(buildWpApiUrl(wpApiConfig.endpoints.template, category));
-    }
 
     render() {
+        if (!isSet(this.props.category)) {
+            return <LoaderComponent/>
+        }
+        this.props.getPageDataMiddleware(buildWpApiUrl(wpApiConfig.endpoints.template, this.props.category));
         return (
             <FetcherApp />
         )
@@ -35,5 +25,22 @@ class ProviderItemPage extends Component {
 
 export default connect(
     null,
-    {getPageData}
+    {getPageDataMiddleware}
 )(ProviderItemPage);
+
+export async function getStaticProps({ params }) {
+    return {
+        props: {
+            category: params.category,
+            provider: params.provider,
+            item_id: params.item_id,
+        },
+    }
+}
+
+export async function getStaticPaths() {
+    return {
+        paths: [],
+        fallback: true // See the "fallback" section below
+    };
+}

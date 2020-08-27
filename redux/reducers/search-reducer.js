@@ -8,6 +8,7 @@ const searchState = {
     searchOperation: NEW_SEARCH_REQUEST,
     extraData: {},
     searchList: [],
+    savedItemsList: [],
     pageControls: {
         paginationRequest: false,
         hasMore: false,
@@ -42,6 +43,10 @@ export const searchSlice = createSlice({
             state.searchList = action.payload;
             // console.log(state.searchList)
         },
+        setSavedItemsList: (state, action) => {
+            state.savedItemsList = action.payload;
+            // console.log(state.searchList)
+        },
         setPageControls: (state, action) => {
             state.pageControls = action.payload;
             // console.log(state.pageControls)
@@ -70,6 +75,7 @@ export const {
     setSearchOperation,
     setExtraData,
     setSearchList,
+    setSavedItemsList,
     setPageControls,
     setRequestService,
     setProvider,
