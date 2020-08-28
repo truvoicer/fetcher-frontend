@@ -9,6 +9,8 @@ import {
     setSearchRequestOperationMiddleware,
     setSearchRequestStatusMiddleware, updateSavedItemMiddleware
 } from "../../../../../../../redux/middleware/search-middleware";
+import Link from "next/link";
+import {getItemViewUrl} from "../../../../../../../redux/actions/search-actions";
 
 
 class EventItemCompact extends React.Component {
@@ -26,6 +28,7 @@ class EventItemCompact extends React.Component {
                    style={{backgroundImage: "url('" + getDefaultImage(this.props.data) + "')"}}/>
                 <div className="lh-content">
                     <span className="category">{uCaseFirst(this.props.data.provider)}</span>
+
                     <a
                         onClick={this.props.saveItemCallback.bind(
                             this,
@@ -37,17 +40,15 @@ class EventItemCompact extends React.Component {
 
                         className={"bookmark" + (this.props.data.saved_item ? " saved" : "")}
                     >
-                        <span className="icon-heart"></span>
+                        <span className="icon-heart"/>
                     </a>
                     <h3>
-                        <a href="#"
-                           onClick={this.props.showInfoCallback.bind(
-                               this,
-                               this.props.data,
-                               this.props.searchCategory)}
+                        <Link
+                            href={getItemViewUrl(this.props.data, this.props.searchCategory)}
+                            as={getItemViewUrl(this.props.data, this.props.searchCategory)}
                         >
-                            {this.props.data.item_name}
-                        </a>
+                        <a>{this.props.data.item_name}</a>
+                        </Link>
                     </h3>
                     <p>{this.props.data.item_venue}</p>
                     <p>{this.props.data.item_start_date}</p>

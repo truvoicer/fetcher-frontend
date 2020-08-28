@@ -22,6 +22,7 @@ export const siteConfig =  {
     sidebarMenu: "main-menu",
     headerMenu: "main-menu",
     myAccountMenu: "my-account-menu",
+    mobileMenu: "mobile-menu",
     sidebarName: "right-sidebar",
     topBarName: "top-bar",
     footerName: "footer",

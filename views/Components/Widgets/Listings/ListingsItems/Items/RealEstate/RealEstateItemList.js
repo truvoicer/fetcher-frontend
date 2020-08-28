@@ -2,6 +2,8 @@ import React from "react";
 import Col from "react-bootstrap/Col";
 import {SESSION_USER} from "../../../../../../../redux/constants/session-constants";
 import {connect} from "react-redux";
+import Link from "next/link";
+import {getItemViewUrl} from "../../../../../../../redux/actions/search-actions";
 
 class RealEstateItemList extends React.Component {
     constructor(props) {
@@ -21,14 +23,12 @@ class RealEstateItemList extends React.Component {
                 </div>
                 <div className={"listings-block--item--grid-list--column"}>
                     <h3 className={"listings-block--item--title"}>
-                        <a href="#"
-                           onClick={this.props.showInfoCallback.bind(
-                               this,
-                               this.props.data,
-                               this.props.searchCategory)}
+                        <Link
+                            href={getItemViewUrl(this.props.data, this.props.searchCategory)}
+                            as={getItemViewUrl(this.props.data, this.props.searchCategory)}
                         >
-                            {this.props.data.item_title}
-                        </a>
+                            <a>{this.props.data.item_property_type}</a>
+                        </Link>
                     </h3>
                 </div>
                 <div className={"listings-block--item--grid-list--column"}>

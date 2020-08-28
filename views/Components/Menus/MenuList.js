@@ -60,7 +60,7 @@ class MenuList extends React.Component {
                             </ul>
                         </li>
                         :
-                        <li key={this.props.sidebar + "_sidebar_menu_item_" + index.toString()}>
+                        <li key={this.props.sidebar + index.toString()}>
                             <a href={"/" + item.menu_item.post_name}
                                onClick={this.pageClickHandler.bind(this, item.menu_item)}>{item.menu_item.post_title}</a>
                         </li>

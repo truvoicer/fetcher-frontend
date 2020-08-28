@@ -3,6 +3,8 @@ import Col from "react-bootstrap/Col";
 import {formatDate, getDefaultImage, isSet, uCaseFirst} from "../../../../../../../library/utils";
 import {SESSION_USER, SESSION_USER_ID} from "../../../../../../../redux/constants/session-constants";
 import {connect} from "react-redux";
+import Link from "next/link";
+import {getItemViewUrl} from "../../../../../../../redux/actions/search-actions";
 
 
 class EventItemDetailed extends React.Component {
@@ -32,14 +34,12 @@ class EventItemDetailed extends React.Component {
                         <span className="icon-heart"/>
                     </a>
                     <h3>
-                        <a href="#"
-                           onClick={this.props.showInfoCallback.bind(
-                               this,
-                               this.props.data,
-                               this.props.searchCategory)}
+                        <Link
+                            href={getItemViewUrl(this.props.data, this.props.searchCategory)}
+                            as={getItemViewUrl(this.props.data, this.props.searchCategory)}
                         >
-                            {this.props.data.item_name}
-                        </a>
+                            <a>{this.props.data.item_name}</a>
+                        </Link>
                     </h3>
                     <p>{this.props.data.item_venue}</p>
                     <p>{formatDate(this.props.data.item_start_date)}</p>

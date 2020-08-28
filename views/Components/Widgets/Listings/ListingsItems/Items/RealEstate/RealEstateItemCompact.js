@@ -2,6 +2,8 @@ import React from "react";
 import Col from "react-bootstrap/Col";
 import {SESSION_USER, SESSION_USER_ID} from "../../../../../../../redux/constants/session-constants";
 import {connect} from "react-redux";
+import Link from "next/link";
+import {getItemViewUrl} from "../../../../../../../redux/actions/search-actions";
 
 class RealEstateItemCompact extends React.Component {
     constructor(props) {
@@ -31,15 +33,12 @@ class RealEstateItemCompact extends React.Component {
                         <span className="icon-heart"></span>
                     </a>
                     <h3>
-
-                        <a href="#"
-                           onClick={this.props.showInfoCallback.bind(
-                               this,
-                               this.props.data,
-                               this.props.searchCategory)}
+                        <Link
+                            href={getItemViewUrl(this.props.data, this.props.searchCategory)}
+                            as={getItemViewUrl(this.props.data, this.props.searchCategory)}
                         >
-                            {this.props.data.item_property_type}
-                        </a>
+                            <a>{this.props.data.item_property_type}</a>
+                        </Link>
                     </h3>
                     <p className="mb-0">
                         <span className="icon-star text-warning"></span>

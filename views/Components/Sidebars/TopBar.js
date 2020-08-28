@@ -7,6 +7,8 @@ import Search from "../Widgets/Search";
 import React from "react";
 import {TOPBAR_REQUEST} from "../../../redux/constants/sidebar-constants";
 import ReactHtmlParser from "react-html-parser";
+import {siteConfig} from "../../../config/site-config";
+import MobileDrawerMenu from "../Menus/MobileDrawerMenu";
 
 class TopBar extends React.Component {
     constructor(props) {
@@ -46,8 +48,12 @@ class TopBar extends React.Component {
                                         {ReactHtmlParser(item.custom_html.content)}
                                     </div>
                                     }
-
-                                    {item.nav_menu && <HeaderMenu data={item.nav_menu} sidebar={"topbar"}/>}
+                                    {item.nav_menu && item.nav_menu.menu_slug === siteConfig.mobileMenu &&
+                                        <MobileDrawerMenu data={item.nav_menu} sidebar={"mobile"} />
+                                    }
+                                    {item.nav_menu && item.nav_menu.menu_slug !== siteConfig.mobileMenu &&
+                                    <HeaderMenu data={item.nav_menu} sidebar={"topbar"}/>
+                                    }
                                 </React.Fragment>
 
                             ))}

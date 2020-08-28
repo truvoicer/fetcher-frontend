@@ -2,6 +2,8 @@ import React from "react";
 import Col from "react-bootstrap/Col";
 import {SESSION_USER, SESSION_USER_ID} from "../../../../../../../redux/constants/session-constants";
 import {connect} from "react-redux";
+import Link from "next/link";
+import {getItemViewUrl} from "../../../../../../../redux/actions/search-actions";
 
 class ProductItemCompact extends React.Component {
     constructor(props) {
@@ -49,14 +51,12 @@ class ProductItemCompact extends React.Component {
                         <span className="icon-heart"></span>
                     </a>
                     <h3>
-                        <a href="#"
-                           onClick={this.props.showInfoCallback.bind(
-                               this,
-                               this.props.data,
-                               this.props.searchCategory)}
+                        <Link
+                            href={getItemViewUrl(this.props.data, this.props.searchCategory)}
+                            as={getItemViewUrl(this.props.data, this.props.searchCategory)}
                         >
-                            {this.props.data.item_title}
-                        </a>
+                            <a>{this.props.data.item_title}</a>
+                        </Link>
                     </h3>
                     {/*<p>{}</p>*/}
                     <p className="mb-0">

@@ -69,7 +69,7 @@ export function updateUserSessionData(data) {
 
 export function getSavedItemsListByUserMiddleware(requestData, callback) {
     return function(dispatch) {
-        console.log(requestData)
+        // console.log(requestData)
         return axios.post(buildWpApiUrl(wpApiConfig.endpoints.savedItemsListByUser), requestData)
             .then(response => {
                 callback(false, response.data);

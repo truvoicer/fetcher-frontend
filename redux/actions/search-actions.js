@@ -93,7 +93,7 @@ export function setSavedItemsListAction(data, provider, category) {
 }
 
 export function getSavedItemsCallback(error, data) {
-    console.log(error, data)
+    // console.log(error, data)
     if (error) {
         return false;
     }
@@ -285,6 +285,15 @@ export function initialSearch() {
     queryData[initialSearch.parameter_name] = initialSearch.parameter_value;
     queryData[fetcherApiConfig.pageNumberKey] = 1;
     addQueryDataObjectAction(queryData, true);
+}
+
+export function getItemViewUrl(item, category) {
+    const data = {
+        category: category,
+        provider: item.provider,
+        item_id: item.item_id
+    }
+    return sprintf(Routes.itemView, data);
 }
 
 export function showInfo(item, category, e) {
