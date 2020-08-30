@@ -1,46 +1,37 @@
-import React from "react";
+import React, {useState} from "react";
 import {connect} from "react-redux";
 import {addListingsQueryDataString} from "../../../redux/middleware/listings-middleware";
 import {setSearchRequestOperationMiddleware} from "../../../redux/middleware/search-middleware";
 import {fetcherApiConfig} from "../../../config/fetcher-api-config";
 import {NEW_SEARCH_REQUEST} from "../../../redux/constants/search-constants";
 
-class Search extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            [fetcherApiConfig.queryKey]: ""
-        }
-        this.formChangeHandler = this.formChangeHandler.bind(this);
-        this.formClickHandler = this.formClickHandler.bind(this);
-    }
+const Search = (props) => {
+    const [ query, setQuery] = useState("");
 
-    formClickHandler(e) {
+    const formClickHandler = (e) => {
         e.preventDefault();
-        this.props.setSearchRequestOperation(NEW_SEARCH_REQUEST);
-        this.props.addListingsQueryDataString(fetcherApiConfig.queryKey, this.state[fetcherApiConfig.queryKey], true)
+        props.setSearchRequestOperationMiddleware(NEW_SEARCH_REQUEST);
+        props.addListingsQueryDataString(fetcherApiConfig.queryKey, query, true)
     }
 
-    formChangeHandler(e) {
-        this.setState({
-            [fetcherApiConfig.queryKey]: e.target.value
-        })
+    const formChangeHandler = (e) => {
+        setQuery(e.target.value);
     }
 
-    render() {
-        return (
-                <form method="post" onSubmit={this.formClickHandler}>
-                        <input type="text"
-                               placeholder="Search"
-                               value={this.state[fetcherApiConfig.queryKey]}
-                               onChange={this.formChangeHandler}/>
-                    <span className={"search-icon"} onClick={this.formClickHandler}/>
-                </form>
-        )
-    }
+    return (
+            <form method="post" onSubmit={formClickHandler}>
+                    <input type="text"
+                           placeholder="Search"
+                           value={query}
+                           onChange={formChangeHandler}/>
+                <span className={"search-icon"} onClick={formClickHandler}/>
+            </form>
+    )
 }
 
 export default connect(
     null,
-    {addListingsQueryDataString, setSearchRequestOperation: setSearchRequestOperationMiddleware}
+    {
+        addListingsQueryDataString,
+        setSearchRequestOperationMiddleware}
 )(Search);

@@ -9,6 +9,7 @@ const pageState = {
     sidebar: [],
     topBar: [],
     footer: [],
+    userAccountMenu: [],
     error: {}
 };
 
@@ -32,6 +33,9 @@ export const pageSlice = createSlice({
         setFooterData: (state, action) => {
             state.footer = action.payload;
         },
+        setUserAccountMenuData: (state, action) => {
+            state.userAccountMenu = action.payload;
+        },
         setPageError: (state, action) => {
             state.error = action.payload;
             console.error(state.error)
@@ -40,4 +44,4 @@ export const pageSlice = createSlice({
 });
 
 export const pageReducer = pageSlice.reducer;
-export const { setPageData, setBlocksData, setSidebarData, setTopBarData, setFooterData, setPageError } = pageSlice.actions;
+export const { setPageData, setBlocksData, setSidebarData, setTopBarData, setFooterData, setUserAccountMenuData, setPageError } = pageSlice.actions;

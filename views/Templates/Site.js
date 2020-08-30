@@ -6,34 +6,29 @@ import {connect} from "react-redux";
 import {getPageDataMiddleware} from "../../redux/middleware/page-middleware";
 import HeroBlock from "../Components/HeroBlock";
 
-class SiteComponent extends React.Component {
-    constructor(props) {
-        super(props);
-        this.htmlParserOptions = {
-            decodeEntities: true,
-            transform: filterHtml
-        };
-    }
+const htmlParserOptions = {
+    decodeEntities: true,
+    transform: filterHtml
+}
 
-    render() {
-        return (
+const SiteComponent = (props) => {
+    return (
             <>
-                {this.props.pageData
+                {props.pageData
                     ?
                     <>
                         <Head>
-                            <title>{this.props.pageData.seo_title ? this.props.pageData.seo_title : "Loading.."}</title>
+                            <title>{props.pageData.seo_title ? props.pageData.seo_title : "Loading.."}</title>
                             <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
                         </Head>
                         <HeroBlock />
-                        {ReactHtmlParser(this.props.pageData.post_content, this.htmlParserOptions)}
+                        {ReactHtmlParser(props.pageData.post_content, htmlParserOptions)}
                     </>
                     :
                     <div>Loading...</div>
                 }
             </>
         )
-    }
 }
 
 function mapStateToProps(state) {

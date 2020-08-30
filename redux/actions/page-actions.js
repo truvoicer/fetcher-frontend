@@ -6,12 +6,15 @@ import {
     setPageData,
     setPageError,
     setSidebarData,
-    setTopBarData
+    setTopBarData, setUserAccountMenuData
 } from "../reducers/page-reducer";
 import {setCategory, setListingsData} from "../reducers/listings-reducer";
 import {isSet} from "../../library/utils";
 import {getListingsProviders} from "../middleware/listings-middleware";
 import {FOOTER_REQUEST, SIDEBAR_REQUEST, TOPBAR_REQUEST} from "../constants/sidebar-constants";
+import {buildWpApiUrl} from "../../library/api/wp/middleware";
+import {wpApiConfig} from "../../config/wp-api-config";
+import {siteConfig} from "../../config/site-config";
 
 export function setPageErrorAction(error) {
     store.dispatch(setPageError(error))
@@ -47,15 +50,19 @@ export function getPageDataAction(pageUrl, params) {
             });
 }
 
+export function setUserAccountMenuAction(menu) {
+    store.dispatch(setUserAccountMenuData(menu))
+}
 
-export function getMenuAction(url, callback) {
-    return fetch(url)
+
+export function getUserAccountMenuAction() {
+    return fetch(buildWpApiUrl(wpApiConfig.endpoints.menu, siteConfig.myAccountMenu))
         .then(response => {
             if (!response.ok) throw Error(response.statusText);
             return response.json();
         })
         .then(json => {
-            callback(json)
+            setUserAccountMenuAction(json)
         })
         .catch(error => {
             console.error(error)

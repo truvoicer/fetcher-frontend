@@ -12,7 +12,7 @@ import Col from "react-bootstrap/Col";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
-import React from "react";
+import React, {useState} from "react";
 import {NEW_SEARCH_REQUEST} from "../../../../../redux/constants/search-constants";
 import {fetcherApiConfig} from "../../../../../config/fetcher-api-config";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -23,44 +23,35 @@ import {
 } from "../../../../../redux/constants/listings-constants";
 
 
-class ListingsSortBar extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            limit: 10,
-            grid: LISTINGS_GRID_COMPACT,
-            limitSelectOptions: [
-                {value: 10, label: 10},
-                {value: 50, label: 50},
-                {value: 100, label: 100},
-            ],
-            gridSelectOptions: [
-                {value: LISTINGS_GRID_COMPACT, label: "Compact"},
-                {value: LISTINGS_GRID_LIST, label: "List"},
-                {value: LISTINGS_GRID_DETAILED, label: "Detailed"},
-            ]
+const ListingsSortBar = (props) => {
+    const [limit, setLimit] = useState(10);
+    const [grid, setGrid] = useState(LISTINGS_GRID_COMPACT);
+    const [limitOptions, setLimitOptions] = useState([
+        {value: 10, label: 10},
+        {value: 50, label: 50},
+        {value: 100, label: 100},
+    ]);
+    const [gridOptions, setGridOptions] = useState([
+        {value: LISTINGS_GRID_COMPACT, label: "Compact"},
+        {value: LISTINGS_GRID_LIST, label: "List"},
+        {value: LISTINGS_GRID_DETAILED, label: "Detailed"},
+    ]);
+
+    const limitChangeHandler = (e) => {
+        if (e.target.name === "limit") {
+            setLimit(e.target.value)
+        } else if (e.target.name === "grid") {
+            setGrid(e.target.value)
         }
-        this.limitChangeHandler = this.limitChangeHandler.bind(this)
-        this.gridChangeHandler = this.gridChangeHandler.bind(this)
+        props.setSearchRequestOperationMiddleware(NEW_SEARCH_REQUEST);
+        props.addListingsQueryDataString(fetcherApiConfig.searchLimitKey, e.target.value, true)
     }
 
-    limitChangeHandler(e) {
-        this.setState({
-            [e.target.name]: e.target.value
-        })
-
-        this.props.setSearchRequestOperationMiddleware(NEW_SEARCH_REQUEST);
-        this.props.addListingsQueryDataString(fetcherApiConfig.searchLimitKey, e.target.value, true)
+    const gridChangeHandler = (e) => {
+        setGrid(e.target.value)
+        props.setListingsGridMiddleware(e.target.value)
     }
 
-    gridChangeHandler(e) {
-        this.setState({
-            [e.target.name]: e.target.value
-        })
-        this.props.setListingsGridMiddleware(e.target.value)
-    }
-
-    render() {
         return (
             <Row>
                 <Col sm={12} md={12} lg={12}>
@@ -73,10 +64,10 @@ class ListingsSortBar extends React.Component {
                                         labelId="sort-bar-limit-label"
                                         id="sort-bar-limit-select"
                                         name="limit"
-                                        value={this.state.limit}
-                                        onChange={this.limitChangeHandler}
+                                        value={limit}
+                                        onChange={limitChangeHandler}
                                     >
-                                        {this.state.limitSelectOptions.map((option, index) => (
+                                        {limitOptions.map((option, index) => (
                                             <MenuItem key={index} value={option.value}>{option.label}</MenuItem>
                                         ))}
                                     </Select>
@@ -89,10 +80,10 @@ class ListingsSortBar extends React.Component {
                                         labelId="sort-bar-grid-label"
                                         id="sort-bar-grid-select"
                                         name={"grid"}
-                                        value={this.state.grid}
-                                        onChange={this.gridChangeHandler}
+                                        value={grid}
+                                        onChange={gridChangeHandler}
                                     >
-                                        {this.state.gridSelectOptions.map((option, index) => (
+                                        {gridOptions.map((option, index) => (
                                             <MenuItem key={index} value={option.value}>{option.label}</MenuItem>
                                         ))}
                                     </Select>
@@ -103,7 +94,6 @@ class ListingsSortBar extends React.Component {
                 </Col>
             </Row>
         );
-    }
 }
 
 export default connect(

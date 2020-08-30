@@ -1,6 +1,6 @@
 import store from "../store/index"
 import React from "react";
-import {setAuthenticated, setSessionError, setUser} from "../reducers/session-reducer";
+import {setAuthenticated, setSavedItems, setSessionError, setUser} from "../reducers/session-reducer";
 import produce from "immer";
 import {
     SESSION_USER_DISPLAY_NAME,
@@ -13,7 +13,7 @@ import {
 } from "../constants/session-constants";
 import {buildWpApiUrl} from "../../library/api/wp/middleware";
 import {wpApiConfig} from "../../config/wp-api-config";
-import {isSet} from "../../library/utils";
+import {isSet, uCaseFirst} from "../../library/utils";
 
 const axios = require("axios")
 
@@ -66,7 +66,7 @@ export function getSessionAction() {
 }
 
 export function validateToken() {
-    if(!getSessionObject()) {
+    if (!getSessionObject()) {
         return false;
     }
     console.log(getSessionObject())
@@ -122,7 +122,7 @@ export const removeLocalSession = () => {
 }
 
 export const getSessionObject = () => {
-    if(typeof localStorage === 'undefined') {
+    if (typeof localStorage === 'undefined') {
         return false;
     }
     try {
@@ -136,8 +136,19 @@ export const getSessionObject = () => {
             token: localStorage.getItem('token'),
             expires_at: JSON.parse(expiresAt)
         }
-    } catch(error) {
+    } catch (error) {
         console.error(error);
         return false;
     }
+}
+
+export function getSavedItemsListByUserAction(requestData, callback) {
+    axios.post(buildWpApiUrl(wpApiConfig.endpoints.savedItemsListByUser), requestData)
+        .then(response => {
+            callback(false, response.data);
+        })
+        .catch(error => {
+            console.error(error)
+            callback(true, error)
+        });
 }

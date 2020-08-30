@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import ListingsFilterDateItem from "./Items/ListingsFilterDateItem";
 import ListingsFilterTextItem from "./Items/ListingsFilterTextItem";
 import ListingsFilterListItem from "./Items/ListingsFilterListItem";
@@ -6,55 +6,24 @@ import ListingsFilterApiListItem from "./Items/ListingsFilterApiListItem";
 import {isSet} from "../../../../../library/utils";
 import {connect} from "react-redux";
 
-class ListingsFilter extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            listingFilters: [],
-            controlPrefix: "filter_control_",
-            data: {}
-        }
-        this.listingFilters = [];
-        this.getListingFilterData = this.getListingFilterData.bind(this);
-        this.formChangeHandler = this.formChangeHandler.bind(this);
-        this.showControl = this.showControl.bind(this)
-        this.getDataList = this.getDataList.bind(this)
-    }
+const ListingsFilter = (props) => {
+    const controlPrefix = "filter_control_";
 
-    formChangeHandler(e) {
-        let data = this.state.data;
-        data[e.name] = e.value;
-        this.setState({
-            data: data
-        })
-        this.props.buildListingsQueryData(data)
-    }
-
-    showControl(e) {
-        if (e.target.classList.contains("active")) {
-            e.target.classList.remove("active")
-        } else {
-            e.target.classList.add("active")
-        }
-    }
-
-    getDataList(item) {
+    const getDataList = (item) => {
         if (item.type === "list" && item.list_source === "wordpress") {
             return (
                 <ListingsFilterListItem
-                    controlPrefix={this.state.controlPrefix}
+                    controlPrefix={controlPrefix}
                     data={item}
-                    value={this.state.data[item.name]}
-                    onChangeCallback={this.formChangeHandler}/>
+                />
             );
         } else if (item.type === "list" && item.list_source === "api") {
-            if (isSet(this.props.listings.listingsData.listing_block_category)) {
+            if (isSet(props.listings.listingsData.listing_block_category)) {
                 return (
                     <ListingsFilterApiListItem
-                        controlPrefix={this.state.controlPrefix}
+                        controlPrefix={controlPrefix}
                         data={item}
-                        value={this.state.data[item.name]}
-                        onChangeCallback={this.formChangeHandler}/>
+                    />
                 )
             }
             return <p>Loading...</p>
@@ -62,47 +31,45 @@ class ListingsFilter extends React.Component {
         return null
     }
 
-    getListingFilterData() {
-        if (isSet(this.props.listings.listingsData.show_filters)) {
-            return this.props.listings.listingsData.filters;
+    const getListingFilterData = () => {
+        if (isSet(props.listings.listingsData.show_filters)) {
+            return props.listings.listingsData.filters;
         }
         return false;
     }
 
-    render() {
-        const listingsFilterData = this.getListingFilterData();
-        // console.log(listingsFilterData)
-        return (
-            <>
-                {listingsFilterData &&
-                <div className={"listings-filters"}>
-                    <h3 className="h5 text-black mb-1 mt-3">Filters</h3>
-                    <form>
-                        {listingsFilterData.listings_filters.map((item, index) => (
-                            <React.Fragment key={index}>
-                                {item.type === "text" &&
-                                <ListingsFilterTextItem
-                                    controlPrefix={this.state.controlPrefix}
-                                    data={item}
-                                    value={this.state.data[item.name]}/>
-                                }
-                                {item.type === "date" &&
-                                <ListingsFilterDateItem
-                                    controlPrefix={this.state.controlPrefix}
-                                    data={item}
-                                    value={this.state.data[item.name]}/>
-                                }
-                                {item.type === "list" &&
-                                this.getDataList(item)
-                                }
-                            </React.Fragment>
-                        ))}
-                    </form>
-                </div>
-                }
-            </>
-        )
-    }
+    const listingsFilterData = getListingFilterData();
+    // console.log(listingsFilterData)
+    return (
+        <>
+            {listingsFilterData &&
+            <div className={"listings-filters"}>
+                <h3 className="h5 text-black mb-1 mt-3">Filters</h3>
+                <form>
+                    {listingsFilterData.listings_filters.map((item, index) => (
+                        <React.Fragment key={index}>
+                            {item.type === "text" &&
+                            <ListingsFilterTextItem
+                                controlPrefix={controlPrefix}
+                                data={item}
+                            />
+                            }
+                            {item.type === "date" &&
+                            <ListingsFilterDateItem
+                                controlPrefix={controlPrefix}
+                                data={item}
+                            />
+                            }
+                            {item.type === "list" &&
+                            getDataList(item)
+                            }
+                        </React.Fragment>
+                    ))}
+                </form>
+            </div>
+            }
+        </>
+    )
 }
 
 function mapStateToProps(state) {

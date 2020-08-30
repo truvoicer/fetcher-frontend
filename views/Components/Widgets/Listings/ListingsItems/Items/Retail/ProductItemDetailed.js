@@ -1,40 +1,32 @@
 import React from "react";
-import Col from "react-bootstrap/Col";
 import {SESSION_USER} from "../../../../../../../redux/constants/session-constants";
 import {connect} from "react-redux";
 import Link from "next/link";
 import {getItemViewUrl} from "../../../../../../../redux/actions/search-actions";
 
 
-class ProductItemDetailed extends React.Component {
-    constructor(props) {
-        super(props);
-
-    }
-
-    render() {
-        return (
-            <div className={"listings-block--item listings-block--item--grid-detailed"}>
-                <div className={"listings-block--item--image"}>
-                    <a href="#" className="image">
-                        <img className={"default-image"} src={this.props.data.item_image_url}/>
-                    </a>
-                </div>
-                <h3 className={"listings-block--item--title"}>
-                    <Link
-                        href={getItemViewUrl(this.props.data, this.props.searchCategory)}
-                        as={getItemViewUrl(this.props.data, this.props.searchCategory)}
-                    >
-                        <a>{this.props.data.item_title}</a>
-                    </Link>
-                </h3>
-                <div className={"listings-block--item--actions"}>
-                    <a className="button"
-                       onClick={this.props.showInfoCallback.bind(this, this.props.data, this.props.searchCategory)}>More</a>
-                </div>
+const ProductItemDetailed = (props) => {
+    return (
+        <div className={"listings-block--item listings-block--item--grid-detailed"}>
+            <div className={"listings-block--item--image"}>
+                <a href="#" className="image">
+                    <img className={"default-image"} src={props.data.item_image_url}/>
+                </a>
             </div>
-        )
-    }
+            <h3 className={"listings-block--item--title"}>
+                <Link
+                    href={getItemViewUrl(props.data, props.searchCategory)}
+                    as={getItemViewUrl(props.data, props.searchCategory)}
+                >
+                    <a>{props.data.item_title}</a>
+                </Link>
+            </h3>
+            <div className={"listings-block--item--actions"}>
+                <a className="button"
+                   onClick={props.showInfoCallback.bind(props.data, props.searchCategory)}>More</a>
+            </div>
+        </div>
+    )
 }
 
 function mapStateToProps(state) {

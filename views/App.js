@@ -5,27 +5,18 @@ import Site from "./Templates/Site";
 import Footer from "./Layout/Footer";
 import {validateToken} from "../redux/actions/session-actions";
 
-class FetcherApp extends React.Component {
-    constructor(props) {
-        super(props);
-    }
+const FetcherApp = (props) => {
+    AddAxiosInterceptors();
+    LoadEnvironment();
+    validateToken();
+    return (
+        <div className="site-wrap">
+            <Header/>
+            <Site />
+            <Footer />
+        </div>
 
-    componentDidMount() {
-        AddAxiosInterceptors();
-        LoadEnvironment();
-        validateToken();
-    }
-
-    render() {
-        return (
-            <div className="site-wrap">
-                <Header/>
-                <Site />
-                <Footer />
-            </div>
-
-        )
-    }
+    )
 }
 
 export default FetcherApp;

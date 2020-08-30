@@ -2,6 +2,7 @@ import store from "../store/index"
 import { setUser, setAuthenticated, setSessionError } from "../reducers/session-reducer"
 import {isSet} from "../../library/utils";
 import {
+    getSavedItemsListByUserAction,
     resetSessionErrorAction,
     setSessionErrorAction,
     setSessionLocalStorage,
@@ -42,7 +43,7 @@ export function createUserMiddleware(requestData, callback) {
             })
             .catch(error => {
                 console.error(error)
-                callback(true, error);
+                callback(true, error?.response);
             });
     }
 }
@@ -51,7 +52,7 @@ export function updateUserMiddleware(requestData, callback) {
     return function(dispatch) {
         return axios.post(buildWpApiUrl(wpApiConfig.endpoints.updateUser), requestData)
             .then(response => {
-                callback(false, response.data);getSavedItemsListByUserMiddleware
+                callback(false, response.data);
             })
             .catch(error => {
                 console.error(error)
@@ -69,14 +70,6 @@ export function updateUserSessionData(data) {
 
 export function getSavedItemsListByUserMiddleware(requestData, callback) {
     return function(dispatch) {
-        // console.log(requestData)
-        return axios.post(buildWpApiUrl(wpApiConfig.endpoints.savedItemsListByUser), requestData)
-            .then(response => {
-                callback(false, response.data);
-            })
-            .catch(error => {
-                console.error(error)
-                callback(true, error);
-            });
+        getSavedItemsListByUserAction(requestData, callback)
     }
 }

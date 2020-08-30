@@ -1,39 +1,35 @@
-import React from "react";
+import React, {useState} from "react";
 import {connect} from "react-redux";
 import {addListingsQueryDataString} from "../../../../../../redux/middleware/listings-middleware";
 import {setSearchRequestOperationMiddleware} from "../../../../../../redux/middleware/search-middleware";
 import {NEW_SEARCH_REQUEST} from "../../../../../../redux/constants/search-constants";
 
-class ListingsFilterTextItem extends React.Component {
-    constructor(props) {
-        super(props);
-        this.formChangeHandler = this.formChangeHandler.bind(this);
+const ListingsFilterTextItem = (props) => {
+    const [query, setQuery] = useState();
+
+    const formChangeHandler = (e) => {
+        setQuery(e.target.value)
+        props.setSearchRequestOperationMiddleware(NEW_SEARCH_REQUEST);
+        props.addListingsQueryDataString(props.data.name, e.target.value)
     }
 
-    formChangeHandler(e) {
-        let data = {
-            name: e.target.name,
-            value: e.target.value
-        };
-
-        this.props.setSearchRequestOperation(NEW_SEARCH_REQUEST);
-        this.props.addListingsQueryDataString(e.target.name, e.target.value)
-    }
-
-    render() {
-        return (
-            <div className={"form-group filter-text"}>
-                <p className={"section-label"}>{this.props.data.label}</p>
-                <input type={"text"}
-                       name={this.props.data.name}
-                       value={this.props.value && this.props.value[this.props.data.name]}
-                       onChange={this.formChangeHandler}/>
-            </div>
-        )
-    }
+    return (
+        <div className={"form-group filter-text"}>
+            <p className={"section-label"}>{props.data.label}</p>
+            <input
+                type={"text"}
+                name={"query"}
+                value={query}
+                onChange={formChangeHandler}
+            />
+        </div>
+    )
 }
 
 export default connect(
     null,
-    {addListingsQueryDataString, setSearchRequestOperation: setSearchRequestOperationMiddleware}
+    {
+        addListingsQueryDataString,
+        setSearchRequestOperationMiddleware
+    }
 )(ListingsFilterTextItem);

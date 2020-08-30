@@ -5,46 +5,40 @@ import {addArrayItem, removeArrayItem} from "../../../../../../redux/middleware/
 import {setSearchRequestOperationMiddleware} from "../../../../../../redux/middleware/search-middleware";
 import {NEW_SEARCH_REQUEST} from "../../../../../../redux/constants/search-constants";
 
-class ListingsFilterListItem extends React.Component {
-    constructor(props) {
-        super(props);
-        this.formChangeHandler = this.formChangeHandler.bind(this);
-    }
+const ListingsFilterListItem = (props) => {
 
-    formChangeHandler(e) {
-        this.props.setSearchRequestOperationMiddleware(NEW_SEARCH_REQUEST);
+    const formChangeHandler = (e) => {
+        props.setSearchRequestOperationMiddleware(NEW_SEARCH_REQUEST);
         if (e.target.checked) {
-            this.props.addArrayItem(this.props.data.name, e.target.value, true)
+            props.addArrayItem(props.data.name, e.target.value, true)
         } else {
-            this.props.removeArrayItem(this.props.data.name, e.target.value, true)
+            props.removeArrayItem(props.data.name, e.target.value, true)
         }
     }
 
-    render() {
-        return (
-            <div className="form-group filter-list">
-                <ul className="list-unstyled">
-                    <p className={"section-label"}>{this.props.data.label}</p>
-                    {this.props.data.list_source === "wordpress" &&
-                    this.props.data.list.map((item, index) => (
+    return (
+        <div className="form-group filter-list">
+            <ul className="list-unstyled">
+                <p className={"section-label"}>{props.data.label}</p>
+                {props.data.list_source === "wordpress" &&
+                props.data.list.map((item, index) => (
 
-                        <li key={"list_control_" + index.toString()}>
-                            <Form.Check
-                                type={"checkbox"}
-                                label={item.label}
-                                id={this.props.controlPrefix + item.name}
-                                name={this.props.data.name + "[]"}
-                                value={item.name}
-                                onChange={this.formChangeHandler}
-                            />
-                        </li>
-                    ))
-                    }
+                    <li key={"list_control_" + index.toString()}>
+                        <Form.Check
+                            type={"checkbox"}
+                            label={item.label}
+                            id={props.controlPrefix + item.name}
+                            name={props.data.name + "[]"}
+                            value={item.name}
+                            onChange={formChangeHandler}
+                        />
+                    </li>
+                ))
+                }
 
-                </ul>
-            </div>
-        )
-    }
+            </ul>
+        </div>
+    )
 }
 
 function mapStateToProps(state) {
@@ -55,5 +49,9 @@ function mapStateToProps(state) {
 
 export default connect(
     mapStateToProps,
-    {addArrayItem, removeArrayItem, setSearchRequestOperationMiddleware}
+    {
+        addArrayItem, 
+        removeArrayItem, 
+        setSearchRequestOperationMiddleware
+    }
 )(ListingsFilterListItem);

@@ -1,41 +1,24 @@
-import React, {Component} from 'react';
+import React, {useState} from 'react';
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Box from "@material-ui/core/Box";
 import HtmlParser from "react-html-parser";
 
-class ItemViewVerticalTabList extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            tabs: {
-                value: this.props.data.config.initialTab
-            }
-        }
-        console.log(this.props.data.config.initialTab)
-        this.tabProps = this.tabProps.bind(this)
-        this.tabPanel = this.tabPanel.bind(this)
-        this.handleTabChange = this.handleTabChange.bind(this)
-        this.getTabListItemData = this.getTabListItemData.bind(this)
+const ItemViewVerticalTabList = (props) => {
+    const [tabValue, setTabValue] = useState(props.data.config.initialTab);
+
+    const handleTabChange = (e, value) => {
+        setTabValue(value)
     }
 
-
-    handleTabChange(e, value) {
-        this.setState({
-            tabs: {
-                value: value
-            }
-        })
-    }
-
-    tabProps(index) {
+    const tabProps = (index) => {
         return {
             id: `vertical-tab-${index}`,
             'aria-controls': `vertical-tabpanel-${index}`,
         };
     }
 
-    tabPanel(props) {
+    const TabPanel = (props) => {
         const {children, value, index, ...other} = props;
 
         return (
@@ -56,19 +39,19 @@ class ItemViewVerticalTabList extends Component {
         );
     }
 
-    getTabListItemData(item) {
+    const getTabListItemData = (item) => {
         return (
             <>
             {!Array.isArray(item.dataKey)
                 ?
                 <>
-                    {item.image ? <img src={this.props.item[item.dataKey]}/> : <p>{HtmlParser(this.props.item[item.dataKey])}</p>}
+                    {item.image ? <img src={props.item[item.dataKey]}/> : <p>{HtmlParser(props.item[item.dataKey])}</p>}
                 </>
                 :
                 <>
                     {item.dataKey.map((dataKeyName, keyIndex) => (
                         <React.Fragment key={keyIndex.toString()}>
-                            {item.image ? <img src={this.props.item[dataKeyName]}/> : <p>{HtmlParser(this.props.item[dataKeyName])}</p>}
+                            {item.image ? <img src={props.item[dataKeyName]}/> : <p>{HtmlParser(props.item[dataKeyName])}</p>}
                         </React.Fragment>
                     ))}
                 </>
@@ -77,41 +60,38 @@ class ItemViewVerticalTabList extends Component {
         )
     }
 
-    render() {
-        return (
-            <div className={"tab-layout"}>
-                <Tabs
-                    orientation="vertical"
-                    variant="scrollable"
-                    value={this.state.tabs.value}
-                    onChange={this.handleTabChange}
-                    aria-label="Vertical tabs example"
-                >
-                    {this.props.data.tabs.map((tabItem, index) => (
-                        <Tab label={tabItem.label} key={index.toString()} {...this.tabProps(index)} />
-                    ))}
-                </Tabs>
-                {this.props.data.tabs.map((tabItem, index) => (
-                    <this.tabPanel key={index.toString()} value={this.state.tabs.value} index={index}>
-                        <ul className={"tab-layout--list"}>
-                            {tabItem.tabData.map((tabDataItem, tabDataIndex) => (
-                                <li key={tabDataIndex.toString()}>
-                                    <div className={"tab-layout--list--row"}>
-                                        <div className={"tab-layout--list--row--label"}>
-                                            {tabDataItem.label}
-                                        </div>
-                                        <div className={"tab-layout--list--row--value"}>
-                                            {this.getTabListItemData(tabDataItem)}
-                                        </div>
-                                    </div>
-                                </li>
-                            ))}
-                        </ul>
-                    </this.tabPanel>
+    return (
+        <div className={"tab-layout"}>
+            <Tabs
+                orientation="vertical"
+                variant="scrollable"
+                value={tabValue}
+                onChange={handleTabChange}
+                aria-label="Vertical tabs example"
+            >
+                {props.data.tabs.map((tabItem, index) => (
+                    <Tab label={tabItem.label} key={index.toString()} {...tabProps(index)} />
                 ))}
-            </div>
-        );
-    }
+            </Tabs>
+            {props.data.tabs.map((tabItem, index) => (
+                <TabPanel key={index.toString()} value={tabValue} index={index}>
+                    <ul className={"tab-layout--list"}>
+                        {tabItem.tabData.map((tabDataItem, tabDataIndex) => (
+                            <li key={tabDataIndex.toString()}>
+                                <div className={"tab-layout--list--row"}>
+                                    <div className={"tab-layout--list--row--label"}>
+                                        {tabDataItem.label}
+                                    </div>
+                                    <div className={"tab-layout--list--row--value"}>
+                                        {getTabListItemData(tabDataItem)}
+                                    </div>
+                                </div>
+                            </li>
+                        ))}
+                    </ul>
+                </TabPanel>
+            ))}
+        </div>
+    );
 }
-
 export default ItemViewVerticalTabList;

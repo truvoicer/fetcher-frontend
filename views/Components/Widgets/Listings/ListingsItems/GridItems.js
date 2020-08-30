@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import Row from "react-bootstrap/Row";
 import {connect} from "react-redux";
 import {addListingsQueryDataString} from "../../../../../redux/middleware/listings-middleware";
@@ -10,94 +10,79 @@ import {
 } from "../../../../../redux/middleware/search-middleware";
 import {siteConfig} from "../../../../../config/site-config";
 import {convertImageObjectsToArray, isSet} from "../../../../../library/utils";
-
-const sprintf = require("sprintf").sprintf
-import Router from "next/router";
-import {Routes} from "../../../../../config/routes";
 import {SESSION_USER, SESSION_USER_ID} from "../../../../../redux/constants/session-constants";
 import {isSavedItemAction, saveItemCallback, showInfo} from "../../../../../redux/actions/search-actions";
 import Col from "react-bootstrap/Col";
 
-class GridItems extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            modalData: {
-                show: false,
-                item: {},
-                provider: ""
-            },
-        }
-        this.getGridItem = this.getGridItem.bind(this)
-        this.getModal = this.getModal.bind(this)
-        this.closeModal = this.closeModal.bind(this)
-    }
+const GridItems = (props) => {
 
-    closeModal() {
-        this.setState({
-            modalData: {
-                show: false,
-                item: this.state.modalData.item,
-                provider: this.state.modalData.provider,
-            }
+    const [modalData, setModalData] = useState({
+        show: false,
+        item: {},
+        provider: ""
+    });
+
+    const closeModal = () => {
+        setModalData({
+            show: false,
+            item: modalData.item,
+            provider: modalData.provider,
         })
     }
 
-    getGridItem(item) {
+    const getGridItem = (item) => {
         let gridItem = {...item};
         if (isSet(gridItem.image_list)) {
             gridItem.image_list = convertImageObjectsToArray(gridItem.image_list);
         }
         const gridConfig = siteConfig.gridItems;
-        if (!isSet(gridConfig[this.props.search.category])) {
+        if (!isSet(gridConfig[props.search.category])) {
             return null;
         }
-        if (!isSet(gridConfig[this.props.search.category][this.props.listings.listingsGrid])) {
+        if (!isSet(gridConfig[props.search.category][props.listings.listingsGrid])) {
             return null;
         }
         gridItem.saved_item = isSavedItemAction(item.item_id, item.provider,
-            this.props.search.category, this.props.user[SESSION_USER_ID]);
-        const GridItems = gridConfig[this.props.search.category][this.props.listings.listingsGrid];
+            props.search.category, props.user[SESSION_USER_ID]);
+        const GridItems = gridConfig[props.search.category][props.listings.listingsGrid];
         return <GridItems data={gridItem}
-                          searchCategory={this.props.search.category}
+                          searchCategory={props.search.category}
                           showInfoCallback={showInfo}
                           saveItemCallback={saveItemCallback}/>
     }
 
-    getModal(item) {
+    const GetModal = (item) => {
         const gridConfig = siteConfig.gridItems;
-        if (!isSet(gridConfig[this.props.search.category])) {
+        if (!isSet(gridConfig[props.search.category])) {
             return null
         }
-        if (!isSet(gridConfig[this.props.search.category].modal)) {
+        if (!isSet(gridConfig[props.search.category].modal)) {
             return null;
         }
-        const ItemModal = gridConfig[this.props.search.category].modal;
-        return <ItemModal data={this.state.modalData} close={this.closeModal}/>
+        const ItemModal = gridConfig[props.search.category].modal;
+        return <ItemModal data={modalData} close={closeModal}/>
 
     }
 
-    render() {
-        // console.log(this.props.listings)
-        // console.log(this.props.search.searchList)
-        return (
-            <>
-                <Row>
-                    {this.props.search.searchList.map((item, index) => (
-                        <React.Fragment key={index}>
-                            <Col sm={12} md={6} lg={4}>
-                                {this.getGridItem(item)}
-                            </Col>
-                        </React.Fragment>
-                    ))}
-                </Row>
+    // console.log(props.listings)
+    // console.log(props.search.searchList)
+    return (
+        <>
+            <Row>
+                {props.search.searchList.map((item, index) => (
+                    <React.Fragment key={index}>
+                        <Col sm={12} md={6} lg={4}>
+                            {getGridItem(item)}
+                        </Col>
+                    </React.Fragment>
+                ))}
+            </Row>
 
-                {this.state.modalData.show &&
-                <this.getModal/>
-                }
-            </>
-        )
-    }
+            {modalData.show &&
+            <GetModal/>
+            }
+        </>
+    )
 }
 
 function mapStateToProps(state) {

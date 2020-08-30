@@ -3,12 +3,12 @@ import ListingsBlock from "../views/Components/Widgets/Listings/ListingsBlock/Li
 import ItemViewWidget from "../views/Components/Widgets/ItemViewWidget";
 import Login from "../views/Pages/login";
 import Register from "../views/Pages/register";
-import UserAccountBlock from "../views/Components/UserAccountBlock";
 import UserDashboard from "../views/Components/User/UserDashboard";
 import UserSavedItems from "../views/Components/User/UserSavedItems";
 import UserProfile from "../views/Components/User/UserProfile";
 import UserMessages from "../views/Components/User/UserMessages";
 import UserAccountDetails from "../views/Components/User/UserAccountDetails";
+import UserAccount from "../views/Components/User/UserAccount";
 
 export const wpApiConfig = {
     apiBaseUrl: process.env.NEXT_PUBLIC_WP_API_URL,
@@ -45,7 +45,7 @@ export const wpApiConfig = {
             component: Register
         },
         user_account_area_block: {
-            component: UserAccountBlock
+            component: UserAccount
         },
     },
     components: {
