@@ -15,6 +15,7 @@ const EventItemList = (props) => {
                 <span className="category">{uCaseFirst(props.data.provider)}</span>
                 <a
                     onClick={props.saveItemCallback.bind(
+                        this,
                         props.data.provider,
                         props.searchCategory,
                         props.data.item_id,

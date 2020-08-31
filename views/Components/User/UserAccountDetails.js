@@ -7,6 +7,7 @@ import {
 } from "../../../redux/constants/session-constants";
 import DataForm from "../Forms/DataForm";
 import {updateUserMiddleware, updateUserSessionData} from "../../../redux/middleware/session-middleware";
+import {UserAccountDetailsData} from "../../../config/forms/user-account-details";
 
 const UserAccountDetails = (props) => {
     const submitButtonText = "Update";
@@ -22,6 +23,7 @@ const UserAccountDetails = (props) => {
 
     const updateUserCallback = (error, data) => {
         if (!error) {
+            console.log(data)
             props.updateUserSessionData(data.data)
             setResponse({
                 error: false,
@@ -29,6 +31,7 @@ const UserAccountDetails = (props) => {
                 message: data.message
             })
         } else {
+            console.log(data.response.data.code)
             setResponse({
                 error: true,
                 success: false,
@@ -36,7 +39,7 @@ const UserAccountDetails = (props) => {
             })
         }
     }
-
+    console.log(response)
     return (
         <div className="user-account-details bg-light">
             <div className="container">

@@ -5,7 +5,7 @@ import UserAccountBlock from "./UserAccountBlock";
 import {getSavedItemsListByUserMiddleware} from "../../../redux/middleware/session-middleware";
 import {SESSION_AUTHENTICATED} from "../../../redux/constants/session-constants";
 import TabLayout from "../Tabs/TabLayout";
-import Login from "../../Pages/login";
+import Login from "../Auth/AuthLoginForm";
 
 const UserAccount = (props) => {
     useEffect(() => {

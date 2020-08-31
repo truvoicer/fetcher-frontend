@@ -9,9 +9,9 @@ import {wpApiConfig} from "../../../config/wp-api-config";
 const TabLayout = (props) => {
     const [tabValue, setTabValue] = useState(0);
 
-    // useEffect(() => {
-    //     setTabValue(props.tabIndex)
-    // })
+    useEffect(() => {
+        setTabValue(props.tabIndex)
+    }, [])
 
     const handleTabChange = (e, value) => {
         setTabValue(value)

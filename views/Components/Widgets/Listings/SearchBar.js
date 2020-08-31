@@ -3,23 +3,35 @@ import {NEW_SEARCH_REQUEST} from "../../../../redux/constants/search-constants";
 import {connect} from "react-redux";
 import {addQueryDataObjectMiddleware} from "../../../../redux/middleware/listings-middleware";
 import {setSearchRequestOperationMiddleware} from "../../../../redux/middleware/search-middleware";
+import {fetcherApiConfig} from "../../../../config/fetcher-api-config";
 
 const SearchBar = (props) => {
-    const [searchData, setSearchData] = useState({
-        query: "",
-        category: "",
-        location: ""
-    })
-
     const [query, setQuery] = useState("")
     const [location, setLocation] = useState("")
     const [category, setCategory] = useState("")
+    const [searchData, setSearchData] = useState({})
 
     const formChangeHandler = (e) => {
         e.preventDefault();
-        setSearchData({
-            [e.target.name]: e.target.value
-        })
+
+        let getSearchData = {...searchData};
+        switch (e.target.name) {
+            case "query":
+                setQuery(e.target.value)
+                getSearchData[fetcherApiConfig.queryKey] = e.target.value;
+                break;
+            case "category":
+                setCategory(e.target.value)
+                getSearchData.category = e.target.value;
+                break;
+            case "location":
+                setLocation(e.target.value)
+                getSearchData.location = e.target.value;
+                break;
+            default:
+                return false;
+        }
+        setSearchData(getSearchData)
     }
 
     const formSubmitHandler = (e) => {
@@ -37,7 +49,7 @@ const SearchBar = (props) => {
                                className="form-control rounded"
                                placeholder="What are you looking for?"
                                name={"query"}
-                               value={searchData.query}
+                               value={query}
                                onChange={formChangeHandler}/>
                     </div>
                     <div className="col-lg-12 mb-4 mb-xl-0 col-xl-3">
@@ -47,7 +59,7 @@ const SearchBar = (props) => {
                                    className="form-control rounded"
                                    placeholder="Location"
                                    name={"location"}
-                                   value={searchData.location}
+                                   value={location}
                                    onChange={formChangeHandler}/>
                         </div>
 
@@ -57,7 +69,7 @@ const SearchBar = (props) => {
                             <span className="icon"><span className="icon-keyboard_arrow_down"/></span>
                             <select className="form-control rounded"
                                     name="category"
-                                    defaultValue={searchData.category}
+                                    defaultValue={category}
                                     onChange={formChangeHandler}>
                                 <option value="all">All Categories</option>
                                 <option value="real_estate">Real Estate</option>

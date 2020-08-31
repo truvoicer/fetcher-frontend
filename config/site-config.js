@@ -17,6 +17,8 @@ import RealEstateInfoModal
 import RetailItemView from "../views/Components/Widgets/Listings/ListingsItems/Items/Retail/RetailItemView";
 import EventItemView from "../views/Components/Widgets/Listings/ListingsItems/Items/Events/EventItemView";
 import RealEstateItemView from "../views/Components/Widgets/Listings/ListingsItems/Items/RealEstate/RealEstateItemView";
+import ListingsBlock from "../views/Components/Widgets/Listings/ListingsBlock/ListingsBlock";
+import PageModal from "../views/Components/Modals/PageModal";
 
 export const siteConfig =  {
     sidebarMenu: "main-menu",
@@ -52,5 +54,5 @@ export const siteConfig =  {
             modal: RealEstateInfoModal,
             single: RealEstateItemView
         },
-    }
+    },
 }

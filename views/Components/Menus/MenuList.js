@@ -1,10 +1,11 @@
 import {connect} from "react-redux";
 import React from 'react';
-import {getPageDataMiddleware} from "../../../redux/middleware/page-middleware";
+import {getPageDataMiddleware, setModalContentMiddleware} from "../../../redux/middleware/page-middleware";
 import Router from "next/router";
 import {setSearchRequestOperationMiddleware} from "../../../redux/middleware/search-middleware";
 import {siteConfig} from "../../../config/site-config";
 import {logout} from "../../../redux/actions/session-actions";
+import {wpApiConfig} from "../../../config/wp-api-config";
 
 const MenuList = (props) => {
 
@@ -20,6 +21,13 @@ const MenuList = (props) => {
 
         // props.setSearchRequestOperation(NEW_SEARCH_REQUEST);
         // props.getPageDataMiddleware(buildWpApiUrl(wpApiConfig.endpoints.page, item.post_name));
+    }
+
+    const showAuthLoginModal = () => {
+        props.setModalContentMiddleware(wpApiConfig.widgets.authentication_login.name, {}, true)
+    }
+    const showAuthRegisterModal = () => {
+        props.setModalContentMiddleware(wpApiConfig.widgets.authentication_register.name, {}, true)
     }
 
     return (
@@ -65,13 +73,13 @@ const MenuList = (props) => {
             {props.sessionLinks && !props.session.authenticated &&
             <>
                 <li className="ml-xl-3 login">
-                    <a href={siteConfig.defaultLoginHref}>
+                    <a onClick={showAuthLoginModal}>
                         <span className="border-left pl-xl-4"/>
                         Log In
                     </a>
                 </li>
                 <li>
-                    <a href={siteConfig.defaultRegisterHref} className="cta">
+                    <a onClick={showAuthRegisterModal} className="cta">
                         <span className="bg-primary text-white rounded">Register</span>
                     </a>
                 </li>
@@ -89,5 +97,9 @@ function mapStateToProps(state) {
 
 export default connect(
     mapStateToProps,
-    {getPageDataMiddleware, setSearchRequestOperationMiddleware}
+    {
+        getPageDataMiddleware,
+        setSearchRequestOperationMiddleware,
+        setModalContentMiddleware
+    }
 )(MenuList);

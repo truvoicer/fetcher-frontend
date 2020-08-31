@@ -26,8 +26,11 @@ const UserSavedItems = (props) => {
                 tabData[savedItem.provider_name] = {}
                 tabData[savedItem.provider_name].items = [];
             }
+            tabData[savedItem.provider_name].category = savedItem.category;
+            tabData[savedItem.provider_name].name = savedItem.provider_name;
             tabData[savedItem.provider_name].label = uCaseFirst(savedItem.provider_name);
-            tabData[savedItem.provider_name].items.push(savedItem)
+            tabData[savedItem.provider_name].items.push(savedItem);
+            tabData[savedItem.provider_name].items_response = [];
         })
         return tabData
     }

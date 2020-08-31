@@ -54,19 +54,19 @@ const ListingsPaginate = (props) => {
                 <div className="pagination">
 
                     {pageControls[PAGE_CONTROL_CURRENT_PAGE] > paginationLimit - paginationRange &&
-                    <a onClick={paginationClickHandler.bind(1)}>1</a>}
+                    <a onClick={paginationClickHandler.bind(this, 1)}>1</a>}
                     {range.map((num, index) => (
                         <React.Fragment key={index.toString()}>
                             {num === pageControls[PAGE_CONTROL_CURRENT_PAGE]
                                 ?
                                 <span>{num}</span>
                                 :
-                                <a onClick={paginationClickHandler.bind(num)}>{num}</a>
+                                <a onClick={paginationClickHandler.bind(this, num)}>{num}</a>
                             }
                         </React.Fragment>
                     ))}
                     <span className="more-page">...</span>
-                    <a onClick={paginationClickHandler.bind(pageControls[PAGE_CONTROL_TOTAL_PAGES])}>
+                    <a onClick={paginationClickHandler.bind(this, pageControls[PAGE_CONTROL_TOTAL_PAGES])}>
                         {pageControls[PAGE_CONTROL_TOTAL_PAGES]}
                     </a>
                 </div>

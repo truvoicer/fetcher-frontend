@@ -21,6 +21,8 @@
     "react-bootstrap": "^1.2.2",
     "react-datepicker": "^3.0.0",
     "react-dom": "16.13.1",
+    "react-facebook-login": "^4.1.1",
+    "react-google-login": "^5.1.21",
     "react-html-parser": "^2.0.2",
     "react-infinite-scroller": "^1.2.4",
     "react-parallax": "^3.0.3",

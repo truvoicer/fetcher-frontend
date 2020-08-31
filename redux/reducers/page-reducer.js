@@ -1,4 +1,3 @@
-
 // AUTH STATE
 import {createSlice} from "@reduxjs/toolkit";
 
@@ -10,6 +9,11 @@ const pageState = {
     topBar: [],
     footer: [],
     userAccountMenu: [],
+    modal: {
+        show: false,
+        component: "",
+        data: {}
+    },
     error: {}
 };
 
@@ -33,6 +37,12 @@ export const pageSlice = createSlice({
         setFooterData: (state, action) => {
             state.footer = action.payload;
         },
+        setShowModal: (state, action) => {
+            state.modal.show = action.payload;
+        },
+        setModalComponent: (state, action) => {
+            state.modal = action.payload;
+        },
         setUserAccountMenuData: (state, action) => {
             state.userAccountMenu = action.payload;
         },
@@ -44,4 +54,10 @@ export const pageSlice = createSlice({
 });
 
 export const pageReducer = pageSlice.reducer;
-export const { setPageData, setBlocksData, setSidebarData, setTopBarData, setFooterData, setUserAccountMenuData, setPageError } = pageSlice.actions;
+export const {
+    setPageData, setBlocksData,
+    setSidebarData, setTopBarData,
+    setFooterData, setUserAccountMenuData,
+    setPageError, setShowModal,
+    setModalComponent
+} = pageSlice.actions;

@@ -16,6 +16,7 @@ const EventItemCompact = (props) => {
 
                 <a
                     onClick={props.saveItemCallback.bind(
+                        this,
                         props.data.provider,
                         props.searchCategory,
                         props.data.item_id,

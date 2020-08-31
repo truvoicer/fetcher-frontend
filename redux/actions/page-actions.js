@@ -2,16 +2,15 @@ import store from "../store/index"
 import React from "react";
 import {
     setBlocksData,
-    setFooterData,
     setPageData,
     setPageError,
-    setSidebarData,
-    setTopBarData, setUserAccountMenuData
+    setUserAccountMenuData,
+    setShowModal,
+    setModalComponent,
 } from "../reducers/page-reducer";
 import {setCategory, setListingsData} from "../reducers/listings-reducer";
 import {isSet} from "../../library/utils";
 import {getListingsProviders} from "../middleware/listings-middleware";
-import {FOOTER_REQUEST, SIDEBAR_REQUEST, TOPBAR_REQUEST} from "../constants/sidebar-constants";
 import {buildWpApiUrl} from "../../library/api/wp/middleware";
 import {wpApiConfig} from "../../config/wp-api-config";
 import {siteConfig} from "../../config/site-config";
@@ -20,6 +19,30 @@ export function setPageErrorAction(error) {
     store.dispatch(setPageError(error))
 }
 
+export function setShowModalAction(show) {
+    store.dispatch(setShowModal(show))
+}
+
+export function setModalComponentAction(data) {
+    const componentState = {...store.getState().page.modal};
+    const object = Object.assign({}, componentState, data);
+    store.dispatch(setModalComponent(object))
+}
+
+export function setModalContentAction(component, data, show) {
+    setModalComponentAction({
+        show: show,
+        data: data,
+        component: component
+    });
+}
+
+export function getWidget(component, data) {
+    if (isSet(wpApiConfig.widgets[component]) && isSet(wpApiConfig.widgets[component].component)) {
+        const ModalContent = wpApiConfig.widgets[component].component;
+        return <ModalContent data={data} />;
+    }
+}
 
 export function getPageDataAction(pageUrl, params) {
         // notify about fetch start

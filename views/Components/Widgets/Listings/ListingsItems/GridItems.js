@@ -64,7 +64,7 @@ const GridItems = (props) => {
 
     }
 
-    // console.log(props.listings)
+    // console.log(props.user)
     // console.log(props.search.searchList)
     return (
         <>

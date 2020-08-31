@@ -15,6 +15,7 @@ const RealEstateItemCompact = (props) => {
                 <span className="category">{props.data.item_property_type}</span>
                 <a
                     onClick={props.saveItemCallback.bind(
+                        this,
                         props.data.provider,
                         props.searchCategory,
                         props.data.item_id,

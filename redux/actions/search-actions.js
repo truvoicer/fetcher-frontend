@@ -319,14 +319,13 @@ export function saveItemAction(requestData, callback) {
         });
 }
 
-export function saveItemCallback(provider, category, itemId, user_id, e) {
+export function saveItemCallback(provider, category, itemId, user_id) {
     const data = {
         provider_name: provider,
         category: category,
         item_id: itemId,
         user_id: user_id
     }
-    console.log(data)
     saveItemAction(data, saveItemRequestCallback)
     updateSavedItemAction(data)
 }

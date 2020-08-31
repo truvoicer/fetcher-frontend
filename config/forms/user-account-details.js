@@ -1,4 +1,4 @@
-const UserAccountDetailsData = (
+export const UserAccountDetailsData = (
     display_name,
     nicename,
     nickname,

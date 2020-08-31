@@ -14,6 +14,7 @@ const ProductItemCompact = (props) => {
                 <span className="category">Cars &amp; Vehicles</span>
                 <a
                     onClick={props.saveItemCallback.bind(
+                        this,
                         props.data.provider,
                         props.searchCategory,
                         props.data.item_id,

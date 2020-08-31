@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useLayoutEffect, useState} from 'react';
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Box from "@material-ui/core/Box";
@@ -10,27 +10,6 @@ import {fetchData} from "../../../library/api/fetcher/middleware";
 import Grid from "@material-ui/core/Grid";
 
 const SavedItemsVerticalTabs = (props) => {
-    const [tabValue, setTabValue] = useState(0);
-    const [panelData, setPanelData] = useState({});
-
-    let tabIndex = 0;
-    const getItemsRequest = (index) => {
-        tabIndex = index;
-        const getItem = getItemByIndex(index);
-        getItem.items?.map((item) => {
-            let data = {
-                query: item.item_id,
-                provider: item.provider_name
-            }
-            console.log(data)
-            fetchData("operation", ["single"], data, getItemsRequestCallback)
-        })
-    }
-
-    // useEffect(() => {
-    //     getItemsRequest(0)
-    // })
-
     const getItemByIndex = (index) => {
         let item = {};
         Object.keys(props.data).map((key, objectIndex) => {
@@ -41,29 +20,48 @@ const SavedItemsVerticalTabs = (props) => {
         return item;
     }
 
-    const getItemsRequestCallback = (status, data) => {
-        // console.log(status, data)
-        if (status === 200) {
-            console.log(tabIndex)
-            let getPanelData = {...panelData};
-            if (!isSet(getPanelData[tabIndex])) {
-                getPanelData[tabIndex] = {};
+    const getItemsRequest = (provider_name, new_request = true) => {
+        props.data[provider_name]?.items?.map((item) => {
+            let data = {
+                query: item.item_id,
+                provider: item.provider_name,
+                category: item.category
             }
-            if (!isSet(getPanelData[tabIndex].items)) {
-                getPanelData[tabIndex].items = []
-            }
-            let itemData = data.request_data[0];
-            itemData.category = data.category;
-            getPanelData[tabIndex].items.push(itemData);
-            setPanelData(getPanelData)
-        }
+            console.log(data)
+            fetchData("operation", ["single"], data)
+                .then((response) => {
+                    if (response.status === 200) {
+                        getItemsResponseHandler(response.data, new_request);
+                        new_request = false;
+                    }
+                })
+                .catch((error) => {
+                    console.error(error)
+                })
+        })
     }
 
     const handleTabChange = (e, value) => {
         console.log(value)
         setTabValue(value)
-        getItemsRequest(value)
+        getItemsRequest(value, true)
     }
+
+
+    const getItemsResponseHandler = (data, new_request) => {
+        let itemData = data.request_data[0];
+        let getPanelData = {...panelData};
+        itemData.category = data.category;
+        if (new_request) {
+            getPanelData[itemData.provider].items_response.splice(
+                0,
+                getPanelData[itemData.provider].items_response.length + 1
+            )
+        }
+        getPanelData[itemData.provider].items_response.push(itemData);
+        setPanelData(getPanelData);
+    }
+
 
     const tabProps = (index) => {
         return {
@@ -99,7 +97,7 @@ const SavedItemsVerticalTabs = (props) => {
 
     const getGridItem = (item, category) => {
         let gridItem = {...item};
-        console.log(item, category)
+        // console.log(item, category)
         if (isSet(gridItem.image_list)) {
             gridItem.image_list = convertImageObjectsToArray(gridItem.image_list);
         }
@@ -111,35 +109,38 @@ const SavedItemsVerticalTabs = (props) => {
             return null;
         }
         gridItem.saved_item = true;
-        // gridItem.saved_item = isSavedItemAction(item.item_id, item.provider,
-        //     category, props.user[SESSION_USER_ID]);
         const GridItems = gridConfig[category][LISTINGS_GRID_COMPACT];
-        // console.log(GridItems)
         return <GridItems data={gridItem}
                           searchCategory={category}
                           showInfoCallback={showInfo}
                           saveItemCallback={saveItemCallback}/>
     }
 
-    const getItemList = (data, tabDataIndex, tabIndexValue) => {
-        console.log(panelData[tabIndexValue])
-
+    const getItemList = (data) => {
         return (
             <Grid container className={""} spacing={2}>
-                {isSet(panelData[tabIndexValue]) &&
-                panelData[tabIndexValue].items.map((item, index) => (
-                        <Grid item xs={4}  key={index}>
-                            {getGridItem(item, item.category)}
-                        </Grid>
+                {isSet(data) &&
+                data.items_response.map((item, index) => (
+                    <Grid item xs={4} key={index}>
+                        {getGridItem(item, item.category)}
+                    </Grid>
                 ))
                 }
             </Grid>
         )
     }
 
+    const [tabValue, setTabValue] = useState(getItemByIndex(0).name);
+    const [panelData, setPanelData] = useState({...props.data});
+
+    useEffect(() => {
+        getItemsRequest(getItemByIndex(0).name, true)
+    }, [])
+
     return (
         <div className={"tab-layout"}>
             <Tabs
+                // action={getItemsRequest(getItemByIndex(0).name, true)}
                 orientation="vertical"
                 variant="scrollable"
                 value={tabValue}
@@ -147,12 +148,20 @@ const SavedItemsVerticalTabs = (props) => {
                 aria-label="Vertical tabs example"
             >
                 {Object.keys(props.data).map((itemKey, index) => (
-                    <Tab label={props.data[itemKey].label} key={index.toString()} {...tabProps(index)} />
+                    <Tab
+                        label={props.data[itemKey].label}
+                        key={index.toString()}
+                        value={itemKey}
+                        {...tabProps(index)} />
                 ))}
             </Tabs>
             {Object.keys(props.data).map((itemKey, tabDataIndex) => (
-                <TabPanel key={tabDataIndex.toString()} value={tabValue} index={tabDataIndex}>
-                    {getItemList(props.data[itemKey].items, tabDataIndex, tabValue)}
+                <TabPanel
+                    key={tabDataIndex.toString()}
+                    value={tabValue}
+                    index={itemKey}
+                >
+                    {getItemList(panelData[itemKey])}
                 </TabPanel>
             ))}
         </div>

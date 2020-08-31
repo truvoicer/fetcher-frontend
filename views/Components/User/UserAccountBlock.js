@@ -2,7 +2,7 @@ import React from 'react';
 import TabLayout from "../Tabs/TabLayout";
 import {connect} from "react-redux";
 import {SESSION_AUTHENTICATED} from "../../../redux/constants/session-constants";
-import Login from "../../Pages/login";
+import Login from "../Auth/AuthLoginForm";
 
 const UserAccountBlock = (props) => {
     const buildTabLayoutData = (menuData) => {
