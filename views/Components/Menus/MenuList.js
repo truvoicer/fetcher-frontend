@@ -42,7 +42,7 @@ const MenuList = (props) => {
                             {item.menu_sub_items.map((subItem, subIndex) => (
                                 <li key={props.sidebar + "_sidebar_sub_menu_item_" + index + subIndex}>
                                     <a href={"/" + subItem.post_name}
-                                       onClick={pageClickHandler.bind(subItem)}>{subItem.post_title}</a>
+                                       onClick={pageClickHandler.bind(this, subItem)}>{subItem.post_title}</a>
                                 </li>
                             ))}
                         </ul>
@@ -50,7 +50,7 @@ const MenuList = (props) => {
                     :
                     <li key={props.sidebar + index.toString()}>
                         <a href={"/" + item.menu_item.post_name}
-                           onClick={pageClickHandler.bind(item.menu_item)}>{item.menu_item.post_title}</a>
+                           onClick={pageClickHandler.bind(this, item.menu_item)}>{item.menu_item.post_title}</a>
                     </li>
 
             ))}

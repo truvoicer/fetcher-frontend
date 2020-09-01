@@ -1,24 +1,43 @@
 import React, {useEffect} from "react";
-import FacebookLogin from 'react-facebook-login';
+import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props'
 import {facebookAuthConfig} from "../../../config/facebook/facebookAuthConfig";
+import {connect} from "react-redux";
+import {getSessionTokenMiddleware} from "../../../redux/middleware/session-middleware";
+import {buildWpApiUrl} from "../../../library/api/wp/middleware";
+import {wpApiConfig} from "../../../config/wp-api-config";
 
 const AuthFacebook = (props) => {
     const responseFacebook = (response) => {
-        console.log(response);
+
+        const data = {
+            custom_auth: "facebook",
+            password: response.accessToken
+        }
+        props.getSessionTokenMiddleware(buildWpApiUrl(wpApiConfig.endpoints.token), data, props.requestCallback)
     }
-    const componentClicked = (e) => {
-        console.log(e)
+    const onFailure = (response) => {
+        console.error(response);
     }
+
     return (
         <FacebookLogin
             appId={facebookAuthConfig.appId}
             autoLoad={false}
             fields="name,email,picture"
-            onClick={componentClicked}
             callback={responseFacebook}
-            textButton={"Login with Facebook"}
-            size={"small"}
+            onFailure={onFailure}
+            render={renderProps => props.component}
         />
     )
 }
-export default AuthFacebook;
+function mapStateToProps(state) {
+    // console.log(state.session)
+    return {
+        session: state.session
+    };
+}
+
+export default connect(
+    mapStateToProps,
+    {getSessionTokenMiddleware}
+)(AuthFacebook);

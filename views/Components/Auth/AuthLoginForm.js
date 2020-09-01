@@ -29,7 +29,7 @@ const AuthLoginForm = (props) => {
                 message: data.message
             });
         } else {
-            router.push(siteConfig.defaultUserAccountHref, siteConfig.defaultUserAccountHref, {shallow: true})
+            props.requestCallback(error, data)
         }
     }
 

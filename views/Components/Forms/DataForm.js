@@ -91,7 +91,7 @@ const DataForm = (props) => {
             const field = getFieldByName(key);
             field.subFields?.map((subField) => {
                 if ((field.fieldType === "checkbox" && !values[field.name]) ||
-                    (field.fieldType === "checkbox" && values[field.name] === "")){
+                    (field.fieldType === "checkbox" && values[field.name] === "")) {
                     ignoredFields.push(subField.name);
                 }
             })
@@ -105,10 +105,10 @@ const DataForm = (props) => {
             const field = getFieldByName(key);
             if (!ignoredFields.includes(field.name)) {
                 const isAllowEmpty = field.validation?.rules?.filter(rule => rule.type === "allow_empty");
-                if(!isSet(isAllowEmpty) ||
-                    (Array.isArray(isAllowEmpty) && isAllowEmpty.length > 0 && values[field.name] !== "" ) ||
+                if (!isSet(isAllowEmpty) ||
+                    (Array.isArray(isAllowEmpty) && isAllowEmpty.length > 0 && values[field.name] !== "") ||
                     (Array.isArray(isAllowEmpty) && isAllowEmpty.length === 0)
-                    ) {
+                ) {
                     field.validation?.rules?.map((rule) => {
                         const validate = validationRules(rule, values, key);
                         // console.log(validate)
@@ -140,12 +140,16 @@ const DataForm = (props) => {
         return (
             <div className="row form-group form-group-text">
                 <div className="col-md-12">
-                    <label className="text-black" htmlFor={field.name}>
+                    {field.label &&
+                    <>
                         {field.label}
+                        <label className="text-black" htmlFor={field.name}>
                         <span className={"site-form--error--field"}>
                             {errors[field.name] && touched[field.name] && errors[field.name]}
                         </span>
-                    </label>
+                        </label>
+                    </>
+                    }
                     <input
                         id={field.name}
                         type={field.type}
@@ -156,6 +160,11 @@ const DataForm = (props) => {
                         onBlur={handleBlur}
                         value={values[field.name]}
                     />
+                    {!isSet(field.label) &&
+                    <span className={"site-form--error--field"}>
+                            {errors[field.name] && touched[field.name] && errors[field.name]}
+                        </span>
+                    }
                 </div>
             </div>
         )
@@ -176,7 +185,7 @@ const DataForm = (props) => {
                   handleSubmit,
               }) => (
                 <>
-                    <form className="p-5 bg-white site-form"
+                    <form className="site-form"
                           onSubmit={handleSubmit}>
                         {props.data.fields.map((field, index) => (
                             <React.Fragment key={index}>

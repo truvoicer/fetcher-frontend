@@ -1,0 +1,19 @@
+$border-radius: 4px;
+.social-button {
+  &--group {
+    color: #fff;
+  }
+  &--icon {
+    border-bottom-left-radius: $border-radius;
+    border-top-left-radius: $border-radius;
+    i {
+      width: 16px;
+      height: 20px
+    }
+  }
+  &--label {
+    border-bottom-right-radius: $border-radius;
+    border-top-right-radius: $border-radius;
+    width: 12em
+  }
+}

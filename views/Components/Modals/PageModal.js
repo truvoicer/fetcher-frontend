@@ -13,7 +13,7 @@ import Dialog from "@material-ui/core/Dialog";
 const PageModal = (props) => {
     const [show, setShow] = useState(props.show)
     const [fullWidth, setFullWidth] = React.useState(true);
-    const [maxWidth, setMaxWidth] = React.useState('sm');
+    const [maxWidth, setMaxWidth] = React.useState('xs');
 
     const handleClose = () => {
         props.showPageModalMiddleware(false);

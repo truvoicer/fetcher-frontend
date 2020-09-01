@@ -1,30 +1,36 @@
 import React  from "react";
 import { GoogleLogin } from 'react-google-login';
 import {GoogleAuthConfig} from "../../../config/google/googleOauthConfig";
+import {connect} from "react-redux";
+import {getSessionTokenMiddleware} from "../../../redux/middleware/session-middleware";
+import {buildWpApiUrl} from "../../../library/api/wp/middleware";
+import {wpApiConfig} from "../../../config/wp-api-config";
 
 const AuthGoogle = (props) => {
     const responseSuccess = (response) => {
-        let data = {
-            tokenId: response.tokenId,
-            familyName: response.profileObj.familyName,
-            givenName: response.profileObj.givenName,
-            googleId: response.profileObj.googleId,
-            imageUrl: response.profileObj.imageUrl,
-            fullName: response.profileObj.name
+        const data = {
+            custom_auth: "google",
+            password: response.tokenId
         }
-        console.log(response);
+        props.getSessionTokenMiddleware(buildWpApiUrl(wpApiConfig.endpoints.token), data, props.requestCallback)
     }
     const responseFail = (response) => {
-        console.log(response);
+        console.error(response);
     }
     return (
         <GoogleLogin
             clientId={GoogleAuthConfig.client_id}
+            autoLoad={false}
             buttonText="Login with Google"
             onSuccess={responseSuccess}
             onFailure={responseFail}
             cookiePolicy={'single_host_origin'}
+            render={renderProps => props.component}
         />
     );
 }
-export default AuthGoogle;
+
+export default connect(
+    null,
+    {getSessionTokenMiddleware}
+)(AuthGoogle);

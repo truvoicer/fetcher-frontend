@@ -8,14 +8,18 @@
 @import "../css/fonts/style.css";
 /* Base */
 @import "site-base";
-/* Navbar */
+@import "colors";
+
+/* Layout */
 @import "site-navbar";
+@import "layout/site-footer";
 @import "layout/menu";
 @import "layout/sidebar";
-/* Blocks */
-@import "site-blocks";
-@import "layout/site-footer";
+@import "components/buttons";
 
+/* Components */
+@import "site-blocks";
+@import 'components/modal';
 @import 'components/forms';
 @import 'components/loader';
 @import 'components/listings-filters';

@@ -1,6 +1,6 @@
 import store from "../store/index"
 import { setUser, setAuthenticated, setSessionError } from "../reducers/session-reducer"
-import {isSet} from "../../library/utils";
+import {isObjectEmpty, isSet} from "../../library/utils";
 import {
     getSavedItemsListByUserAction,
     resetSessionErrorAction,
@@ -14,9 +14,17 @@ import {updateSavedItemAction} from "../actions/search-actions";
 
 const axios = require('axios');
 
-export function getSessionTokenMiddleware(url, requestData, callback) {
+export function getSessionTokenMiddleware(url, requestData, callback = false, headers = {}) {
     return function(dispatch) {
-        return axios.post(url, requestData)
+        let data = {
+            method: "post",
+            url: url,
+            data: requestData
+        }
+        if (!isObjectEmpty(headers)) {
+            data.headers = headers
+        }
+        return axios.request(data)
             .then(response => {
                 if (response.data.success) {
                     setSessionUserAction(response.data.data, true)
